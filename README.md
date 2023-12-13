@@ -1,3 +1,7 @@
 # Rantools
 
 Rantools is a project that consists of a set of web applications designed to simplify and automate tasks for the radio planning and optimization team. Additionally, it provides access to various information without the need to install additional software.
+
+[![CI](https://github.com/ram-alb/rantools-v2/actions/workflows/CI.yml/badge.svg)](https://github.com/ram-alb/rantools-v2/actions/workflows/CI.yml)
+[![Maintainability](https://api.codeclimate.com/v1/badges/b2318a809236547d1cbc/maintainability)](https://codeclimate.com/github/ram-alb/rantools-v2/maintainability)
+[![wemake-python-styleguide](https://img.shields.io/badge/style-wemake-000000.svg)](https://github.com/wemake-services/wemake-python-styleguide)
