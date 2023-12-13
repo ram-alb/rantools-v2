@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "rantools"
+version = "0.1.0"
+description = "Web applications for facilitating the work of the radio planning and optimization team"
+authors = ["Ramil Albakov <ramil.albakov2@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = ">=3.8.1,<4.0"
+django = "4.2.8"
+python-dotenv = "^1.0.0"
+
+
+[tool.poetry.group.dev.dependencies]
+wemake-python-styleguide = "^0.18.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
