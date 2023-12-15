@@ -26,6 +26,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     '[::1]',
     '0.0.0.0',
+    'rantools-v2.kcell.kz',
 ]
 
 # Application definition
