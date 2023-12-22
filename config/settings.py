@@ -7,10 +7,10 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Load needed environment
-if os.getenv('RANTOOLS_ENV', default=False):
-    load_dotenv(BASE_DIR / '.env')
+if 'RANTOOLS_ENV' in os.environ:
+    load_dotenv(dotenv_path=BASE_DIR / '.env', override=True)
 else:
-    load_dotenv(BASE_DIR / '.env.dev')
+    load_dotenv(dotenv_path=BASE_DIR / '.env.dev', override=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -49,7 +50,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
