@@ -5,7 +5,7 @@ from django.urls import reverse
 from users import views
 from users.tests.utils import check_message, fake_is_bind, get_templates
 
-registration_url = reverse('registration')
+REGISTRATION_URL = reverse('registration')
 
 valid_data = {
     'username': 'user1',
@@ -17,7 +17,7 @@ valid_data = {
 
 def test_get(client):
     """Test the behavior of accessing the user registration page using the GET method."""
-    response = client.get(registration_url)
+    response = client.get(REGISTRATION_URL)
     templates = get_templates(response)
 
     assert response.status_code == HTTPStatus.OK
@@ -30,7 +30,7 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
     views.is_ldap_bind = fake_is_bind(True)
 
     response = client.post(
-        registration_url,
+        REGISTRATION_URL,
         data=valid_data,
     )
     users_count_new = django_user_model.objects.count()
@@ -50,7 +50,7 @@ def test_post_valid_form_ldap_false(client, django_user_model, check_user):
     views.is_ldap_bind = fake_is_bind(False)
 
     response = client.post(
-        registration_url,
+        REGISTRATION_URL,
         data=valid_data,
     )
 
@@ -69,7 +69,7 @@ def test_post_invalid_form_wrong_email(client, django_user_model, check_user):
 
     form_data = {**valid_data, 'email': 'user1@example'}
     response = client.post(
-        registration_url,
+        REGISTRATION_URL,
         data=form_data,
     )
 
@@ -88,7 +88,7 @@ def test_post_invalid_form_wrong_password(client, django_user_model, check_user)
 
     form_data = {**valid_data, 'password2': 'anotherPass'}
     response = client.post(
-        registration_url,
+        REGISTRATION_URL,
         data=form_data,
     )
 
