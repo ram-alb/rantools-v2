@@ -1,0 +1,85 @@
+from http import HTTPStatus
+
+from django.urls import reverse
+
+from users import views
+from users.tests.utils import check_message, fake_is_bind, get_templates
+
+LOGIN_URL = reverse('login')
+
+
+def test_get(client):
+    """Test the behavior of accessing the login page using the GET method."""
+    response = client.get(LOGIN_URL)
+    templates = get_templates(response)
+
+    assert response.status_code == HTTPStatus.OK
+    assert 'users/login.html' in templates
+
+
+def test_post_valid_form(client, new_user):
+    """Test the behavior of submitting a valid login form."""
+    form_data = {
+        'username': new_user['username'],
+        'password': new_user['password'],
+    }
+    response = client.post(
+        LOGIN_URL,
+        data=form_data,
+    )
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert response.url == reverse('index')
+    assert check_message(response, views.UserLogin.success_message)
+
+
+def test_post_invalid_form(client, new_user):
+    """Test the behavior of submitting an invalid login form with incorrect username."""
+    invalid_data = {
+        'username': 'user2',
+        'password': new_user['password'],
+    }
+    error_message = 'Please enter a correct username and password'
+    response = client.post(
+        LOGIN_URL,
+        data=invalid_data,
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert error_message in response.content.decode()
+
+
+def test_post_invalid_form_ldap_true(client, django_user_model, new_user):
+    """Test the submitting an invalid login form when LDAP binding is simulated as True."""
+    views.is_ldap_bind = fake_is_bind(True)
+    invalid_data = {
+        'username': new_user['username'],
+        'password': 'newPass',
+    }
+    response = client.post(
+        LOGIN_URL,
+        data=invalid_data,
+    )
+    user = django_user_model.objects.get(username=new_user['username'])
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert response.url == reverse('index')
+    assert check_message(response, views.UserLogin.success_message)
+    assert user.check_password(invalid_data['password'])
+
+
+def test_post_invalid_form_ldap_false(client, new_user):
+    """Test the submitting an invalid login form when LDAP binding is simulated as False."""
+    views.is_ldap_bind = fake_is_bind(False)
+    error_message = 'Please enter a correct username and password'
+    invalid_data = {
+        'username': new_user['username'],
+        'password': 'wrongPass',
+    }
+    response = client.post(
+        LOGIN_URL,
+        data=invalid_data,
+    )
+
+    assert response.status_code == HTTPStatus.OK
+    assert error_message in response.content.decode()

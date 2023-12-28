@@ -16,7 +16,13 @@ lint:
 selfcheck:
 	poetry check
 
-check: selfcheck lint
+test:
+	poetry run pytest
+
+check: selfcheck lint test
+
+shell:
+	poetry run python manage.py shell_plus --plain
 
 
 .PHONY: dev-start install migrate isort lint selfcheck check

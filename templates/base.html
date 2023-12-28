@@ -29,10 +29,44 @@
             </li>
           </ul>
 
+          <hr>
+          <ul class="navbar-nav">
+            {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'logout' %}">
+                  <i class="fas fa-sign-out-alt"></i> <span class="ms-1 d-none d-sm-inline">Logout</span>
+                </a>
+              </li>
+            {% else %}
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">
+                  <i class="fas fa-sign-in-alt"></i> <span class="ms-1 d-none d-sm-inline">Login</span>
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'registration' %}">
+                  <i class="fas fa-user-plus"></i> <span class="ms-1 d-none d-sm-inline">Sign up</span>
+                </a>
+              </li>
+            {% endif %}
+          </ul>
+
         </div>
       </div>
 
       <div class="col py-3">
+
+        {% if messages %}
+          {% for message in messages %}
+            {% if message.tags == 'success' %}
+              <div class="text-center alert alert-info alert-dismissible fade show" role="alert">
+            {% elif message.tags == 'error' %}
+              <div class="text-center alert alert-danger alert-dismissible fade show" role="alert">
+            {% endif %}
+              {{  message }}
+            </div>
+          {% endfor %}
+        {% endif %}
 
         {% block content %}{% endblock content %}
 
