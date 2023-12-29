@@ -28,4 +28,5 @@ jobs:
           make check
         env:
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
+          DJANGO_ALLOWED_HOSTS: ${{ secrets.DJANGO_ALLOWED_HOSTS }}
           DB_ENGINE: SQLite
