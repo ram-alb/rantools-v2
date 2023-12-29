@@ -19,6 +19,9 @@ selfcheck:
 test:
 	poetry run pytest
 
+test-coverage:
+	poetry run pytest --cov=. --cov-report xml
+
 check: selfcheck lint test
 
 shell:
