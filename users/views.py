@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 from users.forms import UserRegistrationForm
-from users.l_dap import is_ldap_bind
+from users.ldap_authentication import is_ldap_bind
 
 
 class UserRegistration(CreateView):
