@@ -1,16 +1,8 @@
 import os
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Load needed environment
-if 'RANTOOLS_ENV' in os.environ:
-    load_dotenv(dotenv_path=BASE_DIR / '.env', override=True)
-else:
-    load_dotenv(dotenv_path=BASE_DIR / '.env.dev', override=True)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
