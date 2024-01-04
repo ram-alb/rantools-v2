@@ -34,6 +34,7 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
         data=valid_data,
     )
     users_count_new = django_user_model.objects.count()
+    user = django_user_model.objects.get(username=valid_data['username'])
 
     assert users_count_new - users_count_old == 1
     assert check_user(valid_data['username'])
@@ -42,6 +43,7 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
     assert response.url == reverse('login')
 
     assert check_message(response, views.UserRegistration.success_message)
+    assert user.groups.filter(name='Regular Users').exists()
 
 
 def test_post_valid_form_ldap_false(client, django_user_model, check_user):
