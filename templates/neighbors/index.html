@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1 class="text-center">Neighbor tools</h1>
+  <div class="list-group text-center">
+    <a href="{% url 'nbr-g2u' %}" class="list-group-item list-group-item-action">GSM to UMTS</a>
+    <a href="#" class="list-group-item list-group-item-action disabled">GSM to GSM</a>
+    <a href="#" class="list-group-item list-group-item-action disabled">UMTS to GSM</a>
+    <a href="#" class="list-group-item list-group-item-action disabled">UMTS to UMTS</a>
+  </div>
+{% endblock content %}

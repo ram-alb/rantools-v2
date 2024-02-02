@@ -1,0 +1,1 @@
+from neighbors.services.network_live.g2u import categorize_g2u_neighbors

@@ -1,0 +1,1 @@
+from neighbors.services.reports.g2u_main import create_g2u_nbr_report

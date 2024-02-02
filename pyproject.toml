@@ -16,6 +16,9 @@ django-crispy-forms = "^2.1"
 crispy-bootstrap5 = "^2023.10"
 ldap3 = "^2.9.1"
 django-extensions = "^3.2.3"
+cx-oracle = "^8.3.0"
+openpyxl = "^3.1.2"
+enm-client-scripting = {path = "local_packages/enm_client_scripting-1.22.2-py2.py3-none-any.whl"}
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
