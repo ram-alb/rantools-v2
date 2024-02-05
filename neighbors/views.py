@@ -56,7 +56,7 @@ class DownloadTemplate(LoginMixin, View):
         template_path = f'neighbors/reports/templates/{technology}.xlsx'
 
         with open(template_path, 'rb') as template:
-            response = HttpResponse(template.read(), content_type='application/octet-stream')
+            response = HttpResponse(template.read(), content_type='application/vnd.ms-excel')
         response['Content-Disposition'] = f'attachment; filename="{technology}.xlsx"'
 
         return response
