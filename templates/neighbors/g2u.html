@@ -4,7 +4,13 @@
 
 {% block content %}
 <div class="container wrapper flex-grow-1">
-  <h1 class="text-center my-3">Upload G2U neighbors</h1>
+  <h1 class="text-center my-3">G2U neighbors</h1>
+
+  <div class="d-flex justify-content-center">
+    <a href="{% url 'nbr-download-template' technology='G2U' %}" class="nav-link link-primary">Download G2U nbr template</a>
+  </div>
+
+  <h4 class="text-center mt-5">Upload G2U planned neighbors</h4>
 
   <div class="d-flex justify-content-center my-3">
     <form id="g2u-nbr" method="post" enctype="multipart/form-data">

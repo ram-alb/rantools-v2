@@ -46,3 +46,17 @@ class GsmToUmtsNbr(LoginMixin, View):
 
         messages.error(request, 'Submited form is invalid')
         return redirect(reverse_lazy('nbr-g2u'))
+
+
+class DownloadTemplate(LoginMixin, View):
+    """A view for downloading neighbor template for planned neighbors."""
+
+    def get(self, request, technology):
+        """Handle a GET request."""
+        template_path = f'neighbors/reports/templates/{technology}.xlsx'
+
+        with open(template_path, 'rb') as template:
+            response = HttpResponse(template.read(), content_type='application/octet-stream')
+        response['Content-Disposition'] = f'attachment; filename="{technology}.xlsx"'
+
+        return response
