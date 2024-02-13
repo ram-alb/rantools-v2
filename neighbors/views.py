@@ -8,7 +8,8 @@ from django.views.generic import TemplateView
 
 from neighbors.forms import UploadNeighborsForm
 from neighbors.services.excel import is_excel_file
-from neighbors.services.gsm.g2u import generate_g2u_nbr_addition_report
+from neighbors.services.gsm.g2u import generate_g2u_nbr_adding_import_report
+from neighbors.services.wcdma.u2g import generate_u2g_nbr_adding_import_report
 from services.mixins import LoginMixin
 
 
@@ -21,42 +22,50 @@ class Index(LoginMixin, TemplateView):
 class GsmToUmtsNbr(LoginMixin, View):
     """A view for managing G2U neighbors."""
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request, direction, *args, **kwargs):
         """Handle GET request."""
-        upload_g2u_nbr_form = UploadNeighborsForm()
-        return render(request, 'neighbors/g2u.html', {'form': upload_g2u_nbr_form})
+        upload_nbr_form = UploadNeighborsForm()
+        return render(
+            request,
+            'neighbors/gu.html',
+            {'form': upload_nbr_form, 'direction': direction},
+        )
 
-    def post(self, request, *args, **kwargs):
+    def post(self, request, direction, *args, **kwargs):
         """Handle POST request."""
-        g2u_nbr_form = UploadNeighborsForm(request.POST, request.FILES)
-        if g2u_nbr_form.is_valid():
-            g2u_nbr_excel = request.FILES['neighbors_excel']
+        nbr_form = UploadNeighborsForm(request.POST, request.FILES)
+        if nbr_form.is_valid():
+            nbr_excel = request.FILES['neighbors_excel']
 
-            if not is_excel_file(g2u_nbr_excel.name):
+            if not is_excel_file(nbr_excel.name):
                 messages.error(request, 'Uploaded file is not excel file')
                 return redirect(reverse_lazy('nbr-g2u'))
 
-            report_path = generate_g2u_nbr_addition_report(g2u_nbr_excel)
+            if direction == 'G2U':
+                report_path = generate_g2u_nbr_adding_import_report(nbr_excel)
+            elif direction == 'U2G':
+                report_path = generate_u2g_nbr_adding_import_report(nbr_excel)
+
             with open(report_path, 'rb') as report:
                 response = HttpResponse(report.read(), content_type='application/zip')
-                response['Content-Disposition'] = 'attachment; filename="G2U-nbr.zip"'
+                response['Content-Disposition'] = f'attachment; filename="{direction}-nbr.zip"'
 
             os.remove(report_path)
             return response
 
         messages.error(request, 'Submited form is invalid')
-        return redirect(reverse_lazy('nbr-g2u'))
+        return redirect(reverse_lazy('nbr-gu'))
 
 
-class DownloadTemplate(LoginMixin, View):
+class DownloadGUTemplate(LoginMixin, View):
     """A view for downloading neighbor template for planned neighbors."""
 
-    def get(self, request, technology):
+    def get(self, request, direction):
         """Handle a GET request."""
-        template_path = f'neighbors/reports/templates/{technology}.xlsx'
+        template_path = 'neighbors/reports/templates/gu.xlsx'
 
         with open(template_path, 'rb') as template:
             response = HttpResponse(template.read(), content_type='application/vnd.ms-excel')
-        response['Content-Disposition'] = f'attachment; filename="{technology}.xlsx"'
+        response['Content-Disposition'] = f'attachment; filename="{direction}.xlsx"'
 
         return response

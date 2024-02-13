@@ -9,6 +9,7 @@ class MoNames(enum.Enum):
     managed_element = 'ManagedElement'
     utran_cell = 'UtranCell'
     geran_cell = 'GeranCell'
+    ext_gsm_network = 'ExternalGsmNetwork'
 
 
 def parse_mo_value_from_fdn(fdn, mo_type):
@@ -25,6 +26,7 @@ def parse_mo_value_from_fdn(fdn, mo_type):
         'GsmSector': 'GsmSector=.*',
         'GeranCell': 'GeranCell=.*',
         'ChannelGroupCell': 'GeranCell=[^,]*',
+        'ExternalGsmNetwork': 'ExternalGsmNetwork=.*',
     }
 
     mo_value_index = -1

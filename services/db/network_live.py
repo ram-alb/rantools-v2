@@ -1,6 +1,6 @@
 import enum
 from abc import abstractmethod
-from typing import Type
+from typing import Set
 
 
 class Tables(enum.Enum):
@@ -20,7 +20,12 @@ class BaseTable:
         self.connection = connection
 
     @abstractmethod
-    def _get_table_name(self) -> Type[Tables]:
+    def get_enm_cells(self) -> Set[str]:
+        """Abstract method for retrieving the cell names configured on ENM from Network Live db."""
+        pass
+
+    @abstractmethod
+    def _get_table_name(self) -> str:
         """Abstract method for retrieving the table name."""
         pass
 

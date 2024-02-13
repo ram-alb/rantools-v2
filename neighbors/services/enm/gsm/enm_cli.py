@@ -48,7 +48,3 @@ class EnmCLI(EnmScripting):
         self._close_session(session)
 
         return response.get_output()
-
-    def _get_last_parameter(self, params_list):
-        """Get the name of the last parameter from the provided parameter list."""
-        return sorted(params_list)[-1]

@@ -22,3 +22,7 @@ class EnmScripting:
     def _close_session(self, session):
         """Close enmscripting session."""
         enmscripting.close(session)
+
+    def _get_last_parameter(self, params_list):
+        """Get the name of the last parameter from the provided parameter list."""
+        return sorted(params_list)[-1]

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container wrapper flex-grow-1">
+  <h1 class="text-center my-3">{{ direction }} neighbors</h1>
+
+  <div class="d-flex justify-content-center">
+    <a href="{% url 'nbr-download-template' direction=direction %}" class="nav-link link-primary">Download {{ direction }} nbr template</a>
+  </div>
+
+  <h4 class="text-center mt-5">Upload {{ direction }} planned neighbors</h4>
+
+  <div class="d-flex justify-content-center my-3">
+    <form id="gu-nbr" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="d-flex justify-content-center">
+        <button id="gu-submit" type="submit" class="btn btn-primary">Upload</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  const guNbrForm = document.getElementById('gu-nbr');
+
+  guNbrForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const submitBtn = document.getElementById('gu-submit');
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>Loading...'
+    const formData = new FormData(guNbrForm);
+
+    fetch('{% url "nbr-gu" direction=direction %}', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.blob())
+    .then(data => {
+      const url = window.URL.createObjectURL(data);
+      const anchor = document.createElement("a");
+      anchor.href = url;
+      anchor.download = '{{ direction }}-NBR.zip';
+      anchor.click();
+      window.URL.revokeObjectURL(url);
+      submitBtn.innerHTML = 'Upload';
+      guNbrForm.reset();
+    });
+  });
+
+</script>
+{% endblock content %}

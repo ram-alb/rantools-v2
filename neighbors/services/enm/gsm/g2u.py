@@ -1,8 +1,8 @@
 import os
 from dataclasses import dataclass
 
-from neighbors.services.enm.enm_cli import EnmCLI
-from neighbors.services.enm.parser import (
+from neighbors.services.enm.gsm.enm_cli import EnmCLI
+from neighbors.services.enm.gsm.parser import (
     parse_geran_cells,
     parse_rnc_function_params,
     parse_utran_cell_params,

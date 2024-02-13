@@ -1,1 +1,1 @@
-from neighbors.services.gsm.g2u.main import generate_g2u_nbr_addition_report
+from neighbors.services.gsm.g2u.main import generate_g2u_nbr_adding_import_report

@@ -1,22 +1,15 @@
-from datetime import datetime
-
+from neighbors.services.date_time import get_date_time
 from neighbors.services.enm import get_enm_g2u_data
 from neighbors.services.excel import get_neighbor_cells_from_excel
 from neighbors.services.gsm.g2u.create_neighbors import (
     prepare_external_ucells_configuration_data,
     prepare_g2u_nbr_configuration_data,
 )
-from neighbors.services.network_live import categorize_g2u_neighbors
+from neighbors.services.network_live import split_gu_neighbors
 from neighbors.services.reports import create_g2u_nbr_report
 
 
-def get_date_time():
-    """Get current date and time."""
-    current_datetime = datetime.now()
-    return current_datetime.strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3]
-
-
-def generate_g2u_nbr_addition_report(g2u_neighbors_excel_file):
+def generate_g2u_nbr_adding_import_report(g2u_neighbors_excel_file):
     """Generate a report for the addition of G2U neighbors in ENM."""
     date_time = get_date_time()
 
@@ -24,7 +17,7 @@ def generate_g2u_nbr_addition_report(g2u_neighbors_excel_file):
     planned_neighbors = get_neighbor_cells_from_excel(g2u_neighbors_excel_file)
 
     # filter planned neighbors
-    filtered_neighbors, nonexistent_cells = categorize_g2u_neighbors(planned_neighbors)
+    filtered_neighbors, nonexistent_cells = split_gu_neighbors(planned_neighbors, 'G2U')
 
     # get data from enm for planned cells
     enm_data = get_enm_g2u_data()

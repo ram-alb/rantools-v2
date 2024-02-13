@@ -1,1 +1,1 @@
-from neighbors.services.network_live.g2u import categorize_g2u_neighbors
+from neighbors.services.network_live.gu import split_gu_neighbors

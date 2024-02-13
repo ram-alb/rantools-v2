@@ -1,0 +1,1 @@
+from neighbors.services.wcdma.u2g.main import generate_u2g_nbr_adding_import_report
