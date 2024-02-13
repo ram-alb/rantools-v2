@@ -1,6 +1,5 @@
 from typing import Set
 
-from services.db.connector import DBConnector
 from services.db.network_live import BaseTable, Tables
 
 
@@ -44,14 +43,3 @@ class WcdmaTable(BaseTable):
     def _get_table_name(self) -> str:
         """Get the table name with the WCDMA cells."""
         return Tables.wcdma_cells.value
-
-
-def get_network_cells(technology: str) -> Set[str]:
-    """Get the cells from the network live based on the technology."""
-    tables = {
-        'GSM': GsmTable,
-        'WCDMA': WcdmaTable,
-    }
-
-    table = tables[technology](DBConnector.get_connection())
-    return table.get_enm_cells()

@@ -1,13 +1,13 @@
 import os
 
-import cx_Oracle
+import cx_Oracle  # type: ignore
 
 
 class DBConnector:
     """A class providing connection to Atoll db."""
 
     @classmethod
-    def get_connection(cls):
+    def get_connection(cls) -> cx_Oracle.Connection:
         """Get a connection to Atoll db."""
         dsn = cx_Oracle.makedsn(
             os.getenv('ATOLL_HOST'),
