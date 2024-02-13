@@ -1,5 +1,4 @@
 import io
-from pathlib import Path
 from typing import List, NamedTuple
 
 import openpyxl
@@ -10,13 +9,6 @@ class NeighborPair(NamedTuple):
 
     source_cell: str
     target_cell: str
-
-
-def is_excel_file(filename: str) -> bool:
-    """Check is a provided filename is Excel file or not."""
-    allowed_extensions = {'.xlsx', '.xls'}
-    extension = Path(filename).suffix
-    return extension in allowed_extensions
 
 
 def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> List[NeighborPair]:

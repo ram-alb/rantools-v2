@@ -7,7 +7,6 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from neighbors.forms import UploadNeighborsForm
-from neighbors.services.excel import is_excel_file
 from neighbors.services.gsm.g2u import generate_g2u_nbr_adding_import_report
 from neighbors.services.wcdma.u2g import generate_u2g_nbr_adding_import_report
 from services.mixins import LoginMixin
@@ -36,10 +35,6 @@ class GsmToUmtsNbr(LoginMixin, View):
         nbr_form = UploadNeighborsForm(request.POST, request.FILES)
         if nbr_form.is_valid():
             nbr_excel = request.FILES['neighbors_excel']
-
-            if not is_excel_file(nbr_excel.name):
-                messages.error(request, 'Uploaded file is not excel file')
-                return redirect(reverse_lazy('nbr-g2u'))
 
             if direction == 'G2U':
                 report_path = generate_g2u_nbr_adding_import_report(nbr_excel)
