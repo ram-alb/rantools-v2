@@ -1,5 +1,7 @@
-from services.enm.enmscripting import EnmScripting
 from typing import Any, Tuple
+
+from services.enm.enmscripting import EnmScripting
+
 
 class EnmCli(EnmScripting):
     def get_gerancell_params(self) -> Tuple[Any, Any]:

@@ -29,6 +29,6 @@ class BaseTable:
         """Abstract method for retrieving the table name."""
         pass
 
-    def _close_connection(self):
+    def _close_connection(self) -> None:
         """Close connection to Network Live db."""
         self.connection.close()

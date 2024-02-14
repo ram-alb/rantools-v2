@@ -1,5 +1,6 @@
 import enum
 import re
+from typing import List
 
 
 class MoNames(enum.Enum):
@@ -12,7 +13,7 @@ class MoNames(enum.Enum):
     ext_gsm_network = 'ExternalGsmNetwork'
 
 
-def parse_mo_value_from_fdn(fdn, mo_type):
+def parse_mo_value_from_fdn(fdn: str, mo_type: str) -> str:
     """Parse MO value from FDN string."""
     re_patterns = {
         'SubNetwork': ',SubNetwork=[^,]*',
@@ -30,18 +31,16 @@ def parse_mo_value_from_fdn(fdn, mo_type):
     }
 
     mo_value_index = -1
-    if mo_type == 'MeContext':
-        try:
-            mo = re.search(re_patterns['MeContext'], fdn).group()
-        except AttributeError:
-            mo = re.search(re_patterns['ManagedElement'], fdn).group()
-    else:
-        mo = re.search(re_patterns[mo_type], fdn).group()
+    mo_obj = re.search(re_patterns[mo_type], fdn)
 
+    if mo_obj is None:
+        raise AttributeError('MO was not found in FDN')
+
+    mo = mo_obj.group()
     return mo.split('=')[mo_value_index]
 
 
-def parse_ref_parameter(needed_parameter_name, ref_value):
+def parse_ref_parameter(needed_parameter_name: str, ref_value: str) -> List[str]:
     """Parse a parameter name and value from the parameters reference string."""
     all_ref_params = ref_value.split(',')
     name_val_pair = list(filter(
