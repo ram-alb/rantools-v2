@@ -1,7 +1,7 @@
 from neighbors.services.date_time import get_date_time
 from neighbors.services.enm import get_enm_g2u_data
 from neighbors.services.excel import get_neighbor_cells_from_excel
-from neighbors.services.gsm.g2u.create_neighbors import (
+from neighbors.services.gsm.g2u.config_preparator import (
     prepare_external_ucells_configuration_data,
     prepare_g2u_nbr_configuration_data,
 )
