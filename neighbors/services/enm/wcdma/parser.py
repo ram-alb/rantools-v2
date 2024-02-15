@@ -1,19 +1,24 @@
-from typing import NamedTuple
+from typing import Dict, Union
 
-from services.enm.parser_utils import MoNames, parse_mo_value_from_fdn, parse_ref_parameter
+from enmscripting import ElementGroup  # type: ignore
+
+from services.enm.parser_utils import MoNames, parse_mo_value_from_fdn
 
 DELIMETER = ' : '
 
+GerancellParameters = Dict[str, Union[int, str]]
 
-def _convert_to_int_or_keep(parameter_value):
+
+def _convert_to_int_or_keep(parameter_value: str) -> Union[int, str]:
     try:
         return int(parameter_value)
     except ValueError:
         return parameter_value
 
 
-def _get_baseline_params(bcch):
-    if bcch < 125:
+def _get_baseline_params(bcch: int) -> dict:
+    max_bcch = 125
+    if bcch < max_bcch:
         return {
             'band_indicator': 'OTHER_BANDS',
             'max_tx_pwr_ul': 33,
@@ -26,7 +31,11 @@ def _get_baseline_params(bcch):
     }
 
 
-def parse_gerancell_parameters(enm_gerancell_data, last_parameter):
+def parse_gerancell_parameters(
+    enm_gerancell_data: ElementGroup,
+    last_parameter: str,
+) -> Dict[str, GerancellParameters]:
+    """Parse necessary gerancells parameters for external geran cells configuration on RNC."""
     gerancell_parameters = {}
     for row in enm_gerancell_data:
         row_value = row.value()
@@ -51,7 +60,8 @@ def parse_gerancell_parameters(enm_gerancell_data, last_parameter):
     return gerancell_parameters
 
 
-def parse_utran_cells(enm_utrancells_data):
+def parse_utran_cells(enm_utrancells_data: ElementGroup) -> Dict[str, str]:
+    """Parse utran cell names for each RNC."""
     utran_cells = {}
     for row in enm_utrancells_data:
         row_value = row.value()
@@ -62,7 +72,8 @@ def parse_utran_cells(enm_utrancells_data):
     return utran_cells
 
 
-def parse_external_gsm_network_ids(enm_ext_gsm_network_data):
+def parse_external_gsm_network_ids(enm_ext_gsm_network_data: ElementGroup) -> Dict[str, str]:
+    """Parse ExternalGsmNetworkId value for each RNC."""
     ext_gsm_network_ids = {}
     for row in enm_ext_gsm_network_data:
         row_value = row.value()

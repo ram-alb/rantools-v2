@@ -1,9 +1,15 @@
+from typing import Dict
+
+from enmscripting import ElementGroup  # type: ignore
+
 from services.enm.parser_utils import MoNames, parse_mo_value_from_fdn, parse_ref_parameter
 
 DELIMETER = ' : '
 
+NodeParams = Dict[str, str]
 
-def parse_rnc_function_params(enm_data, last_parameter):
+
+def parse_rnc_function_params(enm_data: ElementGroup, last_parameter: str) -> Dict[str, NodeParams]:
     """Parse rnc level parameters from ENM data."""
     rnc_parameters = {}
     for row in enm_data:
@@ -21,7 +27,7 @@ def parse_rnc_function_params(enm_data, last_parameter):
     return rnc_parameters
 
 
-def parse_utran_cell_params(enm_data, last_parameter):
+def parse_utran_cell_params(enm_data: ElementGroup, last_parameter: str) -> Dict[str, NodeParams]:
     """Parse utran cell parameters from ENM data."""
     cell_parameters = {}
     for row in enm_data:
@@ -43,7 +49,7 @@ def parse_utran_cell_params(enm_data, last_parameter):
     return cell_parameters
 
 
-def parse_geran_cells(enm_data):
+def parse_geran_cells(enm_data: ElementGroup) -> Dict[str, str]:
     """Parse Geran cell names and BSC names from ENM data."""
     geran_cells = {}
     for row in enm_data:

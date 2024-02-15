@@ -1,6 +1,8 @@
-from services.enm.enmscripting import EnmScripting
-from typing import Any, Tuple
+from typing import Tuple
+
 from enmscripting import ElementGroup  # type: ignore
+
+from services.enm.enmscripting import EnmScripting
 
 
 class EnmCLI(EnmScripting):

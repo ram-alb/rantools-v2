@@ -1,26 +1,30 @@
 import os
-from dataclasses import dataclass
+from typing import Dict, NamedTuple
 
 from neighbors.services.enm.gsm.enm_cli import EnmCLI
 from neighbors.services.enm.gsm.parser import (
+    NodeParams,
     parse_geran_cells,
     parse_rnc_function_params,
     parse_utran_cell_params,
 )
 
 
-@dataclass
-class EnmG2UData:
-    """A data class representing the necessary data for G2U neighbors configuration."""
+class EnmG2UData(NamedTuple):
+    """A class representing the necessary data for G2U neighbors configuration."""
 
-    rnc_params: dict
-    utran_cell_params: dict
-    geran_cells: dict
+    rnc_params: Dict[str, NodeParams]
+    utran_cell_params: Dict[str, NodeParams]
+    geran_cells: Dict[str, str]
 
 
-def get_enm_g2u_data():
+def get_enm_g2u_data() -> EnmG2UData:
     """Get the necessary data from ENM for G2U neighbor configuration."""
-    enm2_cli = EnmCLI(os.getenv('ENM_SERVER_2'))
+    enm_server = os.getenv('ENM_SERVER_2')
+    if enm_server is None:
+        raise ValueError('No ENM_SERVER_2 environment variable')
+
+    enm2_cli = EnmCLI(enm_server)
 
     enm_rnc_function_params, rnc_last_parameter = enm2_cli.get_rnc_function_params()
     rnc_params = parse_rnc_function_params(enm_rnc_function_params, rnc_last_parameter)
