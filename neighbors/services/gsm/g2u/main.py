@@ -1,3 +1,5 @@
+import io
+
 from neighbors.services.date_time import get_date_time
 from neighbors.services.enm import get_enm_g2u_data
 from neighbors.services.excel import get_neighbor_cells_from_excel
@@ -8,8 +10,12 @@ from neighbors.services.gsm.g2u.config_preparator import (
 from neighbors.services.network_live import split_gu_neighbors
 from neighbors.services.reports import create_g2u_nbr_report
 
+ImportFilePath = str
 
-def generate_g2u_nbr_adding_import_report(g2u_neighbors_excel_file):
+
+def generate_g2u_nbr_adding_import_report(
+    g2u_neighbors_excel_file: io.BytesIO,
+) -> ImportFilePath:
     """Generate a report for the addition of G2U neighbors in ENM."""
     date_time = get_date_time()
 

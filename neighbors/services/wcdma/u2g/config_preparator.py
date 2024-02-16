@@ -1,4 +1,9 @@
-from typing import NamedTuple
+from typing import Dict, List, NamedTuple, Set, Tuple
+
+from neighbors.services.enm.wcdma.parser import GerancellParameters
+from neighbors.services.excel import NeighborPair
+
+GsmRelations = Dict[str, List[Tuple[str, str, str]]]
 
 
 class RncMo(NamedTuple):
@@ -12,26 +17,26 @@ class ExternalGsmCell(NamedTuple):
     """A class representing an external GSM cell."""
 
     gsm_cell: str
-    bcc: int
+    bcc: str
     band_indicator: str
     external_gsm_cell_id: str
-    max_txpower_ul: int
-    cell_identity: int
-    qrxlev_min: int
+    max_txpower_ul: str
+    cell_identity: str
+    qrxlev_min: str
     individual_offset: int
-    bcch_frequency: int
-    lac: int
-    ncc: int
+    bcch_frequency: str
+    lac: str
+    ncc: str
 
 
 def prepare_external_gerancell_config_data(
-    neighbor_plan,
-    enm_gerancell_data,
-    utran_cells,
-    ext_gsm_network_ids,
-):
+    neighbor_plan: List[NeighborPair],
+    enm_gerancell_data: Dict[str, GerancellParameters],
+    utran_cells: Dict[str, str],
+    ext_gsm_network_ids: Dict[str, str],
+) -> Dict[str, Set[ExternalGsmCell]]:
     """Prepare data for external geran cells configuration."""
-    external_cells = {}
+    external_cells: Dict[str, Set[ExternalGsmCell]] = {}
 
     for pair in neighbor_plan:
         utran_cell = pair.source_cell
@@ -57,9 +62,13 @@ def prepare_external_gerancell_config_data(
     return external_cells
 
 
-def prepare_gsm_relation_config_data(neighbor_plan, utran_cells, ext_gsm_network_ids):
+def prepare_gsm_relation_config_data(
+    neighbor_plan: List[NeighborPair],
+    utran_cells: Dict[str, str],
+    ext_gsm_network_ids: Dict[str, str],
+) -> Dict[str, GsmRelations]:
     """Prepare data for U2G neighbor configuration."""
-    gsm_relations = {}
+    gsm_relations: Dict[str, GsmRelations] = {}
     for pair in neighbor_plan:
         utran_cell = pair.source_cell
         geran_cell = pair.target_cell

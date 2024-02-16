@@ -2,7 +2,7 @@ import os
 import zipfile
 
 
-def create_zip_archive(file1_path, file2_path, date_time):
+def create_zip_archive(file1_path: str, file2_path: str, date_time: str) -> str:
     """Create a zip archive with two files."""
     output_zip_path = f'neighbors/reports/nbr_{date_time}.zip'
     with zipfile.ZipFile(output_zip_path, 'w') as zipf:

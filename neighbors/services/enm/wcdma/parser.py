@@ -1,4 +1,4 @@
-from typing import Dict, Union
+from typing import Dict
 
 from enmscripting import ElementGroup  # type: ignore
 
@@ -6,28 +6,21 @@ from services.enm.parser_utils import MoNames, parse_mo_value_from_fdn
 
 DELIMETER = ' : '
 
-GerancellParameters = Dict[str, Union[int, str]]
+GerancellParameters = Dict[str, str]
 
 
-def _convert_to_int_or_keep(parameter_value: str) -> Union[int, str]:
-    try:
-        return int(parameter_value)
-    except ValueError:
-        return parameter_value
-
-
-def _get_baseline_params(bcch: int) -> dict:
+def _get_baseline_params(bcch: str) -> dict:
     max_bcch = 125
-    if bcch < max_bcch:
+    if int(bcch) < max_bcch:
         return {
             'band_indicator': 'OTHER_BANDS',
-            'max_tx_pwr_ul': 33,
-            'qrxlev_min': -103,
+            'max_tx_pwr_ul': '33',
+            'qrxlev_min': '-103',
         }
     return {
         'band_indicator': 'DCS1800',
-        'max_tx_pwr_ul': 30,
-        'qrxlev_min': -94,
+        'max_tx_pwr_ul': '30',
+        'qrxlev_min': '-94',
     }
 
 
@@ -49,10 +42,10 @@ def parse_gerancell_parameters(
                     _, _, lac, ci = parameter_value.split('-')
                 except ValueError:
                     continue
-                cell['lac'] = _convert_to_int_or_keep(lac)
-                cell['ci'] = _convert_to_int_or_keep(ci)
+                cell['lac'] = lac
+                cell['ci'] = ci
             else:
-                cell[parameter_name] = _convert_to_int_or_keep(parameter_value)
+                cell[parameter_name] = parameter_value
             if parameter_name == last_parameter:
                 if 'null' in cell.values():
                     continue

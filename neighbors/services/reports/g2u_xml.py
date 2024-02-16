@@ -1,3 +1,7 @@
+from typing import Dict, Set
+
+from neighbors.services.gsm.g2u.config_preparator import ExternalUtranCell, UtranRelations
+
 XML_START = """<?xml version='1.0' encoding='UTF-8'?>
 <bulkCmConfigDataFile
   xmlns:es="EricssonSpecificAttributes.xsd"
@@ -63,7 +67,7 @@ UTRA_NETWORK_START_XML = """
 UTRA_NETWORK_END_XML = '</xn:VsDataContainer>'
 
 
-def make_xml_end(date_time):
+def make_xml_end(date_time: str) -> str:
     """Make a closing section of a XML file."""
     return f"""
           </xn:SubNetwork>
@@ -73,21 +77,21 @@ def make_xml_end(date_time):
     """
 
 
-def make_utran_externals_xml(bsc_ext_utran_cells):
+def make_utran_externals_xml(bsc_ext_utran_cells: Set[ExternalUtranCell]) -> str:
     """Make a section of a XML file for adding utran external cells."""
     external_cells = []
     for ext_cell in bsc_ext_utran_cells:
         ext_cell_xml = f"""
-          <xn:VsDataContainer id="{ext_cell["externalUtranCellId"]}" modifier="create">
+          <xn:VsDataContainer id="{ext_cell.external_utran_cell_id}" modifier="create">
             <xn:attributes>
               <xn:vsDataType>vsDataExternalUtranCell</xn:vsDataType>
               <xn:vsDataFormatVersion>EricssonSpecificAttributes</xn:vsDataFormatVersion>
               <es:vsDataExternalUtranCell>
-                <es:utranId>{ext_cell["utranId"]}</es:utranId>
-                <es:mrsl>{ext_cell["mrsl"]}</es:mrsl>
-                <es:scrCode>{ext_cell["scrCode"]}</es:scrCode>
-                <es:externalUtranCellId>{ext_cell["externalUtranCellId"]}</es:externalUtranCellId>
-                <es:fddArfcn>{ext_cell["fddArfcn"]}</es:fddArfcn>
+                <es:utranId>{ext_cell.utran_id}</es:utranId>
+                <es:mrsl>{ext_cell.mrsl}</es:mrsl>
+                <es:scrCode>{ext_cell.scr_code}</es:scrCode>
+                <es:externalUtranCellId>{ext_cell.external_utran_cell_id}</es:externalUtranCellId>
+                <es:fddArfcn>{ext_cell.fdd_arfcn}</es:fddArfcn>
               </es:vsDataExternalUtranCell>
             </xn:attributes>
           </xn:VsDataContainer>
@@ -99,7 +103,7 @@ def make_utran_externals_xml(bsc_ext_utran_cells):
     return f'{UTRA_NETWORK_START_XML}{external_cells_xml}{UTRA_NETWORK_END_XML}\n'
 
 
-def make_utran_relations_xml(bsc_utran_relations):
+def make_utran_relations_xml(bsc_utran_relations: UtranRelations) -> str:
     """Make a section of an XML file for adding G2U relations."""
     gu_relatins_xml = []
     for geran_cell, cell_utran_realtions in bsc_utran_relations.items():
@@ -137,7 +141,11 @@ def make_utran_relations_xml(bsc_utran_relations):
     return f'{GERAN_CELLS_START_XML}{bsc_utran_relations_xml}{GERAN_CELLS_END_XML}\n'
 
 
-def make_g2u_nbr_adding_xml(utran_external_cells, utran_relations, date_time):
+def make_g2u_nbr_adding_xml(
+    utran_external_cells: Dict[str, Set[ExternalUtranCell]],
+    utran_relations: Dict[str, UtranRelations],
+    date_time: str,
+) -> str:
     """Make a XML file for adding G2U neighbors using ENM Bulk Configuration."""
     report_path = f'neighbors/reports/G2U_nbr_create_{date_time}.xml'
 

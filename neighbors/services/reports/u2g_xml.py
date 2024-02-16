@@ -1,3 +1,7 @@
+from typing import Dict, List, Set
+
+from neighbors.services.wcdma.u2g.config_preparator import ExternalGsmCell, GsmRelations
+
 XML_START = """<?xml version='1.0' encoding='UTF-8'?>
     <bulkCmConfigDataFile xmlns:es="EricssonSpecificAttributes.xsd"
         xmlns:un="utranNrm.xsd"
@@ -21,14 +25,17 @@ XML_RNC_END = """
 """
 
 
-def _make_xml_end(date_time):
+def _make_xml_end(date_time: str) -> str:
     return f"""
         <fileFooter dateTime="{date_time}+06:00"/>
     </bulkCmConfigDataFile>
     """
 
 
-def make_geran_externals_xml(ext_gsm_network_id, rnc_ext_geran_cells):
+def make_geran_externals_xml(
+    ext_gsm_network_id: str,
+    rnc_ext_geran_cells: Set[ExternalGsmCell],
+) -> List[str]:
     """Make a section of a XML file for adding external geran cells."""
     geran_externals = []
 
@@ -72,7 +79,7 @@ def make_geran_externals_xml(ext_gsm_network_id, rnc_ext_geran_cells):
     return geran_externals
 
 
-def make_gsm_relations_xml(rnc_gsm_realtions):
+def make_gsm_relations_xml(rnc_gsm_realtions: GsmRelations) -> List[str]:
     """Make a section of an XML file for adding U2G relations."""
     u2g_relations = []
     for utran_cell, gsm_relations in rnc_gsm_realtions.items():
@@ -109,7 +116,11 @@ def make_gsm_relations_xml(rnc_gsm_realtions):
     return u2g_relations
 
 
-def make_u2g_nbr_adding_xml(external_geran_cells, geran_realtions, date_time):
+def make_u2g_nbr_adding_xml(
+    external_geran_cells: Dict[str, Set[ExternalGsmCell]],
+    geran_realtions: Dict[str, GsmRelations],
+    date_time: str,
+) -> str:
     """Make a XML file for adding U2G neighbors using ENM Bulk Configuration."""
     report_path = f'neighbors/reports/U2G_nbr_adding_{date_time}.xml'
 
