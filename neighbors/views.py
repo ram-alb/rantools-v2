@@ -7,8 +7,8 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from neighbors.forms import UploadNeighborsForm
-from neighbors.services.gsm.g2u import generate_g2u_nbr_adding_import_report
-from neighbors.services.wcdma.u2g import generate_u2g_nbr_adding_import_report
+from neighbors.services.gsm import g2u
+from neighbors.services.wcdma import u2g
 from services.mixins import LoginMixin
 
 
@@ -18,7 +18,7 @@ class Index(LoginMixin, TemplateView):
     template_name = 'neighbors/index.html'
 
 
-class GsmToUmtsNbr(LoginMixin, View):
+class GsmUmtsNbr(LoginMixin, View):
     """A view for managing G2U neighbors."""
 
     def get(self, request, direction, *args, **kwargs):
@@ -37,9 +37,9 @@ class GsmToUmtsNbr(LoginMixin, View):
             nbr_excel = request.FILES['neighbors_excel']
 
             if direction == 'G2U':
-                report_path = generate_g2u_nbr_adding_import_report(nbr_excel)
+                report_path = g2u.generate_g2u_nbr_adding_import_report(nbr_excel)
             elif direction == 'U2G':
-                report_path = generate_u2g_nbr_adding_import_report(nbr_excel)
+                report_path = u2g.generate_u2g_nbr_adding_import_report(nbr_excel)
 
             with open(report_path, 'rb') as report:
                 response = HttpResponse(report.read(), content_type='application/zip')
@@ -49,7 +49,7 @@ class GsmToUmtsNbr(LoginMixin, View):
             return response
 
         messages.error(request, 'Submited form is invalid')
-        return redirect(reverse_lazy('nbr-gu'))
+        return redirect(reverse_lazy('nbr-gu', kwargs={'direction': direction}))
 
 
 class DownloadGUTemplate(LoginMixin, View):
