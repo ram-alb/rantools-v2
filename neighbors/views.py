@@ -57,7 +57,7 @@ class DownloadGUTemplate(LoginMixin, View):
 
     def get(self, request, direction):
         """Handle a GET request."""
-        template_path = 'neighbors/reports/templates/gu.xlsx'
+        template_path = 'neighbors/reports/templates/GU.xlsx'
 
         with open(template_path, 'rb') as template:
             response = HttpResponse(template.read(), content_type='application/vnd.ms-excel')
