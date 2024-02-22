@@ -1,4 +1,4 @@
-from typing import Dict, List
+from typing import Dict, List, Set
 
 from neighbors.services.enm.g2g.parser import NodeParams
 from neighbors.services.excel import NeighborPair
@@ -11,7 +11,7 @@ baseline_params = {
 
 
 def prepare_geran_external_cells(
-    planned_neighbors: List[NeighborPair],
+    planned_neighbors: Set[NeighborPair],
     geran_cells: Dict[str, NodeParams],
     power_control_dl_params: Dict[str, NodeParams],
     power_control_ul_params: Dict[str, NodeParams],

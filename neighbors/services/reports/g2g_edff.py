@@ -30,7 +30,7 @@ def make_external_gerancells_edff(external_gerancells_config: List[Dict[str, str
 
 
 def make_g2g_nbr_adding_edff_file(
-    external_cells_config: List[str],
+    external_cells_config: List[Dict[str, str]],
     date_time: str,
 ) -> str:
     """Create a EDFF import file for G2G nbr adding."""
@@ -43,7 +43,7 @@ def make_g2g_nbr_adding_edff_file(
 
 
 def make_g2g_nbr_adding_report(
-    external_cells: List[str],
+    external_cells: List[Dict[str, str]],
     non_existing_cells: List[NeighborPair],
     date_time: str,
 ) -> str:

@@ -22,7 +22,7 @@ class BaseTable:
     @abstractmethod
     def get_enm_cells(self) -> Set[str]:
         """Abstract method for retrieving the cell names configured on ENM from Network Live db."""
-        return []
+        pass
 
     @abstractmethod
     def _get_table_name(self) -> str:
