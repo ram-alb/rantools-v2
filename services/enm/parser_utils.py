@@ -25,7 +25,7 @@ def parse_mo_value_from_fdn(fdn: str, mo_type: str) -> str:
         'IubLink': 'IubLink=.*',
         'UtranCell': 'UtranCell=.*',
         'GsmSector': 'GsmSector=.*',
-        'GeranCell': 'GeranCell=.*',
+        'GeranCell': 'GeranCell=[^,]*',
         'ChannelGroupCell': 'GeranCell=[^,]*',
         'ExternalGsmNetwork': 'ExternalGsmNetwork=.*',
     }
