@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import TemplateView
 
 from neighbors.forms import UploadNeighborsForm
-from neighbors.services.gsm import g2u
+from neighbors.services.gsm import g2g, g2u
 from neighbors.services.wcdma import u2g
 from services.mixins import LoginMixin
 
@@ -40,6 +40,8 @@ class GsmUmtsNbr(LoginMixin, View):
                 report_path = g2u.generate_g2u_nbr_adding_import_report(nbr_excel)
             elif direction == 'U2G':
                 report_path = u2g.generate_u2g_nbr_adding_import_report(nbr_excel)
+            elif direction == 'G2G':
+                report_path = g2g.generate_g2g_nbr_adding_import_report(nbr_excel)
 
             with open(report_path, 'rb') as report:
                 response = HttpResponse(report.read(), content_type='application/zip')

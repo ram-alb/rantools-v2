@@ -23,6 +23,7 @@ def split_gu_neighbors(
     network_live_cells = {
         'G2U': (gsm_network_cells, wcdma_network_cells),
         'U2G': (wcdma_network_cells, gsm_network_cells),
+        'G2G': (gsm_network_cells, gsm_network_cells),
     }
 
     return split_planned_neighbors(planned_neighbors, *network_live_cells[nbr_direction])
