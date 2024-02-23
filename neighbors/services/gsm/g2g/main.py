@@ -3,7 +3,10 @@ import io
 from neighbors.services.date_time import get_date_time
 from neighbors.services.enm.g2g import get_enm_g2g_data
 from neighbors.services.excel import get_neighbor_cells_from_excel
-from neighbors.services.gsm.g2g.config_preparator import prepare_geran_external_cells
+from neighbors.services.gsm.g2g.config_preparator import (
+    prepare_geran_external_cells,
+    prepare_geran_external_relations,
+)
 from neighbors.services.gsm.g2g.split_neighbors import split_neighbors_by_bsc
 from neighbors.services.network_live import split_gu_neighbors
 from neighbors.services.reports.g2g_edff import make_g2g_nbr_adding_report
@@ -29,8 +32,14 @@ def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> Imp
         enm_data.hierarchical_cell_structure,
     )
 
+    external_geran_relations_config = prepare_geran_external_relations(
+        splitted_neighbors.inter_bsc_neighbors,
+        enm_data.geran_cells,
+    )
+
     return make_g2g_nbr_adding_report(
         external_gerancells_config,
+        external_geran_relations_config,
         non_existing_cells,
         get_date_time(),
     )

@@ -8,7 +8,7 @@ from neighbors.services.gsm.g2u.config_preparator import (
     prepare_g2u_nbr_configuration_data,
 )
 from neighbors.services.network_live import split_gu_neighbors
-from neighbors.services.reports import create_g2u_nbr_report
+from neighbors.services.reports.g2u_main import create_g2u_nbr_report
 
 ImportFilePath = str
 
