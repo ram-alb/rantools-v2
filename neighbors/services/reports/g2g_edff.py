@@ -2,7 +2,7 @@ import os
 from typing import Dict, List
 
 from neighbors.services.excel import NeighborPair
-from neighbors.services.gsm.g2g.config_preparator import ExternalGeranRelation
+from neighbors.services.gsm.g2g.config_preparator import ExternalGeranRelation, GeranCellRelation
 from neighbors.services.reports.archive import create_zip_archive
 from neighbors.services.reports.nonexistent_cells import make_nonexistent_cells_report
 
@@ -48,26 +48,50 @@ def make_ext_geran_realations(
     return ext_relations
 
 
+def make_geran_cell_relations(
+    geran_cell_relations: List[GeranCellRelation],
+) -> List[str]:
+    """Create an EDFF part for configuring geran cell relations."""
+    geran_relations = []
+    for relation in geran_cell_relations:
+        geran_relation_rows = ['create']
+        bsc, source_cell, target_cell, cs = relation
+        fdn = (
+            f'FDN : "SubNetwork=BSC,MeContext={bsc},ManagedElement={bsc},BscFunction=1,BscM=1,'
+            f'GeranCellM=1,GeranCell={source_cell},GeranCellRelation={target_cell}"'
+        )
+        geran_relation_rows.append(fdn)
+        geran_relation_rows.append(f'geranCellRelationId : {target_cell}')
+        geran_relation_rows.append(f'cs : {cs}')
+        geran_relations.append('\n'.join(geran_relation_rows))
+    return geran_relations
+
+
 def make_g2g_nbr_adding_edff_file(
     external_cells_config: List[Dict[str, str]],
     external_relations_config: List[ExternalGeranRelation],
+    geran_cell_relations: List[GeranCellRelation],
     date_time: str,
 ) -> str:
     """Create a EDFF import file for G2G nbr adding."""
     import_file_path = f'neighbors/reports/G2G_nbr_create_{date_time}.txt'
     external_cells = make_external_gerancells_edff(external_cells_config)
     external_relations = make_ext_geran_realations(external_relations_config)
+    geran_relations = make_geran_cell_relations(geran_cell_relations)
     with open(import_file_path, 'w') as import_file:
         for ext_cell in external_cells:
             import_file.write(ext_cell + '\n')
         for ext_rel in external_relations:
             import_file.write(ext_rel + '\n')
+        for geran_relation in geran_relations:
+            import_file.write(geran_relation + '\n')
     return import_file_path
 
 
 def make_g2g_nbr_adding_report(
     external_cells: List[Dict[str, str]],
     external_relations: List[ExternalGeranRelation],
+    geran_cell_relations: List[GeranCellRelation],
     non_existing_cells: List[NeighborPair],
     date_time: str,
 ) -> str:
@@ -75,6 +99,7 @@ def make_g2g_nbr_adding_report(
     import_file_path = make_g2g_nbr_adding_edff_file(
         external_cells,
         external_relations,
+        geran_cell_relations,
         date_time,
     )
 

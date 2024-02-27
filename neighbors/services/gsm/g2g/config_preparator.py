@@ -18,6 +18,15 @@ class ExternalGeranRelation(NamedTuple):
     target_cell: str
 
 
+class GeranCellRelation(NamedTuple):
+    """A class representing GeranCellRelation."""
+
+    bsc: str
+    source_cell: str
+    target_cell: str
+    cs: str
+
+
 def _get_unique_dicts(
     values_list: List[Dict[str, str]],
 ) -> List[Dict[str, str]]:
@@ -66,3 +75,23 @@ def prepare_geran_external_relations(
         )
         ext_geran_relations.append(ext_relation)
     return ext_geran_relations
+
+
+def prepare_geran_cell_relations(
+    planned_neighbors: Set[NeighborPair],
+    geran_cells: Dict[str, NodeParams],
+) -> List[GeranCellRelation]:
+    """Prepare data for GeranCellRelation configuration."""
+    geran_cell_realtions = []
+    for nbr_pair in planned_neighbors:
+        source_cell = nbr_pair.source_cell
+        target_cell = nbr_pair.target_cell
+        cs = 'YES' if source_cell[:-1] == target_cell[:-1] else 'NO'
+        geran_cell_relation = GeranCellRelation(
+            bsc=geran_cells[source_cell]['bsc'],
+            source_cell=source_cell,
+            target_cell=target_cell,
+            cs=cs,
+        )
+        geran_cell_realtions.append(geran_cell_relation)
+    return geran_cell_realtions
