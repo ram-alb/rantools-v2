@@ -11,7 +11,7 @@ class SplittedNeighbors(NamedTuple):
 
 
 def split_planned_neighbors(
-    planned_neighbors: List[NeighborPair],
+    planned_neighbors: Set[NeighborPair],
     source_cells: Set[str],
     target_cells: Set[str],
 ) -> SplittedNeighbors:

@@ -1,4 +1,4 @@
-from typing import List
+from typing import Set
 
 from neighbors.services.excel import NeighborPair
 from neighbors.services.network_live.split_neighbors import (
@@ -10,7 +10,7 @@ from services.db.connector import DBConnector
 
 
 def split_gu_neighbors(
-    planned_neighbors: List[NeighborPair],
+    planned_neighbors: Set[NeighborPair],
     nbr_direction: str,
 ) -> SplittedNeighbors:
     """Split GU planned neighbors into existing and non existing cells."""

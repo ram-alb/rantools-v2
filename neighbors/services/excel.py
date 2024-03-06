@@ -1,5 +1,5 @@
 import io
-from typing import List, NamedTuple
+from typing import NamedTuple, Set
 
 import openpyxl
 
@@ -11,15 +11,15 @@ class NeighborPair(NamedTuple):
     target_cell: str
 
 
-def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> List[NeighborPair]:
+def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> Set[NeighborPair]:
     """Get a neighbor pairs list from an Excel file."""
     workbook = openpyxl.load_workbook(excel_file)
     sheet = workbook.active
 
-    neighbors = []
+    neighbors = set()
     start_row = 2
     for row in sheet.iter_rows(min_row=start_row, values_only=True):  # type: ignore
-        neighbors.append(NeighborPair(*row))
+        neighbors.add(NeighborPair(*row))
 
     workbook.close()
 
