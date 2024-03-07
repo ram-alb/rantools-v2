@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import NamedTuple, Set
 
 from enmscripting import ElementGroup  # type: ignore
 
@@ -15,13 +15,19 @@ class EnmData(NamedTuple):
 class EnmCli(EnmScripting):
     """The service for obtaining ENM data."""
 
+    def __init__(self, enm_server: str, bsc_set: Set[str]):
+        """Initialize attributes for an EnmCli instance."""
+        super().__init__(enm_server)
+        self.bsc_set = bsc_set
+
     def get_power_control_dl_params(self) -> EnmData:
         """Get the ENM data with the necessary PowerControlDownlink parameters."""
         params_list = [
             'bsPwr',
             'bsTxPwr',
         ]
-        cmedit_get_command = 'cmedit get * PowerControlDownlink.({params})'.format(
+        cmedit_get_command = 'cmedit get {scope} PowerControlDownlink.({params})'.format(
+            scope=self._get_scope(),
             params=','.join(params_list),
         )
         session = self._get_session()
@@ -42,7 +48,8 @@ class EnmCli(EnmScripting):
             'msRxSuff',
             'msTxPwr',
         ]
-        cmedit_get_command = 'cmedit get * PowerControlUplink.({params})'.format(
+        cmedit_get_command = 'cmedit get {scope} PowerControlUplink.({params})'.format(
+            scope=self._get_scope(),
             params=','.join(params_list),
         )
         session = self._get_session()
@@ -65,7 +72,8 @@ class EnmCli(EnmScripting):
             'pSsTemp',
             'pTimTemp',
         ]
-        cmedit_get_command = 'cmedit get * HierarchicalCellStructure.({params})'.format(
+        cmedit_get_command = 'cmedit get {scope} HierarchicalCellStructure.({params})'.format(
+            scope=self._get_scope(),
             params=','.join(params_list),
         )
         session = self._get_session()
@@ -87,7 +95,8 @@ class EnmCli(EnmScripting):
             'cgi',
             'ncc',
         ]
-        cmedit_get_command = 'cmedit get * GeranCell.({params})'.format(
+        cmedit_get_command = 'cmedit get {scope} GeranCell.({params})'.format(
+            scope=self._get_scope(),
             params=','.join(params_list),
         )
         session = self._get_session()
@@ -99,3 +108,7 @@ class EnmCli(EnmScripting):
             cmd_output=response.get_output(),
             last_parameter=self._get_last_parameter(params_list),
         )
+
+    def _get_scope(self) -> str:
+        """Get scope of BSC for cli commands."""
+        return ';'.join(self.bsc_set)

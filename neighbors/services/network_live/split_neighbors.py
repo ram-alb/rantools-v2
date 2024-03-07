@@ -9,6 +9,8 @@ class InterRatNeighbors(NamedTuple):
 
     existing_cells: List[NeighborPair]
     non_existing_cells: List[NeighborPair]
+    source_controllers: Set[str]
+    target_controllers: Set[str]
 
 
 class IntraRatNeighbors(NamedTuple):
@@ -22,23 +24,33 @@ class IntraRatNeighbors(NamedTuple):
 
 def split_inter_rat_neighbors(
     planned_neighbors: Set[NeighborPair],
-    source_cells: List[Cell],
-    target_cells: List[Cell],
+    nl_source_cells: List[Cell],
+    nl_target_cells: List[Cell],
 ) -> InterRatNeighbors:
     """Split planned neighbors into existing and non existing cells."""
     existing_cells = []
     non_existing_cells = []
+    source_controllers = set()
+    target_controllers = set()
 
-    source_cells_set = {cell for _, cell in source_cells}
-    target_cells_set = {cell for _, cell in target_cells}
+    source_cells = {cell: controller for controller, cell in nl_source_cells}
+    target_cells = {cell: controller for controller, cell in nl_target_cells}
 
     for nbr_pair in planned_neighbors:
-        if nbr_pair.source_cell in source_cells_set and nbr_pair.target_cell in target_cells_set:
+        source_cell, target_cell = nbr_pair
+        if source_cell in source_cells and target_cell in target_cells:
             existing_cells.append(nbr_pair)
+            source_controllers.add(source_cells[source_cell])
+            target_controllers.add(target_cells[target_cell])
         else:
             non_existing_cells.append(nbr_pair)
 
-    return InterRatNeighbors(existing_cells, non_existing_cells)
+    return InterRatNeighbors(
+        existing_cells,
+        non_existing_cells,
+        source_controllers,
+        target_controllers,
+    )
 
 
 def split_intra_rat_neighbors(

@@ -1,5 +1,5 @@
 import os
-from typing import Dict, NamedTuple
+from typing import Dict, NamedTuple, Set
 
 from neighbors.services.enm.wcdma.enm_cli import EnmCli
 from neighbors.services.enm.wcdma.parser import (
@@ -18,13 +18,13 @@ class EnmU2GData(NamedTuple):
     ext_gsm_network_ids: Dict[str, str]
 
 
-def get_enm_u2g_data() -> EnmU2GData:
+def get_enm_u2g_data(rnc_set: Set[str], bsc_set: Set[str]) -> EnmU2GData:
     """Get the necessary data from ENM for U2G neighbor configuration."""
     enm_server = os.getenv('ENM_SERVER_2')
     if enm_server is None:
         raise ValueError('No ENM_SERVER_2 environment variable')
 
-    enm2_cli = EnmCli(enm_server)
+    enm2_cli = EnmCli(enm_server, rnc_set, bsc_set)
 
     enm_gerancell_data, last_parameter = enm2_cli.get_gerancell_params()
     geran_cell_params = parse_gerancell_parameters(enm_gerancell_data, last_parameter)

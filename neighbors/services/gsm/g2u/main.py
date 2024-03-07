@@ -26,7 +26,10 @@ def generate_g2u_nbr_adding_import_report(
     splitted_neighbors = split_gu_neighbors(planned_neighbors, 'G2U')
 
     # get data from enm for planned cells
-    enm_data = get_enm_g2u_data()
+    enm_data = get_enm_g2u_data(
+        splitted_neighbors.source_controllers,  # type: ignore
+        splitted_neighbors.target_controllers,  # type: ignore
+    )
 
     # create utran external cells
     external_utran_cells = prepare_external_ucells_configuration_data(

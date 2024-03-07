@@ -20,7 +20,7 @@ def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> Imp
 
     splitted_neighbors = split_gu_neighbors(planned_neighbors, 'G2G')
 
-    enm_data = get_enm_g2g_data()
+    enm_data = get_enm_g2g_data(splitted_neighbors.controllers)  # type: ignore
 
     external_gerancells_config = prepare_geran_external_cells(
         splitted_neighbors.inter_controllers_neighbors,  # type: ignore

@@ -24,7 +24,10 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
     splitted_neighbors = split_gu_neighbors(planned_neighbors, 'U2G')
 
     # get data from ENM
-    enm_u2g_data = get_enm_u2g_data()
+    enm_u2g_data = get_enm_u2g_data(
+        splitted_neighbors.source_controllers,  # type: ignore
+        splitted_neighbors.target_controllers,  # type: ignore
+    )
 
     # generate gsm external cells
     ext_gsm_cells = prepare_external_gerancell_config_data(
