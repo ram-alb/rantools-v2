@@ -21,14 +21,14 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
     planned_neighbors = get_neighbor_cells_from_excel(u2g_nbr_template)
 
     # split planned neigbors to list of NeighborPairs where cells are exists in NL and not exists
-    existing_cells, non_existing_cells = split_gu_neighbors(planned_neighbors, 'U2G')
+    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'U2G')
 
     # get data from ENM
     enm_u2g_data = get_enm_u2g_data()
 
     # generate gsm external cells
     ext_gsm_cells = prepare_external_gerancell_config_data(
-        existing_cells,
+        splitted_neighbors.existing_cells,  # type: ignore
         enm_u2g_data.geran_cell_params,
         enm_u2g_data.utran_cells,
         enm_u2g_data.ext_gsm_network_ids,
@@ -36,7 +36,7 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
 
     # generate gsm relations
     gsm_relations = prepare_gsm_relation_config_data(
-        existing_cells,
+        splitted_neighbors.existing_cells,  # type: ignore
         enm_u2g_data.utran_cells,
         enm_u2g_data.ext_gsm_network_ids,
     )
@@ -45,6 +45,6 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
     return create_u2g_nbr_report(
         ext_gsm_cells,
         gsm_relations,
-        non_existing_cells,
+        splitted_neighbors.non_existing_cells,  # type: ignore
         date_time,
     )

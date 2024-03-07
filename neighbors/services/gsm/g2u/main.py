@@ -23,26 +23,29 @@ def generate_g2u_nbr_adding_import_report(
     planned_neighbors = get_neighbor_cells_from_excel(g2u_neighbors_excel_file)
 
     # filter planned neighbors
-    filtered_neighbors, nonexistent_cells = split_gu_neighbors(planned_neighbors, 'G2U')
+    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'G2U')
 
     # get data from enm for planned cells
     enm_data = get_enm_g2u_data()
 
     # create utran external cells
     external_utran_cells = prepare_external_ucells_configuration_data(
-        filtered_neighbors,
+        splitted_neighbors.existing_cells,  # type: ignore
         enm_data.rnc_params,
         enm_data.utran_cell_params,
         enm_data.geran_cells,
     )
 
     # create g2u relations
-    g2u_relations = prepare_g2u_nbr_configuration_data(filtered_neighbors, enm_data.geran_cells)
+    g2u_relations = prepare_g2u_nbr_configuration_data(
+        splitted_neighbors.existing_cells,  # type: ignore
+        enm_data.geran_cells,
+    )
 
     # make xml report for g2u neighbors adding
     return create_g2u_nbr_report(
         external_utran_cells,
         g2u_relations,
-        nonexistent_cells,
+        splitted_neighbors.non_existing_cells,
         date_time,
     )

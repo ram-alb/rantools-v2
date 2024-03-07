@@ -12,6 +12,8 @@ class InterRatNeighbors(NamedTuple):
 
 
 class IntraRatNeighbors(NamedTuple):
+    """A class representing data with intra rat neighbors."""
+
     inter_controllers_neighbors: Set[NeighborPair]
     intra_controller_neighbors: Set[NeighborPair]
     controllers: Set[str]
@@ -27,8 +29,11 @@ def split_inter_rat_neighbors(
     existing_cells = []
     non_existing_cells = []
 
+    source_cells_set = {cell for _, cell in source_cells}
+    target_cells_set = {cell for _, cell in target_cells}
+
     for nbr_pair in planned_neighbors:
-        if nbr_pair.source_cell in source_cells and nbr_pair.target_cell in target_cells:
+        if nbr_pair.source_cell in source_cells_set and nbr_pair.target_cell in target_cells_set:
             existing_cells.append(nbr_pair)
         else:
             non_existing_cells.append(nbr_pair)
@@ -49,8 +54,6 @@ def split_intra_rat_neighbors(
     network_cells = {
         cell: controller for controller, cell in network_live_cells
     }
-
-    print(planned_neighbors)
 
     for nbr_pair in planned_neighbors:
         source_cell, target_cell = nbr_pair

@@ -1,13 +1,6 @@
-from typing import Set, NamedTuple, List
+from typing import List
 
-from services.db.network_live import BaseTable, Tables
-
-
-class Cell(NamedTuple):
-    """A class representing cell object from Network Live."""
-
-    controller: str
-    cell: str
+from services.db.network_live import BaseTable, Cell, Tables
 
 
 class GsmTable(BaseTable):
@@ -26,7 +19,6 @@ class GsmTable(BaseTable):
         self._close_connection()
 
         return gsm_cells
-
 
     def _get_table_name(self) -> str:
         """Get the table name with the GSM cells."""

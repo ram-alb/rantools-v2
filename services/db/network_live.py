@@ -1,6 +1,13 @@
 import enum
 from abc import abstractmethod
-from typing import Set
+from typing import List, NamedTuple
+
+
+class Cell(NamedTuple):
+    """A class representing cell object from Network Live."""
+
+    controller: str
+    cell: str
 
 
 class Tables(enum.Enum):
@@ -20,7 +27,7 @@ class BaseTable:
         self.connection = connection
 
     @abstractmethod
-    def get_enm_cells(self) -> Set[str]:
+    def get_enm_cells(self) -> List[Cell]:
         """Abstract method for retrieving the cell names configured on ENM from Network Live db."""
         pass
 

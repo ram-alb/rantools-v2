@@ -8,7 +8,6 @@ from neighbors.services.gsm.g2g.config_preparator import (
     prepare_geran_external_cells,
     prepare_geran_external_relations,
 )
-from neighbors.services.gsm.g2g.split_neighbors import split_neighbors_by_bsc
 from neighbors.services.network_live import split_gu_neighbors
 from neighbors.services.reports.g2g_edff import make_g2g_nbr_adding_report
 
@@ -24,21 +23,20 @@ def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> Imp
     enm_data = get_enm_g2g_data()
 
     external_gerancells_config = prepare_geran_external_cells(
-        splitted_neighbors.inter_controllers_neighbors,
+        splitted_neighbors.inter_controllers_neighbors,  # type: ignore
         enm_data.geran_cells,
         enm_data.power_control_dl,
         enm_data.power_control_ul,
         enm_data.hierarchical_cell_structure,
-
     )
 
     external_geran_relations_config = prepare_geran_external_relations(
-        splitted_neighbors.inter_controllers_neighbors,
+        splitted_neighbors.inter_controllers_neighbors,  # type: ignore
         enm_data.geran_cells,
     )
 
     geran_cell_relations = prepare_geran_cell_relations(
-        splitted_neighbors.intra_controller_neighbors,
+        splitted_neighbors.intra_controller_neighbors,  # type: ignore
         enm_data.geran_cells,
     )
 
@@ -49,32 +47,3 @@ def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> Imp
         splitted_neighbors.non_existing_cells,
         get_date_time(),
     )
-    """
-    splitted_neighbors = split_neighbors_by_bsc(existing_cells, enm_data.geran_cells)
-
-    external_gerancells_config = prepare_geran_external_cells(
-        splitted_neighbors.inter_bsc_neighbors,
-        enm_data.geran_cells,
-        enm_data.power_control_dl,
-        enm_data.power_control_ul,
-        enm_data.hierarchical_cell_structure,
-    )
-
-    external_geran_relations_config = prepare_geran_external_relations(
-        splitted_neighbors.inter_bsc_neighbors,
-        enm_data.geran_cells,
-    )
-
-    geran_cell_relations = prepare_geran_cell_relations(
-        splitted_neighbors.intra_bsc_neighbors,
-        enm_data.geran_cells,
-    )
-
-    return make_g2g_nbr_adding_report(
-        external_gerancells_config,
-        external_geran_relations_config,
-        geran_cell_relations,
-        non_existing_cells,
-        get_date_time(),
-    )
-    """
