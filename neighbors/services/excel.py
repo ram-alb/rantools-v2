@@ -19,7 +19,8 @@ def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> Set[NeighborPair]:
     neighbors = set()
     start_row = 2
     for row in sheet.iter_rows(min_row=start_row, values_only=True):  # type: ignore
-        neighbors.add(NeighborPair(*row))
+        if all(*row):
+            neighbors.add(NeighborPair(*row))
 
     workbook.close()
 
