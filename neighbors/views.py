@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from neighbors.forms import UploadNeighborsForm
 from neighbors.services.gsm import g2g, g2u
-from neighbors.services.wcdma import u2g
+from neighbors.services.wcdma import u2g, u2u
 from services.mixins import LoginMixin
 
 
@@ -32,16 +32,17 @@ class GsmUmtsNbr(LoginMixin, View):
 
     def post(self, request, direction, *args, **kwargs):
         """Handle POST request."""
+        genereate_import_report_funcs = {
+            'G2U': g2u.generate_g2u_nbr_adding_import_report,
+            'U2G': u2g.generate_u2g_nbr_adding_import_report,
+            'G2G': g2g.generate_g2g_nbr_adding_import_report,
+            'U2U': u2u.generate_u2u_nbr_adding_import_report,
+        }
         nbr_form = UploadNeighborsForm(request.POST, request.FILES)
+
         if nbr_form.is_valid():
             nbr_excel = request.FILES['neighbors_excel']
-
-            if direction == 'G2U':
-                report_path = g2u.generate_g2u_nbr_adding_import_report(nbr_excel)
-            elif direction == 'U2G':
-                report_path = u2g.generate_u2g_nbr_adding_import_report(nbr_excel)
-            elif direction == 'G2G':
-                report_path = g2g.generate_g2g_nbr_adding_import_report(nbr_excel)
+            report_path = genereate_import_report_funcs[direction](nbr_excel)
 
             with open(report_path, 'rb') as report:
                 response = HttpResponse(report.read(), content_type='application/zip')
