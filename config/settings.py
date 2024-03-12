@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import sentry_sdk
 from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
@@ -141,3 +142,15 @@ LOGIN_URL = reverse_lazy('login')
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = 'bootstrap5'
+
+PROFILES_SAMPLE_RATE = 0.2
+sentry_sdk.init(
+    dsn=os.getenv('SENTRY_DSN'),
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    traces_sample_rate=1.0,
+    # Set profiles_sample_rate to 1.0 to profile 100%
+    # of sampled transactions.
+    # We recommend adjusting this value in production.
+    profiles_sample_rate=PROFILES_SAMPLE_RATE,
+)
