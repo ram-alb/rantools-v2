@@ -16,8 +16,8 @@ def make_nonexistent_cells_report(nonexistent_cells: List[NeighborPair], date_ti
     sheet['B1'] = 'Target Cell'  # type: ignore
 
     for row, nbr_pair in enumerate(nonexistent_cells, start=2):
-        sheet.cell(row=row, column=1, value=nbr_pair.source_cell)  # type: ignore
-        sheet.cell(row=row, column=2, value=nbr_pair.target_cell)  # type: ignore
+        sheet.cell(row=row, column=1, value=nbr_pair.source)  # type: ignore
+        sheet.cell(row=row, column=2, value=nbr_pair.target)  # type: ignore
 
     workbook.save(output_filename_path)
     workbook.close()

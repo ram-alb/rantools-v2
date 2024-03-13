@@ -69,9 +69,9 @@ def split_intra_rat_neighbors(
 
     for nbr_pair in planned_neighbors:
         source_cell, target_cell = nbr_pair
-        source_controller = network_cells[source_cell]
-        target_controller = network_cells[target_cell]
         if source_cell in network_cells and target_cell in network_cells:
+            source_controller = network_cells[source_cell]
+            target_controller = network_cells[target_cell]
             if source_controller == target_controller:
                 intra_controller_neighbors.add(nbr_pair)
                 controllers.add(source_controller)
