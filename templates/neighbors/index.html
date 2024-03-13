@@ -3,9 +3,10 @@
 {% block content %}
   <h1 class="text-center">Neighbor tools</h1>
   <div class="list-group text-center">
-    <a href="{% url 'nbr-gu' direction='G2U' %}" class="list-group-item list-group-item-action">GSM to UMTS</a>
-    <a href="{% url 'nbr-gu' direction='G2G' %}" class="list-group-item list-group-item-action">GSM to GSM</a>
-    <a href="{% url 'nbr-gu' direction='U2G' %}" class="list-group-item list-group-item-action">UMTS to GSM</a>
-    <a href="{% url 'nbr-gu' direction='U2U' %}" class="list-group-item list-group-item-action">UMTS to UMTS</a>
+    <a href="{% url 'nbr-import' direction='G2G' %}" class="list-group-item list-group-item-action">GSM to GSM</a>
+    <a href="{% url 'nbr-import' direction='G2U' %}" class="list-group-item list-group-item-action">GSM to UMTS</a>
+    <a href="{% url 'nbr-import' direction='G2L' %}" class="list-group-item list-group-item-action">GSM to LTE</a>
+    <a href="{% url 'nbr-import' direction='U2G' %}" class="list-group-item list-group-item-action">UMTS to GSM</a>
+    <a href="{% url 'nbr-import' direction='U2U' %}" class="list-group-item list-group-item-action">UMTS to UMTS</a>
   </div>
 {% endblock content %}

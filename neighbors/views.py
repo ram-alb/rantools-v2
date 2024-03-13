@@ -18,7 +18,7 @@ class Index(LoginMixin, TemplateView):
     template_name = 'neighbors/index.html'
 
 
-class GsmUmtsNbr(LoginMixin, View):
+class NbrImport(LoginMixin, View):
     """A view for managing G2U neighbors."""
 
     def get(self, request, direction, *args, **kwargs):
@@ -26,7 +26,7 @@ class GsmUmtsNbr(LoginMixin, View):
         upload_nbr_form = UploadNeighborsForm()
         return render(
             request,
-            'neighbors/gu.html',
+            'neighbors/import.html',
             {'form': upload_nbr_form, 'direction': direction},
         )
 
@@ -52,15 +52,18 @@ class GsmUmtsNbr(LoginMixin, View):
             return response
 
         messages.error(request, 'Submited form is invalid')
-        return redirect(reverse_lazy('nbr-gu', kwargs={'direction': direction}))
+        return redirect(reverse_lazy('nbr-import', kwargs={'direction': direction}))
 
 
-class DownloadGUTemplate(LoginMixin, View):
+class DownloadTemplate(LoginMixin, View):
     """A view for downloading neighbor template for planned neighbors."""
 
     def get(self, request, direction):
         """Handle a GET request."""
-        template_path = 'neighbors/reports/templates/GU.xlsx'
+        if '2L' in direction:
+            template_path = 'neighbors/reports/templates/ToLTE.xlsx'
+        else:
+            template_path = 'neighbors/reports/templates/GU.xlsx'
 
         with open(template_path, 'rb') as template:
             response = HttpResponse(template.read(), content_type='application/vnd.ms-excel')

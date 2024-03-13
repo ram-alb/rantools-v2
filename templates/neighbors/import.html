@@ -44,7 +44,7 @@
       return; // Отменяем отправку формы
     }
 
-    fetch('{% url "nbr-gu" direction=direction %}', {
+    fetch('{% url "nbr-import" direction=direction %}', {
       method: 'POST',
       body: formData
     })

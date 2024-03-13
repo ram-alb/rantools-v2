@@ -1,13 +1,13 @@
 from django.urls import path
 
-from neighbors.views import DownloadGUTemplate, GsmUmtsNbr, Index
+from neighbors.views import DownloadTemplate, Index, NbrImport
 
 urlpatterns = [
     path('', Index.as_view(), name='nbr-index'),
-    path('gu/<str:direction>/', GsmUmtsNbr.as_view(), name='nbr-gu'),
+    path('<str:direction>/', NbrImport.as_view(), name='nbr-import'),
     path(
         'download-template/<str:direction>/',
-        DownloadGUTemplate.as_view(),
+        DownloadTemplate.as_view(),
         name='nbr-download-template',
     ),
 ]
