@@ -49,8 +49,7 @@ def prepare_external_ucells_configuration_data(
     external_cells: Dict[str, Set[ExternalUtranCell]] = {}
 
     for pair in neighbor_plan:
-        gsm_cell = pair.source_cell
-        utran_cell = pair.target_cell
+        gsm_cell, utran_cell = pair
         bsc_name = geran_cell_params[gsm_cell]
         external_utran_cell = ExternalUtranCell(
             utran_id=_get_utran_id(utran_cell, rnc_params, utran_cell_params),
@@ -71,8 +70,7 @@ def prepare_g2u_nbr_configuration_data(
     """Prepare data for G2U neighbor configuration."""
     gu_relations: Dict[str, UtranRelations] = {}
     for pair in neighbor_plan:
-        gsm_cell = pair.source_cell
-        utran_cell = pair.target_cell
+        gsm_cell, utran_cell = pair
         bsc_name = geran_cell_params[gsm_cell]
 
         if bsc_name not in gu_relations:

@@ -39,8 +39,7 @@ def prepare_external_gerancell_config_data(
     external_cells: Dict[str, Set[ExternalGsmCell]] = {}
 
     for pair in neighbor_plan:
-        utran_cell = pair.source_cell
-        geran_cell = pair.target_cell
+        utran_cell, geran_cell = pair
         rnc_name = utran_cells[utran_cell]
         ext_gsm_network_id = ext_gsm_network_ids[rnc_name]
         geran_cell_params = enm_gerancell_data[geran_cell]
@@ -70,8 +69,7 @@ def prepare_gsm_relation_config_data(
     """Prepare data for U2G neighbor configuration."""
     gsm_relations: Dict[str, GsmRelations] = {}
     for pair in neighbor_plan:
-        utran_cell = pair.source_cell
-        geran_cell = pair.target_cell
+        utran_cell, geran_cell = pair
         rnc_name = utran_cells[utran_cell]
         ext_gsm_network_id = ext_gsm_network_ids[rnc_name]
         rnc_key = f'{rnc_name}-{ext_gsm_network_id}'

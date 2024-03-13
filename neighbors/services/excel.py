@@ -7,8 +7,8 @@ import openpyxl
 class NeighborPair(NamedTuple):
     """A NamedTuple representing neighbor cells pair."""
 
-    source_cell: str
-    target_cell: str
+    source: str
+    target: str
 
 
 def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> Set[NeighborPair]:

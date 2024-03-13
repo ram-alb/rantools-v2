@@ -45,8 +45,7 @@ def prepare_geran_external_cells(
     """Prepare data for ExternalGeranCell configuration."""
     geran_exteranal_cells = []
     for nbr_pair in planned_neighbors:
-        source = nbr_pair.source_cell
-        target = nbr_pair.target_cell
+        source, target = nbr_pair
         ext_cell = {
             'cell': target,
             **baseline_params,
@@ -67,11 +66,11 @@ def prepare_geran_external_relations(
     """Prepare data for ExternalGeranCellRelation configuration."""
     ext_geran_relations = []
     for nbr_pair in planned_neighbors:
-        source_cell = nbr_pair.source_cell
+        source_cell = nbr_pair.source
         ext_relation = ExternalGeranRelation(
             bsc=geran_cells[source_cell]['bsc'],
             source_cell=source_cell,
-            target_cell=nbr_pair.target_cell,
+            target_cell=nbr_pair.target,
         )
         ext_geran_relations.append(ext_relation)
     return ext_geran_relations
@@ -84,8 +83,7 @@ def prepare_geran_cell_relations(
     """Prepare data for GeranCellRelation configuration."""
     geran_cell_realtions = []
     for nbr_pair in planned_neighbors:
-        source_cell = nbr_pair.source_cell
-        target_cell = nbr_pair.target_cell
+        source_cell, target_cell = nbr_pair
         cs = 'YES' if source_cell[:-1] == target_cell[:-1] else 'NO'
         geran_cell_relation = GeranCellRelation(
             bsc=geran_cells[source_cell]['bsc'],
