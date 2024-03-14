@@ -7,7 +7,7 @@ from neighbors.views import g2u
 from users.tests.utils import check_message, get_templates
 
 TEMPL_PATH = Path(__file__).resolve().parent.parent / 'fixtures/g2u.xlsx'
-G2U_URL = reverse_lazy('nbr-gu', kwargs={'direction': 'G2U'})
+G2U_URL = reverse_lazy('nbr-import', kwargs={'direction': 'G2U'})
 
 
 def test_get_not_logged_in(client):
@@ -27,7 +27,7 @@ def test_get_logged_in(client, new_user):
     response = client.get(G2U_URL)
 
     assert response.status_code == HTTPStatus.OK
-    assert 'neighbors/gu.html' in get_templates(response)
+    assert 'neighbors/import.html' in get_templates(response)
 
 
 def test_post_g2u_nbr_empty_form(client, new_user):

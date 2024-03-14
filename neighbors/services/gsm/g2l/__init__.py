@@ -1,0 +1,1 @@
+from neighbors.services.gsm.g2l.main import generate_g2l_nbr_adding_import_report

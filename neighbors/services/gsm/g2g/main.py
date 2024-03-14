@@ -8,7 +8,7 @@ from neighbors.services.gsm.g2g.config_preparator import (
     prepare_geran_external_cells,
     prepare_geran_external_relations,
 )
-from neighbors.services.network_live import split_gu_neighbors
+from neighbors.services.network_live.main import split_g2g_neighbors
 from neighbors.services.reports.g2g_edff import make_g2g_nbr_adding_report
 
 ImportFilePath = str
@@ -18,12 +18,12 @@ def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> Imp
     """Generate a report for the addition of G2G neighbors on ENM."""
     planned_neighbors = get_neighbor_cells_from_excel(g2g_nbr_excel_file)
 
-    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'G2G')
+    splitted_neighbors = split_g2g_neighbors(planned_neighbors)
 
-    enm_data = get_enm_g2g_data(splitted_neighbors.controllers)  # type: ignore
+    enm_data = get_enm_g2g_data(splitted_neighbors.controllers)
 
     external_gerancells_config = prepare_geran_external_cells(
-        splitted_neighbors.inter_controllers_neighbors,  # type: ignore
+        splitted_neighbors.inter_controllers_neighbors,
         enm_data.geran_cells,
         enm_data.power_control_dl,
         enm_data.power_control_ul,
@@ -31,12 +31,12 @@ def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> Imp
     )
 
     external_geran_relations_config = prepare_geran_external_relations(
-        splitted_neighbors.inter_controllers_neighbors,  # type: ignore
+        splitted_neighbors.inter_controllers_neighbors,
         enm_data.geran_cells,
     )
 
     geran_cell_relations = prepare_geran_cell_relations(
-        splitted_neighbors.intra_controller_neighbors,  # type: ignore
+        splitted_neighbors.intra_controller_neighbors,
         enm_data.geran_cells,
     )
 

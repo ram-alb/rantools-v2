@@ -3,7 +3,7 @@ import io
 from neighbors.services.date_time import get_date_time
 from neighbors.services.enm.wcdma import get_enm_u2g_data
 from neighbors.services.excel import get_neighbor_cells_from_excel
-from neighbors.services.network_live import split_gu_neighbors
+from neighbors.services.network_live.main import split_gu_neighbors
 from neighbors.services.reports.u2g_main import create_u2g_nbr_report
 from neighbors.services.wcdma.u2g.config_preparator import (
     prepare_external_gerancell_config_data,
@@ -25,13 +25,13 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
 
     # get data from ENM
     enm_u2g_data = get_enm_u2g_data(
-        splitted_neighbors.source_controllers,  # type: ignore
-        splitted_neighbors.target_controllers,  # type: ignore
+        splitted_neighbors.source_controllers,
+        splitted_neighbors.target_controllers,
     )
 
     # generate gsm external cells
     ext_gsm_cells = prepare_external_gerancell_config_data(
-        splitted_neighbors.existing_cells,  # type: ignore
+        splitted_neighbors.existing_cells,
         enm_u2g_data.geran_cell_params,
         enm_u2g_data.utran_cells,
         enm_u2g_data.ext_gsm_network_ids,
@@ -39,7 +39,7 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
 
     # generate gsm relations
     gsm_relations = prepare_gsm_relation_config_data(
-        splitted_neighbors.existing_cells,  # type: ignore
+        splitted_neighbors.existing_cells,
         enm_u2g_data.utran_cells,
         enm_u2g_data.ext_gsm_network_ids,
     )
@@ -48,6 +48,6 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
     return create_u2g_nbr_report(
         ext_gsm_cells,
         gsm_relations,
-        splitted_neighbors.non_existing_cells,  # type: ignore
+        splitted_neighbors.non_existing_cells,
         date_time,
     )

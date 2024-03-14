@@ -7,7 +7,7 @@ from neighbors.services.gsm.g2u.config_preparator import (
     prepare_external_ucells_configuration_data,
     prepare_g2u_nbr_configuration_data,
 )
-from neighbors.services.network_live import split_gu_neighbors
+from neighbors.services.network_live.main import split_gu_neighbors
 from neighbors.services.reports.g2u_main import create_g2u_nbr_report
 
 ImportFilePath = str
@@ -27,13 +27,13 @@ def generate_g2u_nbr_adding_import_report(
 
     # get data from enm for planned cells
     enm_data = get_enm_g2u_data(
-        splitted_neighbors.source_controllers,  # type: ignore
-        splitted_neighbors.target_controllers,  # type: ignore
+        splitted_neighbors.source_controllers,
+        splitted_neighbors.target_controllers,
     )
 
     # create utran external cells
     external_utran_cells = prepare_external_ucells_configuration_data(
-        splitted_neighbors.existing_cells,  # type: ignore
+        splitted_neighbors.existing_cells,
         enm_data.rnc_params,
         enm_data.utran_cell_params,
         enm_data.geran_cells,
@@ -41,7 +41,7 @@ def generate_g2u_nbr_adding_import_report(
 
     # create g2u relations
     g2u_relations = prepare_g2u_nbr_configuration_data(
-        splitted_neighbors.existing_cells,  # type: ignore
+        splitted_neighbors.existing_cells,
         enm_data.geran_cells,
     )
 

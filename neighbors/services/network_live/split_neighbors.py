@@ -1,4 +1,4 @@
-from typing import List, NamedTuple, Set
+from typing import Dict, List, NamedTuple, Set
 
 from neighbors.services.excel import NeighborPair
 from neighbors.services.network_live.tables import Cell
@@ -19,6 +19,14 @@ class IntraRatNeighbors(NamedTuple):
     inter_controllers_neighbors: Set[NeighborPair]
     intra_controller_neighbors: Set[NeighborPair]
     controllers: Set[str]
+    non_existing_cells: List[NeighborPair]
+
+
+class LteNeighbors(NamedTuple):
+    """A class representing data with LTE earfcn for mobility to LTE."""
+
+    existing_cells: List[NeighborPair]
+    controllers: Dict[str, str]
     non_existing_cells: List[NeighborPair]
 
 
@@ -84,6 +92,32 @@ def split_intra_rat_neighbors(
     return IntraRatNeighbors(
         inter_controllers_neighbors=inter_controllers_neighbors,
         intra_controller_neighbors=intra_controller_neighbors,
+        controllers=controllers,
+        non_existing_cells=non_existing_cells,
+    )
+
+
+def split_lte_neighbors(
+    planned_neighbors: Set[NeighborPair],
+    network_live_cells: List[Cell],
+) -> LteNeighbors:
+    """Split planned neighbors into existing cells and non existing."""
+    existing_cells = []
+    non_existing_cells = []
+    controllers = {}
+
+    network_cells = {cell: controller for controller, cell in network_live_cells}
+
+    for nbr_pair in planned_neighbors:
+        source_cell = nbr_pair.source
+        if source_cell in network_cells:
+            existing_cells.append(nbr_pair)
+            controllers[source_cell] = network_cells[source_cell]
+        else:
+            non_existing_cells.append(nbr_pair)
+
+    return LteNeighbors(
+        existing_cells=existing_cells,
         controllers=controllers,
         non_existing_cells=non_existing_cells,
     )
