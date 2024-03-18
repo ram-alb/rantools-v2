@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 
 from neighbors.forms import UploadNeighborsForm
 from neighbors.services.gsm import g2g, g2l, g2u
-from neighbors.services.wcdma import u2g, u2u
+from neighbors.services.wcdma import u2g, u2l, u2u
 from services.mixins import LoginMixin
 
 
@@ -19,7 +19,7 @@ class Index(LoginMixin, TemplateView):
 
 
 class NbrImport(LoginMixin, View):
-    """A view for managing G2U neighbors."""
+    """A view for managing neighbors."""
 
     def get(self, request, direction, *args, **kwargs):
         """Handle GET request."""
@@ -38,6 +38,7 @@ class NbrImport(LoginMixin, View):
             'G2L': g2l.generate_g2l_nbr_adding_import_report,
             'U2G': u2g.generate_u2g_nbr_adding_import_report,
             'U2U': u2u.generate_u2u_nbr_adding_import_report,
+            'U2L': u2l.generate_u2l_nbr_adding_import_report,
         }
         nbr_form = UploadNeighborsForm(request.POST, request.FILES)
 

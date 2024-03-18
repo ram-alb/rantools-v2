@@ -59,3 +59,12 @@ def split_u2u_neighbors(
     wcdma_table = WcdmaTable(DBConnector.get_connection())
     wcdma_network_cells = wcdma_table.get_enm_cells()
     return split_intra_rat_neighbors(planned_neighbors, wcdma_network_cells)
+
+
+def split_u2l_neighbors(
+    planned_neighbors: Set[NeighborPair],
+) -> LteNeighbors:
+    """Split U2L planned neighbors."""
+    wcdma_table = WcdmaTable(DBConnector.get_connection())
+    wcdma_network_cells = wcdma_table.get_enm_cells()
+    return split_lte_neighbors(planned_neighbors, wcdma_network_cells)

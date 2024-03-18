@@ -14,7 +14,7 @@ ImportFilePath = str
 
 
 def generate_u2u_nbr_adding_import_report(u2u_nbr_template: io.BytesIO) -> ImportFilePath:
-    """Generate a report for the addition of U2G neighbors in ENM."""
+    """Generate a report for the addition of U2U neighbors in ENM."""
     date_time = get_date_time()
 
     planned_neighbors = get_neighbor_cells_from_excel(u2u_nbr_template)
