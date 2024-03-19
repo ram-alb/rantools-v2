@@ -16,6 +16,14 @@ class EnmG2GData(NamedTuple):
 
 def get_enm_g2g_data(bsc_set: Set[str]) -> EnmG2GData:
     """Get the necessary data from ENM for G2G neighbor configuration."""
+    if not bsc_set:
+        return EnmG2GData(
+            power_control_dl={},
+            power_control_ul={},
+            hierarchical_cell_structure={},
+            geran_cells={},
+        )
+
     enm_server = os.getenv('ENM_SERVER_2')
     if enm_server is None:
         raise ValueError('No ENM_SERVER_2 environment variable')

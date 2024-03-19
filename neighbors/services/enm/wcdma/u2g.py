@@ -20,6 +20,13 @@ class EnmU2GData(NamedTuple):
 
 def get_enm_u2g_data(rnc_set: Set[str], bsc_set: Set[str]) -> EnmU2GData:
     """Get the necessary data from ENM for U2G neighbor configuration."""
+    if not rnc_set or not bsc_set:
+        return EnmU2GData(
+            geran_cell_params={},
+            utran_cells={},
+            ext_gsm_network_ids={},
+        )
+
     enm_server = os.getenv('ENM_SERVER_2')
     if enm_server is None:
         raise ValueError('No ENM_SERVER_2 environment variable')
