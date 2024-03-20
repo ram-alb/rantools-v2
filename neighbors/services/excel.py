@@ -21,7 +21,7 @@ def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> Set[NeighborPair]:
     for row in sheet.iter_rows(min_row=start_row, values_only=True):  # type: ignore
         source_cell, target_cell = row
         if all((source_cell, target_cell)):
-            neighbors.add(NeighborPair(source_cell, target_cell))
+            neighbors.add(NeighborPair(source_cell.strip(), target_cell.strip()))
 
     workbook.close()
 
