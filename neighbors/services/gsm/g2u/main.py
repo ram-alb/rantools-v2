@@ -15,6 +15,7 @@ ImportFilePath = str
 
 def generate_g2u_nbr_adding_import_report(
     g2u_neighbors_excel_file: io.BytesIO,
+    enm: str,
 ) -> ImportFilePath:
     """Generate a report for the addition of G2U neighbors in ENM."""
     date_time = get_date_time()
@@ -23,12 +24,13 @@ def generate_g2u_nbr_adding_import_report(
     planned_neighbors = get_neighbor_cells_from_excel(g2u_neighbors_excel_file)
 
     # filter planned neighbors
-    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'G2U')
+    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'G2U', enm)
 
     # get data from enm for planned cells
     enm_data = get_enm_g2u_data(
         splitted_neighbors.source_controllers,
         splitted_neighbors.target_controllers,
+        enm=enm,
     )
 
     # create utran external cells

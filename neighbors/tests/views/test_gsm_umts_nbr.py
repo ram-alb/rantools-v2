@@ -45,7 +45,7 @@ def test_post_g2u_nbr_empty_form(client, new_user):
 
 def test_post_g2u_nbr_valid_form(client, new_user, zip_file):
     """Test post method of GsmUmtsNbr view with valid form."""
-    def _fake_generate_report(g2u_neighbors_excel_file):
+    def _fake_generate_report(g2u_neighbors_excel_file, enm):
         return zip_file
 
     g2u.generate_g2u_nbr_adding_import_report = _fake_generate_report
@@ -56,7 +56,7 @@ def test_post_g2u_nbr_valid_form(client, new_user, zip_file):
     )
 
     with open(TEMPL_PATH, 'rb') as templ:
-        upload_data = {'neighbors_excel': templ}
+        upload_data = {'enm': 'ENM2', 'neighbors_excel': templ}
         response = client.post(G2U_URL, data=upload_data)
 
     assert response.status_code == HTTPStatus.OK

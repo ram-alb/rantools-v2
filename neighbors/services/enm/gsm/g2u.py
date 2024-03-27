@@ -1,4 +1,3 @@
-import os
 from typing import Dict, NamedTuple, Set
 
 from neighbors.services.enm.gsm.enm_cli import EnmCLI
@@ -8,6 +7,7 @@ from neighbors.services.enm.gsm.parser import (
     parse_rnc_function_params,
     parse_utran_cell_params,
 )
+from neighbors.services.enm.utils import get_enm_server
 
 
 class EnmG2UData(NamedTuple):
@@ -18,7 +18,7 @@ class EnmG2UData(NamedTuple):
     geran_cells: Dict[str, str]
 
 
-def get_enm_g2u_data(bsc_set: Set[str], rnc_set: Set[str]) -> EnmG2UData:
+def get_enm_g2u_data(bsc_set: Set[str], rnc_set: Set[str], enm: str) -> EnmG2UData:
     """Get the necessary data from ENM for G2U neighbor configuration."""
     if not bsc_set or not rnc_set:
         return EnmG2UData(
@@ -27,10 +27,7 @@ def get_enm_g2u_data(bsc_set: Set[str], rnc_set: Set[str]) -> EnmG2UData:
             geran_cells={},
         )
 
-    enm_server = os.getenv('ENM_SERVER_2')
-    if enm_server is None:
-        raise ValueError('No ENM_SERVER_2 environment variable')
-
+    enm_server = get_enm_server(enm)
     enm2_cli = EnmCLI(enm_server, bsc_set, rnc_set)
 
     enm_rnc_function_params, rnc_last_parameter = enm2_cli.get_rnc_function_params()

@@ -14,13 +14,16 @@ from neighbors.services.reports.g2g_edff import make_g2g_nbr_adding_report
 ImportFilePath = str
 
 
-def generate_g2g_nbr_adding_import_report(g2g_nbr_excel_file: io.BytesIO) -> ImportFilePath:
+def generate_g2g_nbr_adding_import_report(
+    g2g_nbr_excel_file: io.BytesIO,
+    enm: str,
+) -> ImportFilePath:
     """Generate a report for the addition of G2G neighbors on ENM."""
     planned_neighbors = get_neighbor_cells_from_excel(g2g_nbr_excel_file)
 
-    splitted_neighbors = split_g2g_neighbors(planned_neighbors)
+    splitted_neighbors = split_g2g_neighbors(planned_neighbors, enm)
 
-    enm_data = get_enm_g2g_data(splitted_neighbors.controllers)
+    enm_data = get_enm_g2g_data(splitted_neighbors.controllers, enm)
 
     external_gerancells_config = prepare_geran_external_cells(
         splitted_neighbors.inter_controllers_neighbors,

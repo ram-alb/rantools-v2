@@ -9,11 +9,14 @@ from neighbors.services.reports.g2l_edff import make_eutran_freq_adding_report
 ImportFilePath = str
 
 
-def generate_g2l_nbr_adding_import_report(g2l_nbr_excel_file: io.BytesIO) -> ImportFilePath:
+def generate_g2l_nbr_adding_import_report(
+    g2l_nbr_excel_file: io.BytesIO,
+    enm: str,
+) -> ImportFilePath:
     """Generate a report for adding G2L neighbors on ENM."""
     planned_neighbors = get_neighbor_cells_from_excel(g2l_nbr_excel_file)
 
-    splitted_neighbors = split_g2l_neighbors(planned_neighbors)
+    splitted_neighbors = split_g2l_neighbors(planned_neighbors, enm)
 
     eutran_freq_configs = prepare_eutran_frequency_configs(
         splitted_neighbors.existing_cells,

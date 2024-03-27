@@ -13,15 +13,15 @@ from neighbors.services.wcdma.u2u.config_preparator import (
 ImportFilePath = str
 
 
-def generate_u2u_nbr_adding_import_report(u2u_nbr_template: io.BytesIO) -> ImportFilePath:
+def generate_u2u_nbr_adding_import_report(u2u_nbr_template: io.BytesIO, enm: str) -> ImportFilePath:
     """Generate a report for the addition of U2U neighbors in ENM."""
     date_time = get_date_time()
 
     planned_neighbors = get_neighbor_cells_from_excel(u2u_nbr_template)
 
-    splitted_neighbors = split_u2u_neighbors(planned_neighbors)
+    splitted_neighbors = split_u2u_neighbors(planned_neighbors, enm)
 
-    enm_utran_cells = get_u2u_enm_data(splitted_neighbors.controllers)
+    enm_utran_cells = get_u2u_enm_data(splitted_neighbors.controllers, enm)
 
     external_utran_cells_config = prepare_utran_external_cells(
         splitted_neighbors.inter_controllers_neighbors,

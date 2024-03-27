@@ -13,7 +13,7 @@ from neighbors.services.wcdma.u2g.config_preparator import (
 ImportFilePath = str
 
 
-def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> ImportFilePath:
+def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO, enm: str) -> ImportFilePath:
     """Generate a report for the addition of U2G neighbors in ENM."""
     date_time = get_date_time()
 
@@ -21,12 +21,13 @@ def generate_u2g_nbr_adding_import_report(u2g_nbr_template: io.BytesIO) -> Impor
     planned_neighbors = get_neighbor_cells_from_excel(u2g_nbr_template)
 
     # split planned neigbors to list of NeighborPairs where cells are exists in NL and not exists
-    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'U2G')
+    splitted_neighbors = split_gu_neighbors(planned_neighbors, 'U2G', enm)
 
     # get data from ENM
     enm_u2g_data = get_enm_u2g_data(
         splitted_neighbors.source_controllers,
         splitted_neighbors.target_controllers,
+        enm,
     )
 
     # generate gsm external cells

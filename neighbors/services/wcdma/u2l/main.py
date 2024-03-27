@@ -9,11 +9,14 @@ from neighbors.services.wcdma.u2l.config_preparator import prepare_eutran_freque
 ImportFilePath = str
 
 
-def generate_u2l_nbr_adding_import_report(u2l_nbr_excel_file: io.BytesIO) -> ImportFilePath:
+def generate_u2l_nbr_adding_import_report(
+    u2l_nbr_excel_file: io.BytesIO,
+    enm: str,
+) -> ImportFilePath:
     """Generate a report for adding U2L neighbors on ENM."""
     planned_neighbors = get_neighbor_cells_from_excel(u2l_nbr_excel_file)
 
-    splitted_neighbors = split_u2l_neighbors(planned_neighbors)
+    splitted_neighbors = split_u2l_neighbors(planned_neighbors, enm)
 
     eutran_freq_configs = prepare_eutran_frequency_configs(
         splitted_neighbors.existing_cells,

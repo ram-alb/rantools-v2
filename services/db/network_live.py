@@ -27,7 +27,7 @@ class BaseTable:
         self.connection = connection
 
     @abstractmethod
-    def get_enm_cells(self) -> List[Cell]:
+    def get_enm_cells(self, enm: str) -> List[Cell]:
         """Abstract method for retrieving the cell names configured on ENM from Network Live db."""
         pass
 

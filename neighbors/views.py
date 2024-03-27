@@ -43,8 +43,9 @@ class NbrImport(LoginMixin, View):
         nbr_form = UploadNeighborsForm(request.POST, request.FILES)
 
         if nbr_form.is_valid():
+            enm = nbr_form.cleaned_data['enm']
             nbr_excel = request.FILES['neighbors_excel']
-            report_path = genereate_import_report_funcs[direction](nbr_excel)
+            report_path = genereate_import_report_funcs[direction](nbr_excel, enm)
 
             with open(report_path, 'rb') as report:
                 response = HttpResponse(report.read(), content_type='application/zip')
