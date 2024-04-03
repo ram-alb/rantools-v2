@@ -14,7 +14,7 @@ Details on installing and using the official documentation are available [here](
 
 ---
 
-## 1. Installation
+## Installation
 
 ### Cloning the repository and installing dependencies
 

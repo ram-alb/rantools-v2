@@ -11,14 +11,14 @@ Rantools is a project that consists of a set of web applications designed to sim
 
 _[Instructions for installing and running the app](INSTALLATION.md)_
 
-### Code Style and Quality
+## Code Style and Quality
 
 In this project, a linter and tests are used. Therefore, don't forget to fix linter and test errors before committing.
 
 You can check the linter by running the command:
 
 ```bash
-make install
+make lint
 ```
 
 You can check the tests by running the command:
