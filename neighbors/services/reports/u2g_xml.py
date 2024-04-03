@@ -125,7 +125,9 @@ def make_u2g_nbr_adding_xml(
     report_path = f'neighbors/reports/U2G_nbr_adding_{date_time}.xml'
 
     with open(report_path, 'w') as xml_file:
-        xml_file.write(XML_START)
+        if external_geran_cells or geran_realtions:
+            xml_file.write(XML_START)
+
         for rnc_key, ext_gsm_cells in external_geran_cells.items():
             rnc, ext_gsm_network_id = rnc_key.split('-')
             rnc_start = f"""
@@ -147,7 +149,9 @@ def make_u2g_nbr_adding_xml(
             xml_file.write('\n'.join(gsm_relations))
 
             xml_file.write(XML_RNC_END)
-        xml_file.write(XML_SUBNETWORK_END)
-        xml_file.write(_make_xml_end(date_time))
+
+        if external_geran_cells or geran_realtions:
+            xml_file.write(XML_SUBNETWORK_END)
+            xml_file.write(_make_xml_end(date_time))
 
     return report_path

@@ -150,7 +150,8 @@ def make_g2u_nbr_adding_xml(
     report_path = f'neighbors/reports/G2U_nbr_create_{date_time}.xml'
 
     with open(report_path, 'w') as xml_file:
-        xml_file.write(XML_START)
+        if utran_external_cells or utran_relations:
+            xml_file.write(XML_START)
 
         for bsc_name, bsc_ext_utran_cells in utran_external_cells.items():
             bsc_start_xml = f"""
@@ -169,6 +170,7 @@ def make_g2u_nbr_adding_xml(
             xml_file.write(BSC_COMMON_END_XML)
             xml_file.write(BSC_END_XML)
 
-        xml_file.write(make_xml_end(date_time))
+        if utran_external_cells or utran_relations:
+            xml_file.write(make_xml_end(date_time))
 
     return report_path
