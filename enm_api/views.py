@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema
 from rest_framework import status
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +15,10 @@ class BscTg(APIView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(
+        request=BscSerializer,
+        responses={200: BscTgSerializer},
+    )
     def post(self, request):
         """Retrieve TG data for the provided BSC name."""
         serializer = BscSerializer(data=request.data)
