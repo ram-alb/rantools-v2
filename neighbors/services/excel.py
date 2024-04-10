@@ -11,11 +11,9 @@ class NeighborPair(NamedTuple):
     target: str
 
 
-def _strip(input_value: Union[str, int]) -> Union[str, int]:
+def _strip(input_value: Union[str, int]) -> str:
     """Remove leading and trailing whitespace characters from a string."""
-    if isinstance(input_value, str):
-        return input_value.strip()
-    return input_value
+    return str(input_value).strip()
 
 
 def get_neighbor_cells_from_excel(excel_file: io.BytesIO) -> Set[NeighborPair]:
