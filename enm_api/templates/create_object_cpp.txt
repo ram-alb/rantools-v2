@@ -1,0 +1,8 @@
+cmedit create NetworkElement=$sitename networkElementId=$sitename, neType=$ne_type, platformType=CPP, timeZone=Etc/GMT-5, ossPrefix="SubNetwork=Base_Station,SubNetwork=$subnetwork,MeContext=$sitename" -ns=OSS_NE_DEF -v=2.0.0
+cmedit create NetworkElement=$sitename,CppConnectivityInformation=1 CppConnectivityInformationId=1,ipAddress="$oam_ip", port=80 -ns=CPP_MED -version=1.0.0
+secadm credentials create --rootusername rbs --rootuserpassword rbs --secureusername rbs --secureuserpassword rbs --normalusername rbs --normaluserpassword rbs -n $sitename
+cmedit set NetworkElement=$sitename,CmNodeHeartbeatSupervision=1 active=true
+cmedit set NetworkElement=$sitename,InventorySupervision=1 active=true
+cmedit set NetworkElement=$sitename,PmFunction=1 pmEnabled=true
+alarm enable $sitename
+cmedit action NetworkElement=$sitename,CmFunction=1 sync
