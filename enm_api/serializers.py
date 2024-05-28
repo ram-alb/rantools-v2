@@ -39,7 +39,7 @@ class ObjectSerializer(serializers.Serializer):
     def validate_oam_ip(self, oam_ip):
         """Validate that the input is a valid IP address."""
         ip_regex = re.compile(
-            r'^(?:[0-9]{1,3}\.){3}[0-9]{1,3}$',
+            r'^(((0)|([1-9]\d?)|(1\d\d)|(2[0-5]{2}))\.?){0,3}((0)|([1-9]\d?)|(1\d\d)|(2[0-5]{2}))?$',
         )
         if not ip_regex.match(oam_ip):
             raise serializers.ValidationError("Invalid IP address format")
@@ -64,7 +64,7 @@ class ObjectSerializer(serializers.Serializer):
         return object_data
 
 
-class ObjectInfoSerializer(serializers.Serializer):
+class ObjectInfoSerializer(serializers.ListSerializer):
     """Serializer for created Base Station object info."""
 
-    object_info = serializers.ListField(child=serializers.CharField())
+    child = serializers.CharField()
