@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 from enm_api.serializers import (
     BscSerializer,
     BscTgSerializer,
-    ObjectInfoSerializer,
+    ObjectCreateResultSerializer,
     ObjectSerializer,
 )
 from enm_api.services.bsc_tg.main import get_bsc_tg
@@ -50,12 +50,13 @@ class CreateObject(AuthenticatedAPIView):
 
     @extend_schema(
         request=ObjectSerializer,
-        responses={200: ObjectInfoSerializer},
+        responses={200: ObjectCreateResultSerializer},
     )
     def post(self, request):
         """Create Base Station object on ENM."""
         serializer = ObjectSerializer(data=request.data)
         if serializer.is_valid():
             create_results = create_object(serializer.validated_data)
-            return Response(ObjectInfoSerializer(create_results).data, status=status.HTTP_200_OK)
+            create_result_serializer = ObjectCreateResultSerializer(create_results)
+            return Response(create_result_serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

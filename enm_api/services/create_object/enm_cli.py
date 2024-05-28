@@ -1,6 +1,6 @@
 import string
 from pathlib import Path
-from typing import Dict, List
+from typing import List, Tuple
 
 from services.enm.enmscripting import EnmScripting
 
@@ -16,7 +16,7 @@ class EnmCli(EnmScripting):
         'XML': f'{TEMPLATES_PATH}/com.xml',
     }
 
-    def create_object(self, object_data: dict) -> None:
+    def create_object(self, object_data: dict) -> List[Tuple[str, str]]:
         """Create Base Station object on ENM."""
         ne_type = self._determine_ne_type(object_data['platform'], object_data['technologies'])
         template = self._get_template(object_data['platform'])
@@ -29,11 +29,16 @@ class EnmCli(EnmScripting):
         )
         session = self._get_session()
         terminal = session.terminal()
-        for command in commands:
-            terminal.execute(command)
-        self._close_session(session)
 
-    def load_xml(self, sitename: str, enm: str) -> None:
+        create_results = []
+        for command in commands:
+            response = terminal.execute(command)
+            execution_result = response.get_output()
+            create_results.append((command, ','.join(execution_result)))
+        self._close_session(session)
+        return create_results
+
+    def load_xml(self, sitename: str, enm: str) -> Tuple[str, str]:
         """Load XML for new Base Station object."""
         xml_path = self._generate_xml(sitename, enm)
         command = 'pkiadm etm -c -xf file:{xml}'.format(xml=Path(xml_path).name)
@@ -41,11 +46,13 @@ class EnmCli(EnmScripting):
         session = self._get_session()
         terminal = session.terminal()
         with open(xml_path, 'r') as xml:
-            terminal.execute(command, xml)
+            response = terminal.execute(command, xml)
+            load_result = response.get_output()
         self._close_session(session)
         Path(xml_path).unlink()
+        return command, ','.join(load_result)
 
-    def set_controller(self, technology: str, sitename: str, controller: str) -> None:
+    def set_controller(self, technology: str, sitename: str, controller: str) -> Tuple[str, str]:
         """Set controller for Base Station."""
         commands = {
             'GSM': (
@@ -59,17 +66,10 @@ class EnmCli(EnmScripting):
         }
         session = self._get_session()
         terminal = session.terminal()
-        terminal.execute(commands[technology])
+        response = terminal.execute(commands[technology])
+        set_result = response.get_output()
         self._close_session(session)
-
-    def get_object_info(self, sitename: str) -> Dict[str, str]:
-        """Get information about Base Station object."""
-        command = f'cmedit get NetworkElement={sitename}'
-        session = self._get_session()
-        terminal = session.terminal()
-        object_info = terminal.execute(command)
-        self._close_session(session)
-        return object_info.get_output()
+        return commands[technology], ','.join(set_result)
 
     def _determine_ne_type(self, platform: str, technologies: List[str]) -> str:
         """Determine neType."""

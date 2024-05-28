@@ -39,7 +39,8 @@ class ObjectSerializer(serializers.Serializer):
     def validate_oam_ip(self, oam_ip):
         """Validate that the input is a valid IP address."""
         ip_regex = re.compile(
-            r'^(((0)|([1-9]\d?)|(1\d\d)|(2[0-5]{2}))\.?){0,3}((0)|([1-9]\d?)|(1\d\d)|(2[0-5]{2}))?$',
+            r'^(((0)|([1-9]\d?)|(1\d\d)|(2[0-5]{2}))\.?){0,3}'
+            r'((0)|([1-9]\d?)|(1\d\d)|(2[0-5]{2}))?$',
         )
         if not ip_regex.match(oam_ip):
             raise serializers.ValidationError("Invalid IP address format")
@@ -64,7 +65,33 @@ class ObjectSerializer(serializers.Serializer):
         return object_data
 
 
-class ObjectInfoSerializer(serializers.ListSerializer):
-    """Serializer for created Base Station object info."""
+class ComandResultSerializer(serializers.Serializer):
+    """Serializer for a ENM CLI command and its output."""
 
-    child = serializers.CharField()
+    command = serializers.CharField()
+    output = serializers.CharField()
+
+    def to_representation(self, instance):
+        """Serialize a tuple of command result to a representation suitable for response."""
+        return {
+            'command': instance[0],
+            'output': instance[1],
+        }
+
+    def to_internal_value(self, command_data):
+        """Deserialize a command results to internal representation."""
+        return (command_data['command'], command_data['output'])
+
+
+class ObjectCreateResultSerializer(serializers.ListSerializer):
+    """Serialize the results of commands executed during the creation of a Base Station object."""
+
+    child = ComandResultSerializer()
+
+    def to_representation(self, object_data):
+        """Serialize a list of command results to a representation suitable for response."""
+        return [self.child.to_representation(object_item) for object_item in object_data]
+
+    def to_internal_value(self, object_data):
+        """Deserialize a list of command results to internal representation."""
+        return [self.child.to_internal_value(object_item) for object_item in object_data]
