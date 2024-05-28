@@ -17,7 +17,7 @@ selfcheck:
 	poetry check
 
 test:
-	poetry run pytest
+	poetry run pytest --disable-warnings
 
 test-coverage:
 	poetry run pytest --cov=. --cov-report xml
