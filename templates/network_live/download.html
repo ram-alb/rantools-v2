@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title%}Network Live{% endblock %}
+
+{% block content %}
+    <div class="nl">
+        <h1>Network Live</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input id="nl-download" type="submit" class="btn btn-primary" value="Download">
+        </form>
+    </div>
+{% endblock %}
