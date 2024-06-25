@@ -1,6 +1,13 @@
-from typing import List
+from typing import List, NamedTuple
 
-from services.db.network_live import BaseTable, Cell, Tables
+from services.db.network_live import BaseTable, Tables
+
+
+class Cell(NamedTuple):
+    """A class representing cell object from Network Live."""
+
+    controller: str
+    cell: str
 
 
 class GsmTable(BaseTable):

@@ -1,14 +1,17 @@
-import os
+enms = {
+    'ENM2': 'ENM_SERVER_2',
+    'ENM4': 'ENM_SERVER_4',
+}
 
 
 def get_enm_server(enm: str) -> str:
     """Get enm server's environment variable value."""
-    if enm == 'ENM2':
-        enm_server = os.getenv('ENM_SERVER_2')
-    elif enm == 'ENM4':
-        enm_server = os.getenv('ENM_SERVER_4')
+    enm_server = enms.get(enm)
 
     if enm_server is None:
-        raise ValueError(f'No {enm_server} environment variable')
+        valid_options = ', '.join(enms.keys())
+        raise ValueError(
+            f'No configuration found for ENM identifier: {enm}. Valid options are: {valid_options}',
+        )
 
     return enm_server
