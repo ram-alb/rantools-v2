@@ -8,10 +8,13 @@ from rest_framework.views import APIView
 from enm_api.serializers import (
     BscSerializer,
     BscTgSerializer,
+    ControllersSerializer,
+    EnmSerializer,
     ObjectCreateResultSerializer,
     ObjectSerializer,
 )
 from enm_api.services.bsc_tg.main import get_bsc_tg
+from enm_api.services.controllers_list.main import get_controllers
 from enm_api.services.create_object.main import create_object
 
 
@@ -59,4 +62,21 @@ class CreateObject(AuthenticatedAPIView):
             create_results = create_object(serializer.validated_data)
             create_result_serializer = ObjectCreateResultSerializer(create_results)
             return Response(create_result_serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class Controllers(AuthenticatedAPIView):
+    """Retrieve the list of all configured BSCs and RNCs from the requested ENM."""
+
+    @extend_schema(
+        request=EnmSerializer,
+        responses={200: ControllersSerializer},
+    )
+    def post(self, request):
+        """Retrieve the list of all configured BSCs and RNCs."""
+        serializer = EnmSerializer(data=request.data)
+        if serializer.is_valid():
+            controllers = get_controllers(serializer.validated_data['enm'])
+            controllers_serializer = ControllersSerializer(controllers)
+            return Response(controllers_serializer.data, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

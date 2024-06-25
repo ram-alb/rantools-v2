@@ -95,3 +95,25 @@ class ObjectCreateResultSerializer(serializers.ListSerializer):
     def to_internal_value(self, object_data):
         """Deserialize a list of command results to internal representation."""
         return [self.child.to_internal_value(object_item) for object_item in object_data]
+
+
+class EnmSerializer(serializers.Serializer):
+    """Serializer for the ENM server."""
+
+    enm = serializers.CharField()
+
+    def validate_enm(self, enm):
+        """Validate the ENM server identifier."""
+        pattern = r'^ENM_SERVER_\d{1}$'
+        if not re.match(pattern, enm):
+            raise serializers.ValidationError(
+                'Invalid ENM. Use one of ENM_SERVER_2 or ENM_SERVER_4',
+            )
+        return enm
+
+
+class ControllersSerializer(serializers.Serializer):
+    """Serializer for controllers information."""
+
+    bsc = serializers.ListField(child=serializers.CharField())
+    rnc = serializers.ListField(child=serializers.CharField())
