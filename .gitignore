@@ -162,3 +162,9 @@ cython_debug/
 #.idea/
 
 .DS_Store
+
+#Ignore all xlsx files
+*.xlsx
+
+#Ignore all pdf file
+*.pdf
