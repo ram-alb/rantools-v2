@@ -2,7 +2,7 @@ from django import forms
 
 
 class SelectTables(forms.Form):
-    """A form for uploading sites from the file."""
+    """A form to check Technologies."""
 
     choices = (
         ('lte', 'LTE Cells'),
@@ -11,4 +11,8 @@ class SelectTables(forms.Form):
         ('nr', 'NR Cells'),
     )
 
-    tech = forms.BooleanField(choices=choices, required=False)
+    technologies = forms.MultipleChoiceField(
+        choices=choices,
+        widget=forms.CheckboxSelectMultiple,
+        required=False,
+    )

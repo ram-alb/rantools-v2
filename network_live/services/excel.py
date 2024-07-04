@@ -12,7 +12,7 @@ InnerTuple = Tuple[List[Tuple], List[str]]
 def create_excel(network_live_data: Dict[str, InnerTuple]) -> str:
     """Create excel file with network live cell data."""
     file_name = 'kcell_cells.xlsx'
-    file_directory = os.path.join(settings.BASE_DIR, 'network_live/file')
+    file_directory = os.path.join(settings.BASE_DIR, 'network_live')
     file_path = os.path.join(file_directory, file_name)
 
     work_book = Workbook()

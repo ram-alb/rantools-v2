@@ -37,42 +37,56 @@
 </div>
 
 <script>
-    const nlForm = document.getElementById('network_live');
+  const nlForm = document.getElementById('network_live');
 
-    nlForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        const submitBtn = document.getElementById('nl-submit');
-        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+  nlForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+      const submitBtn = document.getElementById('nl-submit');
+      submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
 
-        const formData = new FormData();
-        checkboxes = document.querySelectorAll('.form-check-input:checked');
-        const technologiesArray = Array.from(checkboxes).map(checkbox => checkbox.value);
-        const sortedTechnologies = technologiesArray.sort(); // Sort alphabetically
-        sortedTechnologies.forEach(technology => {
-            formData.append('technologies[]', technology);
-        });
-        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      const formData = new FormData();
+      checkboxes = document.querySelectorAll('.form-check-input:checked');
+      const technologiesArray = Array.from(checkboxes).map(checkbox => checkbox.value);
+      const sortedTechnologies = technologiesArray.sort();
 
-        fetch('{% url "network_live" %}', {
-            method: 'POST',
-            body: formData
-        })
-        .then(response => response.blob())
-        .then(data => {
-            const url = window.URL.createObjectURL(data);
-            const anchor = document.createElement("a");
-            anchor.href = url;
-            // Dynamically set the filename based on selected technologies
-            const selectedTechnologies = sortedTechnologies.join('_');
-            anchor.download = 'kcell_' + selectedTechnologies + '_data.xlsx';
-            anchor.click();
+      if (sortedTechnologies.length === 0) {
+          alert('Choose at least one technology.');
+          submitBtn.innerHTML = 'Download';
+          return;
+      }
+      sortedTechnologies.forEach(technology => {
+          formData.append('technologies[]', technology);
+      });
+      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
 
-            submitBtn.innerHTML = 'Download';
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = false;
-            })
-        });
-    });
+      fetch('{% url "nl-index" %}', {
+          method: 'POST',
+          body: formData
+      })
+      .then(response => {
+          if (!response.ok) {
+              throw new Error('Network response was not ok');
+          }
+          return response.blob();
+      })
+      .then(data => {
+          const url = window.URL.createObjectURL(data);
+          const anchor = document.createElement("a");
+          anchor.href = url;
+          const selectedTechnologies = sortedTechnologies.join('_');
+          anchor.download = 'kcell_' + selectedTechnologies + '_data.xlsx';
+          anchor.click();
+
+          submitBtn.innerHTML = 'Download';
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = false;
+          })
+      })
+      .catch(error => {
+          console.error('Fetch error:', error);
+          submitBtn.innerHTML = 'Download';
+      });
+  });
 
 </script>
 {% endblock %}
