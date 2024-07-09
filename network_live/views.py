@@ -3,10 +3,10 @@ from django.views import View
 
 from network_live.forms import SelectTables
 from network_live.services import excel, select
-from services.mixins import LoginMixin
+from services.mixins import GroupMixin, LoginMixin
 
 
-class NetworkLive(LoginMixin, View):
+class NetworkLive(GroupMixin, LoginMixin, View):
     """A view for technology choose and cell data download."""
 
     template_name = 'network_live/index.html'

@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group, User
@@ -40,11 +41,11 @@ class UserRegistration(CreateView):
     def assign_groups(self, user, email):
         """Assign user to appropriate groups based on LDAP membership."""
         is_pou = is_member_pou(email)
-        group_regular, _ = Group.objects.get_or_create(name='Regular Users')
+        group_regular, _ = Group.objects.get_or_create(name=settings.REGULAR_GROUP)
         user.groups.add(group_regular)
 
         if is_pou:
-            group_pou, _ = Group.objects.get_or_create(name='POU Users')
+            group_pou, _ = Group.objects.get_or_create(name=settings.POU_GROUP)
             user.groups.add(group_pou)
 
 
@@ -54,11 +55,16 @@ class UserLogin(LoginView):
     template_name = 'users/login.html'
     success_url = reverse_lazy('index')
     success_message = 'You are logged in'
+    full_access = settings.POU_GROUP
 
     def form_valid(self, form):
         """Handle the case when the login form is valid."""
+        super().form_valid(form)
+        user = self.request.user
+
+        self.request.session['full_access'] = user.groups.filter(name=self.full_access).exists()
         messages.success(self.request, self.success_message)
-        return super().form_valid(form)
+        return redirect(self.success_url)
 
     def form_invalid(self, form):
         """Handle the case when the login form is invalid."""
