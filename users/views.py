@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 from users.forms import UserRegistrationForm
-from users.ldap_authentication import is_ldap_bind
+from users.ldap_authentication import is_ldap_bind, is_member_pou
 
 
 class UserRegistration(CreateView):
@@ -25,6 +25,9 @@ class UserRegistration(CreateView):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password1']
         if is_ldap_bind(email, password):
+            user = form.save(commit=False)
+            user.save()
+            self.assign_groups(user, email)
             messages.success(self.request, self.success_message)
             return super().form_valid(form)
 
@@ -33,6 +36,16 @@ class UserRegistration(CreateView):
             self.error_kcell_message,
         )
         return self.form_invalid(form)
+
+    def assign_groups(self, user, email):
+        """Assign user to appropriate groups based on LDAP membership."""
+        is_pou = is_member_pou(email)
+        group_regular, _ = Group.objects.get_or_create(name='Regular Users')
+        user.groups.add(group_regular)
+
+        if is_pou:
+            group_pou, _ = Group.objects.get_or_create(name='POU Users')
+            user.groups.add(group_pou)
 
 
 class UserLogin(LoginView):
