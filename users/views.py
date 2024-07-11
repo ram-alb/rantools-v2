@@ -1,13 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import Group, User
 from django.contrib.auth.views import LoginView, LogoutView
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 from users.forms import UserRegistrationForm
-from users.ldap_authentication import is_ldap_bind
+from users.ldap_authentication import get_unit_ldap, is_ldap_bind
 
 
 class UserRegistration(CreateView):
@@ -25,14 +25,39 @@ class UserRegistration(CreateView):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password1']
         if is_ldap_bind(email, password):
+            response = super().form_valid(form)
+            self.add_user_to_groups(self.object, email, password)
             messages.success(self.request, self.success_message)
-            return super().form_valid(form)
+            return response
 
         form.add_error(
             None,
             self.error_kcell_message,
         )
         return self.form_invalid(form)
+
+    def add_user_to_groups(self, user, email, passwd):
+        """Add users to groups."""
+        group_name = 'Regular Users'
+        try:
+            regular_users_group = Group.objects.get(name=group_name)
+        except Group.DoesNotExist:
+            regular_users_group = Group.objects.create(name=group_name)
+        user.groups.add(regular_users_group)
+
+        rnpo_units = [
+            'Сектор стратегического планирования радиосети',
+            'Сектор планирования сети',
+            'Сектор оптимизации радиосети',
+        ]
+        rnpo_group = 'RNPO Users'
+        unit = get_unit_ldap(email, passwd)
+        if unit in rnpo_units:
+            try:
+                special_group = Group.objects.get(name=rnpo_group)
+            except Group.DoesNotExist:
+                special_group = Group.objects.create(name=rnpo_group)
+            user.groups.add(special_group)
 
 
 class UserLogin(LoginView):
