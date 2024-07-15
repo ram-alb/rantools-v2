@@ -15,11 +15,23 @@ def test_index_not_logged_in(client):
     assert response.url == reverse('login') + '?next=' + INDEX_URL
 
 
-def test_index_logged_in(client, new_user):
-    """Test neighbor Index view when user is logged in."""
+def test_index_logged_in_regular_user(client, regular_user):
+    """Test neighbor Index view when user is regular user."""
     client.login(
-        username=new_user['username'],
-        password=new_user['password'],
+        username=regular_user['username'],
+        password=regular_user['password'],
+    )
+    response = client.get(INDEX_URL)
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert response.url == reverse('index')
+
+
+def test_index_logged_in_rnpo_user(client, rnpo_user):
+    """Test neighbor Index view when user is rnpo user."""
+    client.login(
+        username=rnpo_user['username'],
+        password=rnpo_user['password'],
     )
     response = client.get(INDEX_URL)
 
