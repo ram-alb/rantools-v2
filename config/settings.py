@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'users',
     'neighbors',
     'enm_api',
+    'bts_files',
 ]
 
 MIDDLEWARE = [
