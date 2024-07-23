@@ -2,7 +2,7 @@ import os
 from typing import Union
 
 import cx_Oracle  # type: ignore
-import oracledb
+import oracledb  # type: ignore
 
 Connection = Union[cx_Oracle.Connection, oracledb.Connection]
 
