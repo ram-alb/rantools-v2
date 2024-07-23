@@ -1,0 +1,10 @@
+<description>
+    BSC: {{cell.bsc}}
+    Site: {{cell.site}}
+    Height: {{cell.height}}
+    Azimut: {{cell.azimut}}
+    CID: {{cell.cid}}
+    BCCH: {{cell.bcch}}
+    BSIC: {{cell.bsic}}
+    LAC: {{cell.lac}}
+</description>

@@ -1,0 +1,10 @@
+<description>
+    Subnetwork: {{cell.subnetwork}}
+    Site: {{cell.lte_sitename}}
+    Height: {{cell.height}}
+    Azimut: {{cell.azimut}}
+    CID: {{cell.cid}}
+    PCI: {{cell.pci}}
+    PRACH: {{cell.prach}}
+    TAC: {{cell.tac}}
+</description>

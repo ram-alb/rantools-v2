@@ -1,0 +1,8 @@
+<description>
+    Site: {{cell.site}}
+    Height: {{cell.height}}
+    Azimut: {{cell.azimut}}
+    CID: {{cell.cid}}
+    PCI: {{cell.pci}}
+    TAC: {{cell.tac}}
+</description>

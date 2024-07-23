@@ -1,0 +1,9 @@
+<description>
+    RNC: {{cell.rnc}}
+    Site: {{cell.site}}
+    Height: {{cell.height}}
+    Azimut: {{cell.azimut}}
+    CID: {{cell.cid}}
+    PSC: {{cell.psc}}
+    LAC: {{cell.lac}}
+</description>
