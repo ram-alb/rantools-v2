@@ -95,6 +95,13 @@
       return true;
     }
 
+    const getFileName = (fileTypes, regions) => {
+        const fileType = fileTypes[0].value;
+        const ext = fileType === 'excel' ? 'xlsx' : fileType;
+        const name = regions.length === 1 ? regions[0].value : 'sites';
+        return `${name}.${ext}`;
+    }
+
     const btsFilesForm = document.getElementById('bts-files-form');
     const fileTypeAlert = document.getElementById('file-type-alert');
     const technologiesAlert = document.getElementById('technologies-alert');
@@ -126,9 +133,23 @@
           method: 'POST',
           body: formData
         })
-        .then(response => console.log(response))
+        .then(response => response.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
 
+          const fileName = getFileName(fileTypes, regions);
+
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+          btsFilesForm.reset();
+          submitBtn.innerHTML = 'Download';
+        })
       }
-    })
+    });
   </script>
 {% endblock content %}
