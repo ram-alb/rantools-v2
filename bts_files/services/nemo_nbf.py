@@ -21,6 +21,13 @@ def _get_common_part(cell: CellRowFactory) -> str:
     return ';'.join(common_params)
 
 
+def _replace_none(params_list: list) -> list:
+    return [
+        '' if param_item is None else param_item
+        for param_item in params_list
+    ]
+
+
 def _get_gsm_uniq(cell: GsmRowFactory) -> str:
     uniq_params = [
         str(cell.bcch),
@@ -31,7 +38,7 @@ def _get_gsm_uniq(cell: GsmRowFactory) -> str:
         '',
         str(cell.azimut),
     ]
-    return ';'.join(uniq_params)
+    return ';'.join(_replace_none(uniq_params))
 
 
 def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
@@ -44,7 +51,7 @@ def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
         str(cell.psc),
         str(cell.azimut),
     ]
-    return ';'.join(uniq_params)
+    return ';'.join(_replace_none(uniq_params))
 
 
 def _get_lte_uniq(cell: LteRowFactory) -> str:
@@ -58,7 +65,7 @@ def _get_lte_uniq(cell: LteRowFactory) -> str:
         '',
         str(cell.azimut),
     ]
-    return ';'.join(uniq_params)
+    return ';'.join(_replace_none(uniq_params))
 
 
 def _get_tech_row(cell: CellRowFactory, technology: str) -> str:
