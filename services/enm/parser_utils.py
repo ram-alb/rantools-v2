@@ -21,7 +21,7 @@ def parse_mo_value_from_fdn(fdn: str, mo_type: str) -> str:
         'ManagedElement': 'ManagedElement=[^,]*',
         'NRSectorCarrier': 'NRSectorCarrier=.*',
         'NRCellDU': 'NRCellDU=.*',
-        'EUtranCellFDD': 'EUtranCellFDD=[^,]*',
+        'EUtranCellFDD': 'EUtranCellFDD=[A-Za-z0-9-]+',
         'IubLink': 'IubLink=.*',
         'UtranCell': 'UtranCell=.*',
         'GsmSector': 'GsmSector=.*',

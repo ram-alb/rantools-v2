@@ -13,4 +13,5 @@ urlpatterns = [
     path('neighbors/', include('neighbors.urls')),
     path('enm-api/', include('enm_api.urls')),
     path('bts-files/', include('bts_files.urls')),
+    path('bts-info/', include('bts_info.urls')),
 ]
