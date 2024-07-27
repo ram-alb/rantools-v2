@@ -29,7 +29,8 @@ def make_excel_content(cell_data: AllTechPolygon) -> bytes:
     for tech, tech_data in cell_data.items():
         if tech == 'sites':
             continue
-        _create_sheet(work_book, tech, tech_data)  # type: ignore
+        if tech_data:
+            _create_sheet(work_book, tech, tech_data)  # type: ignore
 
     work_book.remove(work_book['Sheet'])
 
