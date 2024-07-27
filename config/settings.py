@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'neighbors',
     'enm_api',
     'bts_files',
+    'bts_info',
 ]
 
 MIDDLEWARE = [

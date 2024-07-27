@@ -6,13 +6,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rantools</title>
 
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossorigin=""/>
+  <style>
+    {% block style %}{% endblock style %}
+  </style>
 
   {% bootstrap_css %}
   {% bootstrap_javascript %}
 
-  <title>Rantools</title>
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js" integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM=" crossorigin=""></script>
 </head>
 <body>
   <div class="container-fluid">
@@ -30,6 +35,12 @@
             </li>
 
             {% if user.is_authenticated %}
+              <li class="nav-item">
+                <a href="{% url 'bts-info' %}" class="nav-link align-middle px-0">
+                  <i class="fas fa-broadcast-tower"></i> <span class="ms-1 d-none d-sm-inline">BTS Info</span>
+                </a>
+              </li>
+
               {% if request.user|in_group:"RNPO Users" %}
                 <li class="nav-item">
                   <a href="{% url 'bts-files' %}" class="nav-link align-middle px-0">

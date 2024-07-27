@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block style %}
+  .py-3 {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  #map {
+    width: 800px;
+    height: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+{% endblock style %}
+
+{% block content %}
+  <h1 class="text-center mt-3">BTS Info</h1>
+
+  <div>
+    <div class="d-flex justify-content-center my-3">
+      <form method="post" class="row">
+        {% csrf_token %}
+        <div class="col-auto">
+          {{ form.bts_id|as_crispy_field }}
+        </div>
+        <div class="col-auto">
+          {{ form.source|as_crispy_field }}
+        </div>
+        <div class="col-auto">
+          <button id="btn" type="submit" class="btn btn-primary form-control">Find Site</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  {% if sites %}
+    <div class="mx-3 mt-4">
+      <table class="table table-bordered table-striped">
+        <thead>
+          {% for header in headers %}
+            <th>{{ header }}</th>
+          {% endfor %}
+        </thead>
+        <tbody>
+          {% for site in sites %}
+            <tr>
+              {% for item_value in site.values %}
+                <td>{{ item_value }}</td>
+              {% endfor %}
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    {% if source == 'atoll' %}
+      <div id="map" class="mt-4 mb-4"></div>
+    {% endif %}
+  {% endif %}
+
+  <script>
+    const input = document.getElementById('input-field');
+    const btn = document.getElementById('btn');
+
+    btn.addEventListener('click', () => {
+      const inputVal = input.value;
+      if (inputVal.length >= 5) {
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+      }
+    });
+
+
+    // Creating map options
+
+    const makeNum = (coordinate) => {
+      const numStr = coordinate.replace(',', '.');
+      return parseFloat(numStr);
+    };
+
+    const mapOptions = {
+      center: [makeNum('{{ latitude }}'), makeNum('{{ longitude }}')],
+      zoom: 14,
+      attributionControl: false
+    }
+
+    // Creating a map object
+    const map = new L.map('map', mapOptions);
+    // const marker = L.marker([{{ latitude }}, {{ longitude }}]).addTo(map);
+
+    {% for polygon in sector_polygons %}
+      var polygon = L.polygon([
+        [makeNum('{{ polygon.point0.0 }}'), makeNum('{{ polygon.point0.1 }}')],
+        [makeNum('{{ polygon.point1.0 }}'), makeNum('{{ polygon.point1.1 }}')],
+        [makeNum('{{ polygon.point2.0 }}'), makeNum('{{ polygon.point2.1 }}')]
+      ], {color: '{{ polygon.color }}'}).addTo(map);
+    {% endfor %}
+
+
+    // Creating a Layer object
+    const layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+    // Adding layer to the map
+    map.addLayer(layer);
+
+  </script>
+{% endblock content %}
