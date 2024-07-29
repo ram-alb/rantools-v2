@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import Group, User
@@ -67,16 +66,11 @@ class UserLogin(LoginView):
     template_name = 'users/login.html'
     success_url = reverse_lazy('index')
     success_message = 'You are logged in'
-    full_access = settings.POU_GROUP
 
     def form_valid(self, form):
         """Handle the case when the login form is valid."""
-        super().form_valid(form)
-        user = self.request.user
-
-        self.request.session['full_access'] = user.groups.filter(name=self.full_access).exists()
         messages.success(self.request, self.success_message)
-        return redirect(self.success_url)
+        return super().form_valid(form)
 
     def form_invalid(self, form):
         """Handle the case when the login form is invalid."""
