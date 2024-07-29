@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'enm_api',
     'bts_files',
     'bts_info',
-    'network_livel',
+    'network_live',
 ]
 
 MIDDLEWARE = [

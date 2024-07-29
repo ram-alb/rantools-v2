@@ -7,85 +7,99 @@
   <div class="d-flex justify-content-center align-items-center">
     <form method="POST" id="network_live">
       {% csrf_token %}
-      <div class="form-check my-2">
-        <input class="form-check-input" type="checkbox" value="nr" id="nr">
-        <label class="form-check-label" for="nr">
-          NR Cells
-        </label>
+
+      <div class="row justify-content-around">
+        <div class="col-auto">
+          <div class="form-check my-2">
+            <input class="form-check-input" type="checkbox" name="technologies" value="nr" id="nr">
+            <label class="form-check-label" for="nr">NR Cells</label>
+          </div>
+          <div class="form-check my-2">
+            <input class="form-check-input" type="checkbox" name="technologies" value="lte" id="lte">
+            <label class="form-check-label" for="lte">LTE Cells</label>
+          </div>
+          <div class="form-check my-2">
+            <input class="form-check-input" type="checkbox" name="technologies" value="wcdma" id="wcdma">
+            <label class="form-check-label" for="wcdma">WCDMA Cells</label>
+          </div>
+          <div class="form-check my-2">
+            <input class="form-check-input" type="checkbox" name="technologies" value="gsm" id="gsm">
+            <label class="form-check-label" for="gsm">GSM Cells</label>
+          </div>
+        </div>
       </div>
-      <div class="form-check my-2">
-        <input class="form-check-input" type="checkbox" value="lte" id="lte">
-        <label class="form-check-label" for="lte">
-          LTE Cells
-        </label>
+
+      <div class="row justify-content-around">
+        <div class="col-auto">
+          <div class="alert alert-danger" role="alert" id="technologies-alert">
+            Please, choose the technologies first!
+          </div>
+        </div>
       </div>
-      <div class="form-check my-2">
-        <input class="form-check-input" type="checkbox" value="wcdma" id="wcdma">
-        <label class="form-check-label" for="wcdma">
-          WCDMA Cells
-        </label>
-      </div>
-      <div class="form-check my-2">
-        <input class="form-check-input" type="checkbox" value="gsm" id="gsm">
-        <label class="form-check-label" for="gsm">
-          GSM Cells
-        </label>
-      </div>
+
       <button type="submit" class="btn btn-primary mt-3 d-block mx-auto" id="nl-submit">Download</button>
     </form>
   </div>
 </div>
 
 <script>
+  const validate = (form) => {
+    const checkboxes = form.querySelectorAll('input[name="technologies"]');
+
+    for (const checkbox of checkboxes) {
+      if (checkbox.checked) {
+        return true;
+      }
+    }
+
+    return false;
+  };
+
+  const createFileName = (form) => {
+    const checkboxes = form.querySelectorAll('input[name="technologies"]:checked');
+    const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+    const selectedValuesStr = selectedValues.join('-');
+    return `${selectedValuesStr}.xlsx`;
+  };
+
   const nlForm = document.getElementById('network_live');
+  const submitBtn = document.getElementById('nl-submit');
+  const alertDiv = document.getElementById('technologies-alert');
+  alertDiv.style.display = 'none';
 
   nlForm.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const submitBtn = document.getElementById('nl-submit');
+    event.preventDefault();
+    const is_valid = validate(nlForm);
+
+    if (is_valid) {
       submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
-
-      const formData = new FormData();
-      checkboxes = document.querySelectorAll('.form-check-input:checked');
-      const technologiesArray = Array.from(checkboxes).map(checkbox => checkbox.value);
-      const sortedTechnologies = technologiesArray.sort();
-
-      if (sortedTechnologies.length === 0) {
-          alert('Choose at least one technology.');
-          submitBtn.innerHTML = 'Download';
-          return;
-      }
-      sortedTechnologies.forEach(technology => {
-          formData.append('technologies[]', technology);
-      });
-      formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+      alertDiv.style.display = 'none';
+      const formData = new FormData(nlForm);
 
       fetch('{% url "nl-index" %}', {
-          method: 'POST',
-          body: formData
+        method: 'POST',
+        body: formData,
       })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error('Network response was not ok');
-          }
-          return response.blob();
-      })
-      .then(data => {
-          const url = window.URL.createObjectURL(data);
-          const anchor = document.createElement("a");
-          anchor.href = url;
-          const selectedTechnologies = sortedTechnologies.join('_');
-          anchor.download = 'kcell_' + selectedTechnologies + '_data.xlsx';
-          anchor.click();
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
 
-          submitBtn.innerHTML = 'Download';
-          checkboxes.forEach(checkbox => {
-              checkbox.checked = false;
-          })
-      })
-      .catch(error => {
-          console.error('Fetch error:', error);
-          submitBtn.innerHTML = 'Download';
-      });
+        const fileName = createFileName(nlForm);
+
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+        nlForm.reset();
+        submitBtn.innerHTML = 'Download';
+        });
+    } else {
+      alertDiv.style.display = '';
+      submitBtn.innerHTML = 'Download';
+    }
   });
 
 </script>

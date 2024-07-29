@@ -2,33 +2,36 @@
 
 from typing import Dict, List, Tuple
 
-from services.db.connector import DBConnector
+from services.db.db import DbConnection, select
 from services.db.network_live import Tables
 
-InnerTuple = Tuple[List[Tuple], List[str]]
+COLUMN_QUERY = """
+    SELECT COLUMN_NAME
+    FROM ALL_TAB_COLUMNS
+    WHERE TABLE_NAME = :table_name
+    ORDER BY COLUMN_ID
+"""
+
+Technology = str
+Headers = List[str]
+Rows = List[tuple]
+DbData = Tuple[Rows, Headers]
+NetworkLiveData = Dict[Technology, DbData]
 
 
-def select_data(technologies: List[str]) -> Dict[str, InnerTuple]:
+def select_data(technologies: List[str]) -> NetworkLiveData:
     """Select cell data from network_live."""
     network_live_tables = {table.name.split('_')[0]: table.value for table in Tables}
     network_live_data = {}
 
-    with DBConnector.get_connection() as connection:
-        cursor = connection.cursor()
+    with DbConnection('oracledb') as connection:
         for technology in technologies:
-            column_query = """
-                SELECT COLUMN_NAME
-                FROM ALL_TAB_COLUMNS
-                WHERE TABLE_NAME = :table_name
-                ORDER BY COLUMN_ID
-            """
-            cursor.execute(column_query, table_name=(network_live_tables[technology]).upper())
-            columns = cursor.fetchall()
+            table_name = network_live_tables[technology].upper()
+            columns = select(connection, COLUMN_QUERY, {'table_name': table_name})
             column_list = [column[0] for column in columns]
 
             data_query = 'SELECT * FROM {table}'.format(table=network_live_tables[technology])
-            cursor.execute(data_query)
-            cell_data = cursor.fetchall()
+            cell_data = select(connection, data_query)
 
             network_live_data[technology] = (cell_data, column_list)
 

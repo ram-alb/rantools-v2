@@ -1,15 +1,15 @@
 from pathlib import Path
+from tempfile import NamedTemporaryFile
 
 import pytest
 from openpyxl import Workbook
 
-from users.tests.conftest import new_user
+from users.tests.conftest import regular_user, rnpo_user
 
 
 @pytest.fixture
 def mock_xlsx_file():
     """Create mock XLSX file."""
-    xlsx_path = Path(__file__).resolve().parent / 'kcell_cells.xlsx'
 
     wb = Workbook()
     ws = wb.active
@@ -23,9 +23,10 @@ def mock_xlsx_file():
     for row in cell_data:
         ws.append(row)
 
-    wb.save(xlsx_path)
-
-    return xlsx_path
+    with NamedTemporaryFile() as temp:
+        wb.save(temp.name)
+        temp.seek(0)
+        return temp.read()
 
 
 @pytest.fixture
