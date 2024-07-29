@@ -43,7 +43,10 @@ def get_unit_ldap(email, password):
 
     if conn.entries:
         entry = conn.entries[0]
-        unit = entry.entry_attributes_as_dict.get(attr_name, [None])[0]
+        try:
+            unit = entry.entry_attributes_as_dict.get(attr_name, [None])[0]
+        except IndexError:
+            unit = None
 
     conn.unbind()
     return unit
