@@ -1,0 +1,155 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="text-center mt-2">BTS Files</h1>
+    <div class="d-flex justify-content-center align-items-center">
+      <form method="POST" id="bts-files-form">
+        {% csrf_token %}
+
+        <div class="text-center mt-3">
+          <h5>Select File Type:</h5>
+
+          {% for file_type in file_types  %}
+            <div class="form-check form-check-inline">
+              <input class="form-check-input file-type" type="radio" name="file-type" id="{{ file_type }}" value="{{ file_type }}">
+              <label class="form-check-label" for="{{ file_type }}">{{ file_type }}</label>
+            </div>
+          {% endfor %}
+
+          <div class="row justify-content-around">
+            <div class="col-auto">
+              <div class="alert alert-danger" role="alert" id="file-type-alert">
+                Please, choose the file type first!
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="text-center mt-3">
+          <h5>Select Technologies:</h5>
+
+          {% for technology in technologies %}
+            <div class="form-check form-check-inline">
+              <input class="form-check-input technology" type="checkbox" name="technologies" id="{{ technology }}" value="{{ technology }}">
+              <label class="form-check-label" for="{{ technology }}">{{ technology }}</label>
+            </div>
+          {% endfor %}
+
+          <div class="row justify-content-around">
+            <div class="col-auto">
+              <div class="alert alert-danger" role="alert" id="technologies-alert">
+                Please, choose the technologies first!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-3">
+          <h5 class="text-center">Select Regions:</h5>
+
+          <div class="row justify-content-around">
+            <div class="col-auto">
+
+              {% for region in regions %}
+                <div class="form-check">
+                  <input class="form-check-input region" type="checkbox" name="regions" value="{{ region }}" id="{{ region }}">
+                  <label class="form-check-label" for="{{ region }}">{{ region }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="row justify-content-around">
+            <div class="col-auto">
+              <div class="alert alert-danger" role="alert" id="regions-alert">
+                Please, choose the regions first!
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center mt-3">
+          <div class="col-auto">
+            <button class="btn btn-primary" type="submit" id="btn-apply">Download</button>
+          </div>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  <script>
+    const validate = (alertData) => {
+      for (const alertBlock of alertData) {
+        const [alertDiv, selects] = alertBlock;
+        if (selects.length === 0) {
+          alertDiv.style.display = '';
+          return false;
+        } else {
+          alertDiv.style.display = 'none';
+        }
+      }
+
+      return true;
+    }
+
+    const getFileName = (fileTypes, regions) => {
+        const fileType = fileTypes[0].value;
+        const ext = fileType === 'excel' ? 'xlsx' : fileType;
+        const name = regions.length === 1 ? regions[0].value : 'sites';
+        return `${name}.${ext}`;
+    }
+
+    const btsFilesForm = document.getElementById('bts-files-form');
+    const fileTypeAlert = document.getElementById('file-type-alert');
+    const technologiesAlert = document.getElementById('technologies-alert');
+    const regionsAlert = document.getElementById('regions-alert');
+    const submitBtn = document.getElementById('btn-apply');
+
+    fileTypeAlert.style.display = 'none';
+    technologiesAlert.style.display = 'none';
+    regionsAlert.style.display = 'none';
+
+    btsFilesForm.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const fileTypes = document.querySelectorAll('.file-type:checked');
+      const technologies = document.querySelectorAll('.technology:checked');
+      const regions = document.querySelectorAll('.region:checked');
+
+      const is_valid = validate([
+        [fileTypeAlert, fileTypes],
+        [technologiesAlert, technologies],
+        [regionsAlert, regions],
+      ]);
+
+      if (is_valid) {
+        submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+        const formData = new FormData(btsFilesForm);
+
+        fetch('{% url "bts-files" %}', {
+          method: 'POST',
+          body: formData
+        })
+        .then(response => response.blob())
+        .then(blob => {
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+
+          const fileName = getFileName(fileTypes, regions);
+
+          a.download = fileName;
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+          window.URL.revokeObjectURL(url);
+          btsFilesForm.reset();
+          submitBtn.innerHTML = 'Download';
+        })
+      }
+    });
+  </script>
+{% endblock content %}

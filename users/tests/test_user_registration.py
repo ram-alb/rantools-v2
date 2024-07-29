@@ -3,7 +3,7 @@ from http import HTTPStatus
 from django.urls import reverse
 
 from users import views
-from users.tests.utils import check_message, fake_is_bind, get_templates
+from users.tests.utils import check_message, fake_get_unit_ldap, fake_is_bind, get_templates
 
 REGISTRATION_URL = reverse('registration')
 
@@ -28,6 +28,7 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
     """Test the submitting a valid registration form when LDAP binding is simulated as True."""
     users_count_old = django_user_model.objects.count()
     views.is_ldap_bind = fake_is_bind(True)
+    views.get_unit_ldap = fake_get_unit_ldap(False)
 
     response = client.post(
         REGISTRATION_URL,
@@ -39,11 +40,34 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
     assert users_count_new - users_count_old == 1
     assert check_user(valid_data['username'])
 
-    assert response.status_code == HTTPStatus.FOUND
     assert response.url == reverse('login')
 
     assert check_message(response, views.UserRegistration.success_message)
     assert user.groups.filter(name='Regular Users').exists()
+    assert not user.groups.filter(name='RNPO Users').exists()
+
+
+def test_post_valid_form_ldap_true_rnpo(client, django_user_model, check_user):
+    """Test the submitting a valid registration form when LDAP binding is simulated as True."""
+    users_count_old = django_user_model.objects.count()
+    views.is_ldap_bind = fake_is_bind(True)
+    views.get_unit_ldap = fake_get_unit_ldap(True)
+
+    response = client.post(
+        REGISTRATION_URL,
+        data=valid_data,
+    )
+    users_count_new = django_user_model.objects.count()
+    user = django_user_model.objects.get(username=valid_data['username'])
+
+    assert users_count_new - users_count_old == 1
+    assert check_user(valid_data['username'])
+
+    assert response.url == reverse('login')
+
+    assert check_message(response, views.UserRegistration.success_message)
+    assert user.groups.filter(name='Regular Users').exists()
+    assert user.groups.filter(name='RNPO Users').exists()
 
 
 def test_post_valid_form_ldap_false(client, django_user_model, check_user):

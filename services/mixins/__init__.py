@@ -1,1 +1,1 @@
-from services.mixins.login_mixin import GroupMixin, LoginMixin
+from services.mixins.access_mixin import GroupRequiredMixin, LoginMixin

@@ -9,17 +9,20 @@ from django.views.generic import TemplateView
 from neighbors.forms import UploadNeighborsForm
 from neighbors.services.gsm import g2g, g2l, g2u
 from neighbors.services.wcdma import u2g, u2l, u2u
-from services.mixins import LoginMixin
+from services.mixins import GroupRequiredMixin, LoginMixin
 
 
-class Index(LoginMixin, TemplateView):
+class Index(LoginMixin, GroupRequiredMixin, TemplateView):
     """Render the index page of the neighbors app."""
 
     template_name = 'neighbors/index.html'
+    required_group = 'RNPO Users'
 
 
-class NbrImport(LoginMixin, View):
+class NbrImport(LoginMixin, GroupRequiredMixin, View):
     """A view for managing neighbors."""
+
+    required_group = 'RNPO Users'
 
     def get(self, request, direction, *args, **kwargs):
         """Handle GET request."""
@@ -58,8 +61,10 @@ class NbrImport(LoginMixin, View):
         return redirect(reverse_lazy('nbr-import', kwargs={'direction': direction}))
 
 
-class DownloadTemplate(LoginMixin, View):
+class DownloadTemplate(LoginMixin, GroupRequiredMixin, View):
     """A view for downloading neighbor template for planned neighbors."""
+
+    required_group = 'RNPO Users'
 
     def get(self, request, direction):
         """Handle a GET request."""

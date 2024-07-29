@@ -1,0 +1,15 @@
+<Placemark>
+    <name>{{cell.cell}}</name>
+    {{description}}
+    <styleUrl>{{style}}</styleUrl>
+    <Polygon>
+        <tessellate>1</tessellate>
+        <outerBoundaryIs>
+            <LinearRing>
+                <coordinates>
+                    {{polygon_coordinates}}
+                </coordinates>
+            </LinearRing>
+        </outerBoundaryIs>
+    </Polygon>
+</Placemark>

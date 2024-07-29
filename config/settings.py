@@ -43,7 +43,9 @@ INSTALLED_APPS = [
     'users',
     'neighbors',
     'enm_api',
-    'network_live',
+    'bts_files',
+    'bts_info',
+    'network_livel',
 ]
 
 MIDDLEWARE = [
@@ -70,6 +72,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries': {
+                'custom_filters': 'config.templatetags.custom_filters',
+            },
         },
     },
 ]
@@ -164,6 +169,3 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
     'SERVE_INCLUDE_SCHEMA': False,
 }
-
-POU_GROUP = 'POU Users'
-REGULAR_GROUP = 'Regular Users'

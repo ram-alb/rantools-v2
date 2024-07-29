@@ -10,7 +10,14 @@ class EnmScripting:
 
     def __init__(self, enm_server: str):
         """Initialize attributes for an EnmScripting instance."""
-        self.enm_server = enm_server
+        self.enm_server = self._get_server(enm_server)
+
+    def _get_server(self, enm_pointer):
+        """Retrieve the ENM server address from environment variables."""
+        enm_server = os.getenv(enm_pointer)
+        if enm_server is None:
+            raise ValueError(f'No {enm_pointer} environment variable')
+        return enm_server
 
     def _get_session(self) -> EnmSession:
         """Get enmscripting session for comunication with ENM."""

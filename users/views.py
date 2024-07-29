@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 from users.forms import UserRegistrationForm
-from users.ldap_authentication import is_ldap_bind, is_member_pou
+from users.ldap_authentication import get_unit_ldap, is_ldap_bind
 
 
 class UserRegistration(CreateView):
@@ -26,11 +26,10 @@ class UserRegistration(CreateView):
         email = form.cleaned_data['email']
         password = form.cleaned_data['password1']
         if is_ldap_bind(email, password):
-            user = form.save(commit=False)
-            user.save()
-            self.assign_groups(user, email)
+            response = super().form_valid(form)
+            self.add_user_to_groups(self.object, email, password)
             messages.success(self.request, self.success_message)
-            return super().form_valid(form)
+            return response
 
         form.add_error(
             None,
@@ -38,15 +37,28 @@ class UserRegistration(CreateView):
         )
         return self.form_invalid(form)
 
-    def assign_groups(self, user, email):
-        """Assign user to appropriate groups based on LDAP membership."""
-        is_pou = is_member_pou(email)
-        group_regular, _ = Group.objects.get_or_create(name=settings.REGULAR_GROUP)
-        user.groups.add(group_regular)
+    def add_user_to_groups(self, user, email, passwd):
+        """Add users to groups."""
+        group_name = 'Regular Users'
+        try:
+            regular_users_group = Group.objects.get(name=group_name)
+        except Group.DoesNotExist:
+            regular_users_group = Group.objects.create(name=group_name)
+        user.groups.add(regular_users_group)
 
-        if is_pou:
-            group_pou, _ = Group.objects.get_or_create(name=settings.POU_GROUP)
-            user.groups.add(group_pou)
+        rnpo_units = [
+            'Сектор стратегического планирования радиосети',
+            'Сектор планирования сети',
+            'Сектор оптимизации радиосети',
+        ]
+        rnpo_group = 'RNPO Users'
+        unit = get_unit_ldap(email, passwd)
+        if unit in rnpo_units:
+            try:
+                special_group = Group.objects.get(name=rnpo_group)
+            except Group.DoesNotExist:
+                special_group = Group.objects.create(name=rnpo_group)
+            user.groups.add(special_group)
 
 
 class UserLogin(LoginView):

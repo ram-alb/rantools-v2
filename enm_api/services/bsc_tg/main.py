@@ -1,4 +1,3 @@
-import os
 from typing import List, Tuple
 
 from enm_api.services.bsc_tg.enm_cli import EnmCli
@@ -13,11 +12,7 @@ def get_bsc_tg(bsc_name: str) -> Tuple[List[int], List[int]]:
     g31tg = set()
 
     for enm_server in ENM_SERVERS:
-        enm = os.getenv(enm_server)
-        if enm is None:
-            raise ValueError('No ENM_SERVER_2 environment variable')
-
-        enm_cli = EnmCli(enm)
+        enm_cli = EnmCli(enm_server)
         enm_g12tg_data = enm_cli.get_bsc_tg(bsc_name, 'G12')
         enm_g31tg_data = enm_cli.get_bsc_tg(bsc_name, 'G31')
 

@@ -22,6 +22,9 @@ enm-client-scripting = {path = "local_packages/enm_client_scripting-1.22.2-py2.p
 mypy = "^1.9.0"
 djangorestframework = "^3.15.0"
 drf-spectacular = "^0.27.2"
+oracledb = "^2.2.1"
+geopandas = "0.12.2"
+geopy = "^2.4.1"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
