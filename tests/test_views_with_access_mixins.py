@@ -6,15 +6,15 @@ from django.urls import reverse_lazy
 from services.mixins import LoginMixin
 
 
-@pytest.mark.parametrize('url_name', [
-    'bts-files',
-    'bts-info',
-    'nbr-index',
-    'nl-index',
+@pytest.mark.parametrize('url', [
+    reverse_lazy('bts-files'),
+    reverse_lazy('bts-info'),
+    reverse_lazy('nbr-index'),
+    reverse_lazy('nl-index'),
+    reverse_lazy('nbr-import', kwargs={'direction': 'G2U'}),
 ])
-def test_get_not_logged_in(client, check_message, url_name):
+def test_get_not_logged_in(client, check_message, url):
     """Test that GET requests to specified URLs when the user is not logged in."""
-    url = reverse_lazy(url_name)
     response = client.get(url)
 
     assert response.status_code == HTTPStatus.FOUND
@@ -22,14 +22,14 @@ def test_get_not_logged_in(client, check_message, url_name):
     assert check_message(response, LoginMixin.not_signed_in_msg)
 
 
-@pytest.mark.parametrize('url_name', [
-    'bts-files',
-    'nbr-index',
-    'nl-index',
+@pytest.mark.parametrize('url', [
+    reverse_lazy('bts-files'),
+    reverse_lazy('nbr-index'),
+    reverse_lazy('nl-index'),
+    reverse_lazy('nbr-import', kwargs={'direction': 'G2U'}),
 ])
-def test_get_regular_user(client, regular_user, check_message, url_name):
+def test_get_regular_user(client, regular_user, check_message, url):
     """Test that GET requests to specified URLs without permissions for regular user."""
-    url = reverse_lazy(url_name)
     client.login(
         username=regular_user['username'],
         password=regular_user['password'],

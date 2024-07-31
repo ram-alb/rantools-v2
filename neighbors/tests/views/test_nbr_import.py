@@ -4,33 +4,12 @@ from pathlib import Path
 from django.urls import reverse_lazy
 
 from neighbors.views import g2u
-from users.tests.utils import check_message, get_templates
 
 TEMPL_PATH = Path(__file__).resolve().parent.parent / 'fixtures/g2u.xlsx'
 G2U_URL = reverse_lazy('nbr-import', kwargs={'direction': 'G2U'})
 
 
-def test_get_not_logged_in(client):
-    """Test get method of NbrImport view when user is not logged in."""
-    response = client.get(G2U_URL)
-
-    assert response.status_code == HTTPStatus.FOUND
-    assert response.url == reverse_lazy('login') + '?next=' + G2U_URL
-
-
-def test_get_regular_user(client, regular_user):
-    """Test get method of NbrImport view when user is regular user."""
-    client.login(
-        username=regular_user['username'],
-        password=regular_user['password'],
-    )
-    response = client.get(G2U_URL)
-
-    assert response.status_code == HTTPStatus.FOUND
-    assert response.url == reverse_lazy('index')
-
-
-def test_get_rnpo_user(client, rnpo_user):
+def test_get_rnpo_user(client, rnpo_user, get_templates):
     """Test get method of NbrImport view when user is rnpo user."""
     client.login(
         username=rnpo_user['username'],
@@ -42,7 +21,7 @@ def test_get_rnpo_user(client, rnpo_user):
     assert 'neighbors/import.html' in get_templates(response)
 
 
-def test_post_g2u_nbr_empty_form(client, rnpo_user):
+def test_post_g2u_nbr_empty_form(client, rnpo_user, check_message):
     """Test post method of NbrImport view with invalid form."""
     client.login(
         username=rnpo_user['username'],

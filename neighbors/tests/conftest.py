@@ -2,10 +2,6 @@ import zipfile
 from pathlib import Path
 
 import pytest
-from django.contrib.auth.models import Group, User
-from django.test import RequestFactory
-
-from users.tests.conftest import regular_user, rnpo_user
 
 
 @pytest.fixture
