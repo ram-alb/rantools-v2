@@ -80,11 +80,13 @@ def test_nbr_import_post_empty_form(client, rnpo_user, check_message, direction)
         ),
     ],
 )
+@patch('neighbors.services.network_live.main.DBConnector')
 @patch('neighbors.services.network_live.main.GsmTable')
 @patch('neighbors.services.network_live.main.WcdmaTable')
 def test_nbr_import_post_valid_form(
     MockWcdmaTable,
     MockGsmTable,
+    MockDBConnector,
     client,
     rnpo_user,
     direction,
@@ -94,6 +96,8 @@ def test_nbr_import_post_valid_form(
     """Test the post request of NbrImport view with valid form."""
     input_file = Path(__file__).resolve().parent.parent / f'fixtures/{direction}.xlsx'
     url = reverse_lazy('nbr-import', kwargs={'direction': direction})
+
+    MockDBConnector.get_connection.return_value = None
 
     if 'G' in direction:
         mock_table = MockGsmTable.return_value
