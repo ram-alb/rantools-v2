@@ -1,7 +1,8 @@
 from django.shortcuts import HttpResponse, render
 from django.views import View
 
-from network_live.services import excel, select
+from network_live.services.excel import create_excel
+from network_live.services.select import select_data
 from services.mixins import GroupRequiredMixin, LoginMixin
 
 
@@ -18,8 +19,8 @@ class NetworkLive(LoginMixin, GroupRequiredMixin, View):
     def post(self, request):
         """Handle POST requests."""
         technologies = request.POST.getlist('technologies')
-        network_live_data = select.select_data(technologies)
-        excel_content = excel.create_excel(network_live_data)
+        network_live_data = select_data(technologies)
+        excel_content = create_excel(network_live_data)
 
         content_type = 'application/vnd.ms-excel'
         file_name = 'nl_cells.xlsx'

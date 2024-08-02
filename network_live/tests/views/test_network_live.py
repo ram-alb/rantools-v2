@@ -1,20 +1,36 @@
 from http import HTTPStatus
+from io import BytesIO
+from unittest.mock import patch
 
-from django.test import Client
 from django.urls import reverse_lazy
+from openpyxl import load_workbook
 
-from network_live.views import select
-
-client = Client()
 URL = reverse_lazy('nl-index')
 
+network_live_data = {
+    'gsm': ([('data1', 'data2')], ['header1', 'header2']),
+    'nr': ([('data3', 'data4')], ['header3', 'header4']),
+}
 
-def test_post_request(rnpo_user, mock_select_data, mock_xlsx_file):
+
+def _is_contains_word(response, technologies, word):
+    file_content = BytesIO(response.content)
+    wb = load_workbook(filename=file_content)
+
+    for tech in technologies:
+        sheet = wb[tech.upper()]
+        for row in sheet.iter_rows():
+            for cell in row:
+                if cell.value == word:
+                    return True
+    return False
+
+
+@patch('network_live.views.select_data')
+def test_post_request(mock_select_data, client, rnpo_user):
     """Test post method of Network Live view."""
-    def _fake_select(technologies):
-        return mock_select_data
+    mock_select_data.return_value = network_live_data
 
-    select.select_data = _fake_select
     form_data = {'technologies': ['gsm', 'nr']}
     file_name = 'nl_cells.xlsx'
 
@@ -27,3 +43,5 @@ def test_post_request(rnpo_user, mock_select_data, mock_xlsx_file):
     assert response.status_code == HTTPStatus.OK
     assert response['Content-Type'] == 'application/vnd.ms-excel'
     assert f'attachment; filename="{file_name}"' in response['Content-Disposition']
+    assert _is_contains_word(response, form_data['technologies'], 'data1')
+    assert _is_contains_word(response, form_data['technologies'], 'data4')
