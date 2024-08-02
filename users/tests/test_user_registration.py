@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
-from django.urls import reverse
+from django.urls import reverse_lazy
 
 from users import views
 from users.tests.utils import check_message, fake_get_unit_ldap, fake_is_bind, get_templates
 
-REGISTRATION_URL = reverse('registration')
+REGISTRATION_URL = reverse_lazy('registration')
 
 valid_data = {
     'username': 'user1',
@@ -40,7 +40,7 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
     assert users_count_new - users_count_old == 1
     assert check_user(valid_data['username'])
 
-    assert response.url == reverse('login')
+    assert response.url == reverse_lazy('login')
 
     assert check_message(response, views.UserRegistration.success_message)
     assert user.groups.filter(name='Regular Users').exists()
@@ -63,7 +63,7 @@ def test_post_valid_form_ldap_true_rnpo(client, django_user_model, check_user):
     assert users_count_new - users_count_old == 1
     assert check_user(valid_data['username'])
 
-    assert response.url == reverse('login')
+    assert response.url == reverse_lazy('login')
 
     assert check_message(response, views.UserRegistration.success_message)
     assert user.groups.filter(name='Regular Users').exists()

@@ -1,11 +1,11 @@
 from http import HTTPStatus
 
-from django.urls import reverse
+from django.urls import reverse_lazy
 
 from users import views
 from users.tests.utils import check_message, fake_is_bind, get_templates
 
-LOGIN_URL = reverse('login')
+LOGIN_URL = reverse_lazy('login')
 
 
 def test_get(client):
@@ -29,7 +29,7 @@ def test_post_valid_form(client, new_user):
     )
 
     assert response.status_code == HTTPStatus.FOUND
-    assert response.url == reverse('index')
+    assert response.url == reverse_lazy('index')
     assert check_message(response, views.UserLogin.success_message)
 
 
@@ -63,7 +63,7 @@ def test_post_invalid_form_ldap_true(client, django_user_model, new_user):
     user = django_user_model.objects.get(username=new_user['username'])
 
     assert response.status_code == HTTPStatus.FOUND
-    assert response.url == reverse('index')
+    assert response.url == reverse_lazy('index')
     assert check_message(response, views.UserLogin.success_message)
     assert user.check_password(invalid_data['password'])
 
