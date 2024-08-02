@@ -164,7 +164,7 @@ cython_debug/
 .DS_Store
 
 #Ignore all xlsx files
-*.xlsx
+# *.xlsx
 
 #Ignore all pdf file
 *.pdf
