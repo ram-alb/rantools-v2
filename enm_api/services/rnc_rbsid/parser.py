@@ -4,7 +4,7 @@ from enmscripting import ElementGroup
 
 
 def parse_rbsid(enm_rbsid_data: ElementGroup) -> List[Dict[str, Any]]:
-    """Parse Rs Id data from ENM data."""
+    """Parse RbsId, IubLink, RNC Name data from ENM data."""
     all_rbsid = []
     iub = ''
 

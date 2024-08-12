@@ -122,13 +122,13 @@ class ControllersSerializer(serializers.Serializer):
 class SiteIdSerializer(serializers.Serializer):
     """Serializer for Site Id data."""
 
-    Id = serializers.CharField()
+    id = serializers.CharField()
 
-    def validate_Id(self, siteid):
+    def validate_id(self, siteid):
         """Validate the format of the site id."""
         pattern = r'^\d{5}$'
         if not re.match(pattern, siteid):
-            raise serializers.ValidationError("Invalid site id. It must be a 5-digit number.")
+            raise serializers.ValidationError("Invalid siteId. It must be a 5-digit number.")
         return siteid
 
 
@@ -142,14 +142,9 @@ class RbsIdSerializer(serializers.Serializer):
 
 class RbsIdResponseSerializer(serializers.Serializer):
     """Serializer for the RbsId response format."""
-    
+
     rbsid_map = serializers.DictField(child=RbsIdSerializer())
 
     def to_representation(self, instance):
         """Transform the instance into the required dictionary format."""
-        # result = {}
-        # for iub, rbsid_data in instance.items():
-        #     result[iub] = RbsIdSerializer(rbsid_data).data
-        # return result
-        # return {iub: RbsIdSerializer(rbsid_data).data for iub, rbsid_data in instance.items()}
         return instance

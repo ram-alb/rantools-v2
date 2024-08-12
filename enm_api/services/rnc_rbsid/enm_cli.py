@@ -7,7 +7,7 @@ class EnmCli(EnmScripting):
     """A class for communicating with ENM CLI."""
 
     def get_rnc_rbsid(self, siteid: str) -> ElementGroup:
-        """Get RbsId data from ENM for a given scope."""
+        """Get RbsId and IubLink data from ENM for a given scope."""
         cmedit_get_command = f'cmedit get * IubLink.(IubLinkId==*{siteid}*, rbsId)'
 
         session = self._get_session()

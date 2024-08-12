@@ -96,7 +96,7 @@ class RncRbsId(AuthenticatedAPIView):
         """Retrieve RbsId data for all RNCs based on the provided SiteId."""
         serializer = SiteIdSerializer(data=request.data)
         if serializer.is_valid():
-            siteid = serializer.validated_data['Id']
+            siteid = serializer.validated_data['id']
             rbsid_list = get_rnc_rbsid(siteid)
             rbsid_map = {instance['Name']: instance for instance in rbsid_list}
             rbsid_response_serializer = RbsIdResponseSerializer(rbsid_map)

@@ -7,7 +7,7 @@ ENM_SERVERS = ('ENM_SERVER_2', 'ENM_SERVER_4')
 
 
 def get_rnc_rbsid(siteid: str) -> List[Dict[str, Any]]:
-    """Get all rbsIds for matched IubLink."""
+    """Get all rbsIds for matched SiteId in IubLink name."""
     for enm_server in ENM_SERVERS:
         enm_cli = EnmCli(enm_server)
         enm_rbsid_data = enm_cli.get_rnc_rbsid(siteid)
