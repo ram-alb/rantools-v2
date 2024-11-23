@@ -43,7 +43,9 @@ SELECT_NETWORK = """
         sitename,
         cell,
         cellid,
-        lac
+        lac,
+        ROUND(longitude, 5) as longitude,
+        ROUND(latitude, 5) as latitude
     FROM gsmcells2
     WHERE sitename LIKE :site_id
     ORDER BY cell
@@ -58,3 +60,5 @@ class NetworkGsmCell(NamedTuple):
     cell: str
     cellid: int
     lac: int
+    longitude: float
+    latitude: float

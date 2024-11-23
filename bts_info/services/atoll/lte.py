@@ -47,7 +47,9 @@ SELECT_NETWORK = """
         sitename,
         eutrancell,
         cellid,
-        tac
+        tac,
+        ROUND(longitude, 5) as longitude,
+        ROUND(latitude, 5) as latitude
     FROM ltecells2
     WHERE sitename LIKE :site_id
     ORDER BY cellid
@@ -62,3 +64,5 @@ class NetworkLteCell(NamedTuple):
     cell: str
     cellid: int
     tac: int
+    longitude: float
+    latitude: float

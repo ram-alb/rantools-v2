@@ -44,6 +44,8 @@ gsm_network_data = [
         cell='Gcell1',
         cellid=0,
         lac=10,
+        longitude=lon,
+        latitude=lat,
     ),
     NetworkGsmCell(
         location='BSC1',
@@ -51,6 +53,8 @@ gsm_network_data = [
         cell='Gcell2',
         cellid=1,
         lac=10,
+        longitude=lon,
+        latitude=lat,
     ),
 ]
 
