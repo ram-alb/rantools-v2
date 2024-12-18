@@ -48,8 +48,8 @@ SELECT_NETWORK = """
         cellname,
         cellid,
         nrtac,
-        ROUND(longitude, 5) as longitude,
-        ROUND(latitude, 5) as latitude
+        ROUND(latitude, 5) as latitude,
+        ROUND(longitude, 5) as longitude
     FROM nrcells
     WHERE sitename LIKE :site_id
     ORDER BY cellid
@@ -64,5 +64,5 @@ class NetworkNrCell(NamedTuple):
     cell: str
     cellid: int
     tac: int
-    longitude: float
     latitude: float
+    longitude: float

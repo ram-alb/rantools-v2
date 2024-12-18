@@ -46,8 +46,8 @@ SELECT_NETWORK = """
         utrancell,
         localcellid,
         lac,
-        ROUND(longitude, 5) as longitude,
-        ROUND(latitude, 5) as latitude
+        ROUND(latitude, 5) as latitude,
+        ROUND(longitude, 5) as longitude
     FROM wcdmacells2
     WHERE sitename LIKE :site_id
     ORDER BY utrancell
@@ -62,5 +62,5 @@ class NetworkWcdmaCell(NamedTuple):
     cell: str
     cellid: int
     lac: int
-    longitude: float
     latitude: float
+    longitude: float
