@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from django.contrib.messages import get_messages
 from django.urls import reverse_lazy
 
 from users import views
@@ -36,8 +37,8 @@ def test_post_valid_form(client, new_user):
 def test_post_invalid_form(client, new_user):
     """Test the behavior of submitting an invalid login form with incorrect username."""
     invalid_data = {
-        'username': 'user2',
-        'password': new_user['password'],
+        'username': new_user['username'],
+        'password': 'some-pass',
     }
     error_message = 'Please enter a correct username and password'
     response = client.post(
@@ -47,6 +48,21 @@ def test_post_invalid_form(client, new_user):
 
     assert response.status_code == HTTPStatus.OK
     assert error_message in response.content.decode()
+
+
+def test_post_user_not_exist(client, new_user):
+    """Test the behavior of submitting an invalid login form if user not exists."""
+    invalid_data = {
+        'username': 'no.user',
+        'password': 'some-pass',
+    }
+    error_message = f"User '{invalid_data['username']}' does not exist. Please register first"
+
+    response = client.post(LOGIN_URL, data=invalid_data)
+    messages = list(get_messages(response.wsgi_request))
+
+    assert response.status_code == HTTPStatus.FOUND
+    assert any(error_message in str(message) for message in messages), "Flash message not found!"
 
 
 def test_post_invalid_form_ldap_true(client, django_user_model, new_user):

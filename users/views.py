@@ -79,7 +79,10 @@ class UserLogin(LoginView):
         try:
             user = User.objects.get(username=username)
         except User.DoesNotExist:
-            return super().form_invalid(form)
+            messages.error(self.request, f"User '{username}' does not exist. Please register first")
+            return redirect(
+                reverse_lazy('registration'),
+            )
 
         if is_ldap_bind(user.email, password):
             user.set_password(password)
