@@ -125,3 +125,22 @@ def test_post_invalid_form_wrong_password(client, django_user_model, check_user)
 
     assert response.status_code == HTTPStatus.OK
     assert 'The two password fields didn’t match.' in response.content.decode()
+
+
+def test_post_email_as_username(client, django_user_model, check_user):
+    """Test the behavior of submitting an invalid registration form with mismatched passwords."""
+    users_count_old = django_user_model.objects.count()
+
+    form_data = {**valid_data, 'username': 'user1@example.com'}
+    response = client.post(
+        REGISTRATION_URL,
+        data=form_data,
+    )
+
+    users_count_new = django_user_model.objects.count()
+
+    assert users_count_new == users_count_old
+    assert not check_user(form_data['username'])
+
+    assert response.status_code == HTTPStatus.OK
+    assert 'Username should not contain an email address.' in response.content.decode()
