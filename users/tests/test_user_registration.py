@@ -3,7 +3,7 @@ from http import HTTPStatus
 from django.urls import reverse_lazy
 
 from users import views
-from users.tests.utils import check_message, fake_get_unit_ldap, fake_is_bind, get_templates
+from users.tests.utils import check_message, fake_get_groups_ldap, fake_is_bind, get_templates
 
 REGISTRATION_URL = reverse_lazy('registration')
 
@@ -28,7 +28,7 @@ def test_post_valid_form_ldap_true(client, django_user_model, check_user):
     """Test the submitting a valid registration form when LDAP binding is simulated as True."""
     users_count_old = django_user_model.objects.count()
     views.is_ldap_bind = fake_is_bind(True)
-    views.get_unit_ldap = fake_get_unit_ldap(False)
+    views.get_groups_ldap = fake_get_groups_ldap(False)
 
     response = client.post(
         REGISTRATION_URL,
@@ -51,7 +51,7 @@ def test_post_valid_form_ldap_true_rnpo(client, django_user_model, check_user):
     """Test the submitting a valid registration form when LDAP binding is simulated as True."""
     users_count_old = django_user_model.objects.count()
     views.is_ldap_bind = fake_is_bind(True)
-    views.get_unit_ldap = fake_get_unit_ldap(True)
+    views.get_groups_ldap = fake_get_groups_ldap(True)
 
     response = client.post(
         REGISTRATION_URL,

@@ -7,7 +7,7 @@ from django.urls import reverse_lazy
 from django.views.generic.edit import CreateView
 
 from users.forms import UserRegistrationForm
-from users.ldap_authentication import get_unit_ldap, is_ldap_bind
+from users.ldap_authentication import get_groups_ldap, is_ldap_bind
 
 
 class UserRegistration(CreateView):
@@ -45,14 +45,12 @@ class UserRegistration(CreateView):
             regular_users_group = Group.objects.create(name=group_name)
         user.groups.add(regular_users_group)
 
-        rnpo_units = [
-            'Сектор стратегического планирования радиосети',
-            'Сектор планирования сети',
-            'Сектор оптимизации радиосети',
-        ]
+        ldap_groups = get_groups_ldap(email, passwd)
+        if ldap_groups is None:
+            return
+
         rnpo_group = 'RNPO Users'
-        unit = get_unit_ldap(email, passwd)
-        if unit in rnpo_units:
+        if 'CN=NDS-RNPOU' in ', '.join(ldap_groups):
             try:
                 special_group = Group.objects.get(name=rnpo_group)
             except Group.DoesNotExist:

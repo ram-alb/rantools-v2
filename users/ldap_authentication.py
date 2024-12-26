@@ -19,10 +19,10 @@ def is_ldap_bind(email, password):
     return is_bind
 
 
-def get_unit_ldap(email, password):
+def get_groups_ldap(email, password):
     """Get the user's unit from ldap."""
     base_dn = 'dc=kcell,dc=kz'
-    attr_name = 'kcellUnitNewRus'
+    attr_name = 'memberOf'
     search_filter = f'(mail={email})'
 
     server = Server(host=os.getenv('LDAP_URL'), get_info=ALL)
@@ -44,9 +44,9 @@ def get_unit_ldap(email, password):
     if conn.entries:
         entry = conn.entries[0]
         try:
-            unit = entry.entry_attributes_as_dict.get(attr_name, [None])[0]
+            groups = entry.entry_attributes_as_dict.get(attr_name, [None])
         except IndexError:
-            unit = None
+            groups = None
 
     conn.unbind()
-    return unit
+    return groups

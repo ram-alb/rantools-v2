@@ -15,10 +15,14 @@ def fake_is_bind(is_bound):
     return lambda email, password: False
 
 
-def fake_get_unit_ldap(is_rnpo):
+def fake_get_groups_ldap(is_rnpo):
     """Create a fake function to get unit from ldap based on the given rnpo state."""
     if is_rnpo:
-        return lambda email, password: 'Сектор планирования сети'
+        groups = [
+            'CN=Technologies-SR,OU=Groups,OU=Information and Communication Technologies Dpt.',
+            'CN=NDS-RNPOU,OU=Groups,OU=Information and Communication Technologies Dpt.',
+        ]
+        return lambda email, password: groups
     return lambda email, password: None
 
 
