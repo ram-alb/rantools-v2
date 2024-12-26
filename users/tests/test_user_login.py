@@ -36,6 +36,7 @@ def test_post_valid_form(client, new_user):
 
 def test_post_invalid_form(client, new_user):
     """Test the behavior of submitting an invalid login form with incorrect username."""
+    views.is_ldap_bind = fake_is_bind(False)
     invalid_data = {
         'username': new_user['username'],
         'password': 'some-pass',
