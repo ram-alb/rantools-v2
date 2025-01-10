@@ -43,14 +43,14 @@ SELECT_NETWORK = """
     SELECT
         rncname,
         sitename,
-        utrancell,
+        cell,
         localcellid,
         lac,
         ROUND(latitude, 5) as latitude,
         ROUND(longitude, 5) as longitude
     FROM wcdmacells2
     WHERE sitename LIKE :site_id
-    ORDER BY utrancell
+    ORDER BY cell
 """
 
 

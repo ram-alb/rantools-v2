@@ -45,7 +45,7 @@ SELECT_NETWORK = """
     SELECT
         subnetwork,
         sitename,
-        eutrancell,
+        cell,
         cellid,
         tac,
         ROUND(latitude, 5) as latitude,

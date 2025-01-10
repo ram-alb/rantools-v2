@@ -45,7 +45,7 @@ SELECT_NETWORK = """
     SELECT
         subnetwork,
         sitename,
-        cellname,
+        cell,
         cellid,
         nrtac,
         ROUND(latitude, 5) as latitude,
