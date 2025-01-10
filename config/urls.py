@@ -15,4 +15,5 @@ urlpatterns = [
     path('bts-files/', include('bts_files.urls')),
     path('bts-info/', include('bts_info.urls')),
     path('network_live/', include('network_live.urls')),
+    path('dayX/', include('day_x.urls')),
 ]
