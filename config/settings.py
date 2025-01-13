@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'enm_api',
     'bts_files',
     'bts_info',
-    'network_live',
+    'network_live_app',
     'day_x',
 ]
 

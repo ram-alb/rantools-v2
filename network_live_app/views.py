@@ -1,8 +1,8 @@
 from django.shortcuts import HttpResponse, render
 from django.views import View
 
-from network_live.services.excel import create_excel
-from network_live.services.select import select_data
+from network_live_app.services.excel import create_excel
+from network_live_app.services.select import select_data
 from services.mixins import GroupRequiredMixin, LoginMixin
 
 

@@ -14,6 +14,6 @@ urlpatterns = [
     path('enm-api/', include('enm_api.urls')),
     path('bts-files/', include('bts_files.urls')),
     path('bts-info/', include('bts_info.urls')),
-    path('network_live/', include('network_live.urls')),
+    path('network_live/', include('network_live_app.urls')),
     path('dayX/', include('day_x.urls')),
 ]
