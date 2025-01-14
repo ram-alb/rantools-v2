@@ -6,8 +6,8 @@ class UploadNeighborsForm(forms.Form):
 
     choices = (
         ('', '----------'),
-        ('ENM2', 'ENM2'),
-        ('ENM4', 'ENM4'),
+        ('ENM_2', 'ENM_2'),
+        ('ENM_4', 'ENM_4'),
     )
 
     enm = forms.ChoiceField(choices=choices, required=True)

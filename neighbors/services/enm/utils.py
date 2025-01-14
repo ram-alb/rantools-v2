@@ -1,6 +1,6 @@
 enms = {
-    'ENM2': 'ENM_SERVER_2',
-    'ENM4': 'ENM_SERVER_4',
+    'ENM_2': 'ENM_SERVER_2',
+    'ENM_4': 'ENM_SERVER_4',
 }
 
 

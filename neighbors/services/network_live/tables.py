@@ -38,7 +38,7 @@ class WcdmaTable(BaseTable):
     def get_enm_cells(self, enm: str) -> List[Cell]:
         """Get the WCDMA cells configured on ENM from network live table."""
         table_name = self._get_table_name()
-        sql_select = f"SELECT rncname, utrancell FROM {table_name} WHERE oss = :oss"
+        sql_select = f"SELECT rncname, cell FROM {table_name} WHERE oss = :oss"
 
         with self.connection.cursor() as cursor:
             cursor.execute(sql_select, oss=enm)

@@ -115,7 +115,7 @@ def test_nbr_import_post_valid_form(
     with patch(get_enm_data_func_location) as mock_get_enm_data:
         mock_get_enm_data.return_value = enm_data
         with open(input_file, 'rb') as temp:
-            form_data = {'enm': 'ENM2', 'neighbors_excel': temp}
+            form_data = {'enm': 'ENM_2', 'neighbors_excel': temp}
             client.login(
                 username=rnpo_user['username'],
                 password=rnpo_user['password'],
