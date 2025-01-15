@@ -72,7 +72,9 @@ class UserLogin(LoginView):
 
     def form_invalid(self, form):
         """Handle the case when the login form is invalid."""
-        username = form.cleaned_data['username']
+        username = form.cleaned_data['username'].lower()
+        if '@' in username:
+            username = username.split('@')[0]
         password = form.cleaned_data['password']
         try:
             user = User.objects.get(username=username)

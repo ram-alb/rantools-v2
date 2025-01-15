@@ -7,11 +7,6 @@ from django.core.exceptions import ValidationError
 class UserRegistrationForm(UserCreationForm):
     """User registration form."""
 
-    username = forms.CharField(
-        label='Username',
-        required=True,
-        help_text='Use your kcell username without @kcell.kz',
-    )
     email = forms.EmailField(
         label='Email',
         required=True,
@@ -28,17 +23,27 @@ class UserRegistrationForm(UserCreationForm):
         help_text='To confirm, please enter your password again.',
     )
 
-    def clean_username(self):
-        """Ensure the username does not contain an email address."""
-        username = self.cleaned_data.get('username')
-        if '@' in username:
-            raise ValidationError('Username should not contain an email address.')
-        return username
+    def clean_email(self):
+        """Ensure the email is valid and generate a username from it."""
+        email = self.cleaned_data.get('email').lower()
+        if '@kcell.kz' not in email:
+            raise ValidationError('Please use a Kcell email address.')
+
+        self.cleaned_data['username'] = email.split('@')[0]
+        return email
+
+    def save(self, commit=True):
+        """Save the user with the generated username in lowercase."""
+        user = super().save(commit=False)
+        user.username = self.cleaned_data['username'].lower()
+        user.email = self.cleaned_data['email'].lower()
+        if commit:
+            user.save()
+        return user
 
     class Meta(UserCreationForm.Meta):
         model = User
         fields = [
-            'username',
             'email',
             'password1',
             'password2',
