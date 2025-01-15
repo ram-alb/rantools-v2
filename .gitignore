@@ -168,3 +168,7 @@ cython_debug/
 
 #Ignore all pdf file
 *.pdf
+
+day_x/network_live_files/DEC_2019.xlsx
+day_x/network_live_files/DEC_2019.zip
+dump.rdb
