@@ -58,6 +58,14 @@
                   </a>
                 </li>
               {% endif %}
+
+              {% if request.user|in_group:"DayX" %}
+                <li class="nav-item">
+                  <a href="{% url 'dayX' %}" class="nav-link align-middle px-0">
+                    <i class="fa fa-user-secret"></i> <span class="ms-1 d-none d-sm-inline">DayX</span>
+                  </a>
+                </li>
+              {% endif %}
             {% endif %}
 
             <li class="nav-item">

@@ -3,7 +3,7 @@ from tempfile import NamedTemporaryFile
 
 from openpyxl import Workbook  # type: ignore
 
-from network_live.services.select import NetworkLiveData
+from network_live_app.services.select import NetworkLiveData
 
 
 def create_excel(network_live_data: NetworkLiveData) -> bytes:

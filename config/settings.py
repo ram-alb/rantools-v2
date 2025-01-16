@@ -45,7 +45,8 @@ INSTALLED_APPS = [
     'enm_api',
     'bts_files',
     'bts_info',
-    'network_live',
+    'network_live_app',
+    'day_x',
 ]
 
 MIDDLEWARE = [
@@ -169,3 +170,13 @@ SPECTACULAR_SETTINGS = {
     'COMPONENT_SPLIT_REQUEST': True,
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# Celery settings
+CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_RESULT_BACKEND = "redis://localhost:6379"
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+REDIS_DB = 0
