@@ -45,7 +45,8 @@ SELECT_NETWORK = """
         cellid,
         lac,
         ROUND(latitude, 5) as latitude,
-        ROUND(longitude, 5) as longitude
+        ROUND(longitude, 5) as longitude,
+        '' as sharingtype
     FROM gsmcells2
     WHERE sitename LIKE :site_id
     ORDER BY cell
@@ -62,3 +63,4 @@ class NetworkGsmCell(NamedTuple):
     lac: int
     latitude: float
     longitude: float
+    sharingtype: str

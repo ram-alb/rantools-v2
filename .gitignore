@@ -168,3 +168,4 @@ cython_debug/
 
 #Ignore all pdf file
 *.pdf
+dump.rdb

@@ -47,7 +47,8 @@ SELECT_NETWORK = """
         localcellid,
         lac,
         ROUND(latitude, 5) as latitude,
-        ROUND(longitude, 5) as longitude
+        ROUND(longitude, 5) as longitude,
+        mocncellprofile
     FROM wcdmacells2
     WHERE sitename LIKE :site_id
     ORDER BY cell
@@ -64,3 +65,4 @@ class NetworkWcdmaCell(NamedTuple):
     lac: int
     latitude: float
     longitude: float
+    sharingtype: str

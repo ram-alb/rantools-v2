@@ -47,7 +47,7 @@
           {% for site in sites %}
             <tr>
               {% for item_value in site.values %}
-                <td>{{ item_value }}</td>
+                <td>{{ item_value|default_if_none:'' }}</td>
               {% endfor %}
             </tr>
           {% endfor %}

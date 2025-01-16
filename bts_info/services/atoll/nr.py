@@ -49,7 +49,8 @@ SELECT_NETWORK = """
         cellid,
         nrtac,
         ROUND(latitude, 5) as latitude,
-        ROUND(longitude, 5) as longitude
+        ROUND(longitude, 5) as longitude,
+        '' as sharingtype
     FROM nrcells
     WHERE sitename LIKE :site_id
     ORDER BY cellid
@@ -66,3 +67,4 @@ class NetworkNrCell(NamedTuple):
     tac: int
     latitude: float
     longitude: float
+    sharingtype: str
