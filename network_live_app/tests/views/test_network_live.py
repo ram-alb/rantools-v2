@@ -26,7 +26,7 @@ def _is_contains_word(response, technologies, word):
     return False
 
 
-@patch('network_live.views.select_data')
+@patch('network_live_app.views.select_data')
 def test_post_request(mock_select_data, client, rnpo_user):
     """Test post method of Network Live view."""
     mock_select_data.return_value = network_live_data
