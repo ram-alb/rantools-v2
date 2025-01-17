@@ -24,4 +24,4 @@ def send_dayx_file() -> None:
     # send report
     subject = 'DayX file'
     message = '\n'.join(update_results)
-    send_email(list(to), subject, message, filepaths=report_path)
+    send_email(list(to), subject, message, filepaths=[report_path])
