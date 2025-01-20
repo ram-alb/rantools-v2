@@ -31,9 +31,9 @@ def select_atoll_data(technologies: List[str]) -> AtollData:
 
     with DbConnection('oracledb') as connection:
         for tech in technologies:
-            selected_data[tech] = select(
+            selected_data[tech] = select(  # type: ignore
                 connection,
-                **sql_data[tech],
+                **sql_data[tech],  # type: ignore
             )
 
     return selected_data

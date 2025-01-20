@@ -87,7 +87,7 @@ def test_post_request(client, rnpo_user, file_type):
     form_data = {
         'file-type': file_type,
         'technologies': ['GSM'],
-        'regions': ['Almaty-region'],
+        'regions': ['Jetysu-region'],
     }
 
     client.login(

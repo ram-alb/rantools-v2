@@ -1,29 +1,13 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
+from point_in_region import get_regions
 
 from bts_files.services.main import get_file_content
 from services.mixins import GroupRequiredMixin, LoginMixin
 
 FILE_TYPES = ('kml', 'nbf', 'excel')
 TECHNOLOGIES = ('GSM', 'WCDMA', 'LTE', 'NR')
-REGIONS = (
-    'Astana-region',
-    'Aktobe-region',
-    'Almaty-region',
-    'Atyrau-region',
-    'Karaganda-region',
-    'Kostanay-region',
-    'Kyzylorda-region',
-    'Mangystau-region',
-    'Pavlodar-region',
-    'North-Kazakhstan',
-    'South-Kazakhstan',
-    'East-Kazakhstan',
-    'Zhambyl-region',
-    'West-Kazakhstan',
-    'Kazmin',
-)
 
 
 class BtsFiles(LoginMixin, GroupRequiredMixin, View):
@@ -36,7 +20,7 @@ class BtsFiles(LoginMixin, GroupRequiredMixin, View):
         return render(request, 'bts_files/bts_files.html', {
             'file_types': FILE_TYPES,
             'technologies': TECHNOLOGIES,
-            'regions': sorted(REGIONS),
+            'regions': get_regions(is_sorted=True),
         })
 
     def post(self, request, *args, **kwargs):
