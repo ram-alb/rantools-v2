@@ -19,11 +19,21 @@ class UserRegistration(CreateView):
     success_url = reverse_lazy('login')
     success_message = 'User registration was successful'
     error_kcell_message = 'You used not Kcell account. Please, use your Kcell account'
+    error_email_exists_message = 'A user with this email already exists.'
 
     def form_valid(self, form):
         """Handle the case when the registration form is valid."""
-        email = form.cleaned_data['email']
+        email = form.cleaned_data['email'].lower()
+
+        form.instance.email = email
+        form.instance.username = form.cleaned_data['username'].lower()
+
         password = form.cleaned_data['password1']
+
+        if User.objects.filter(email=email).exists():
+            form.add_error('email', self.error_email_exists_message)
+            return self.form_invalid(form)
+
         if is_ldap_bind(email, password):
             response = super().form_valid(form)
             self.add_user_to_groups(self.object, email, password)
