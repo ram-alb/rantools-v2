@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'bts_info',
     'network_live_app',
     'day_x',
+    'sites_count',
 ]
 
 MIDDLEWARE = [
