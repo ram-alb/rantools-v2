@@ -16,4 +16,5 @@ urlpatterns = [
     path('bts-info/', include('bts_info.urls')),
     path('network_live/', include('network_live_app.urls')),
     path('dayX/', include('day_x.urls')),
+    path('sites_count/', include('sites_count.urls')),
 ]

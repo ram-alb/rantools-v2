@@ -1,9 +1,9 @@
 from django.contrib.auth.models import Group
-from network_live import update_nl
 from send_mail import send_email
 
 from day_x.services.reports import fill_excel
 from day_x.services.sql import get_network_live_data
+from network_live import update_nl
 
 
 def send_dayx_file() -> None:
