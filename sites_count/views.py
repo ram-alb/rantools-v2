@@ -9,10 +9,9 @@ from sites_count.forms import SiteCountForm
 from sites_count.services.main import get_site_data
 
 
-class SitesCountView(LoginMixin, GroupRequiredMixin, View):
+class SitesCountView(LoginMixin, View):
     """A view for displaying site counts."""
 
-    required_group = 'RNPO Users'
     template_path = 'sites_count/index.html'
 
     year = 2023
