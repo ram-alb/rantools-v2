@@ -3,6 +3,7 @@ from bts_files.services.atoll.lte import LteRowFactory
 from bts_files.services.atoll.main import CellRowFactory
 from bts_files.services.atoll.wcdma import WcdmaRowFactory
 from bts_files.services.filter_cells import AllTechPolygon
+from bts_files.services.utils import DEFAULT_WIDTH, calc_azimut_beam
 
 
 def _get_lte_carrier(carrier: str) -> str:
@@ -37,6 +38,7 @@ def _get_gsm_uniq(cell: GsmRowFactory) -> str:
         str(cell.lac),
         '',
         str(cell.azimut),
+        str(DEFAULT_WIDTH),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -50,12 +52,14 @@ def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
         str(cell.lac),
         str(cell.psc),
         str(cell.azimut),
+        str(DEFAULT_WIDTH),
     ]
     return ';'.join(_replace_none(uniq_params))
 
 
 def _get_lte_uniq(cell: LteRowFactory) -> str:
     carrier = _get_lte_carrier(cell.carrier)
+    azimut, beam_width = calc_azimut_beam(cell)
     uniq_params = [
         carrier,
         '',
@@ -63,7 +67,8 @@ def _get_lte_uniq(cell: LteRowFactory) -> str:
         str(cell.pci),
         '',
         '',
-        str(cell.azimut),
+        str(azimut),
+        str(beam_width),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -87,7 +92,7 @@ def _get_tech_row(cell: CellRowFactory, technology: str) -> str:
 
 def make_nbf_content(cell_data: AllTechPolygon) -> str:
     """Generate NBF content from the given cell data for different technologies."""
-    nbf_content = 'SYSTEM;SITE;LAT;LON;CELL;CH;BSIC;CID;PCI;LAC;SCR;DIR;'
+    nbf_content = 'SYSTEM;SITE;LAT;LON;CELL;CH;BSIC;CID;PCI;LAC;SCR;DIR;BEAM;'
 
     for tech, tech_data in cell_data.items():
         if tech in {'sites', 'NR'}:
