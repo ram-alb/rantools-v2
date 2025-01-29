@@ -12,7 +12,8 @@ atoll_wcdma_select = """
         c.scrambling_code as psc,
         c.lac,
         t.height,
-        t.azimut
+        t.azimut,
+        t.antenna_name
     FROM
         atoll_mrat.utransmitters t
         JOIN atoll_mrat.sites s
@@ -42,3 +43,4 @@ class WcdmaRowFactory(NamedTuple):
     lac: int
     height: float
     azimut: int
+    antenna: str

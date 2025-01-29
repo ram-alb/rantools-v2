@@ -14,7 +14,8 @@ atoll_lte_select = """
         c.prach_rsi_list,
         c.tac,
         t.height,
-        t.azimut
+        t.azimut,
+        t.antenna_name
     FROM
         atoll_mrat.xgtransmitters t
         JOIN atoll_mrat.sites s
@@ -45,3 +46,4 @@ class LteRowFactory(NamedTuple):
     tac: int
     height: float
     azimut: int
+    antenna: str

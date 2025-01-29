@@ -13,7 +13,8 @@ atoll_gsm_select = """
         g.lac,
         g.height,
         g.azimut,
-        g.fband
+        g.fband,
+        g.antenna_name
     FROM
         atoll_mrat.gtransmitters g
         JOIN atoll_mrat.sites s
@@ -41,3 +42,4 @@ class GsmRowFactory(NamedTuple):
     height: float
     azimut: int
     fband: str
+    antenna: str

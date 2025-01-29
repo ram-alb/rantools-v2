@@ -30,6 +30,7 @@ gsm_data = [
         height=10,
         azimut=10,
         fband='GSM 900',
+        antenna='Antenna1',
     ),
     GsmRowFactory(
         bsc='BSC1',
@@ -44,6 +45,7 @@ gsm_data = [
         height=10,
         azimut=10,
         fband='GSM 900',
+        antenna='Antenna2',
     ),
 ]
 

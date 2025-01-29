@@ -12,7 +12,8 @@ atoll_nr_select = """
         c.pci,
         c.tac,
         t.height,
-        t.azimut
+        t.azimut,
+        t.antenna_name
     FROM
         atoll_mrat.xgtransmitters t
         JOIN atoll_mrat.sites s
@@ -41,3 +42,4 @@ class NrRowFactory(NamedTuple):
     tac: int
     height: float
     azimut: int
+    antenna: str
