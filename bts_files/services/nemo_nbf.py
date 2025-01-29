@@ -1,6 +1,7 @@
 from bts_files.services.atoll.gsm import GsmRowFactory
 from bts_files.services.atoll.lte import LteRowFactory
 from bts_files.services.atoll.main import CellRowFactory
+from bts_files.services.atoll.nr import NrRowFactory
 from bts_files.services.atoll.wcdma import WcdmaRowFactory
 from bts_files.services.filter_cells import AllTechPolygon
 from bts_files.services.utils import DEFAULT_WIDTH, calc_azimut_beam
@@ -10,6 +11,16 @@ def _get_lte_carrier(carrier: str) -> str:
     """Extract the LTE carrier from a given carrier string."""
     carr = carrier.split('(')[-1]
     return carr[:-1]
+
+
+def _get_nr_carrier(carrier: str) -> str:
+    """Extract the NR carrier from a given carrier string."""
+    carrier_data = carrier.split(' ')[-1]
+
+    if '(' in carrier_data:
+        return carrier_data.split('(')[0]
+
+    return carrier_data
 
 
 def _get_common_part(cell: CellRowFactory) -> str:
@@ -73,6 +84,21 @@ def _get_lte_uniq(cell: LteRowFactory) -> str:
     return ';'.join(_replace_none(uniq_params))
 
 
+def _get_nr_uniq(cell: NrRowFactory) -> str:
+    carrier = _get_nr_carrier(cell.carrier)
+    uniq_params = [
+        carrier,
+        '',
+        cell.cid,
+        str(cell.pci),
+        '',
+        '',
+        str(cell.azimut),
+        str(DEFAULT_WIDTH),
+    ]
+    return ';'.join(_replace_none(uniq_params))
+
+
 def _get_tech_row(cell: CellRowFactory, technology: str) -> str:
     """Construct a row string for a given cell and technology."""
     common = _get_common_part(cell)
@@ -86,6 +112,9 @@ def _get_tech_row(cell: CellRowFactory, technology: str) -> str:
     elif technology == 'LTE':
         lte_uniq = _get_lte_uniq(cell)  # type: ignore
         row = f'LTE;{common};{lte_uniq};'
+    elif technology == 'NR':
+        nr_uniq = _get_nr_uniq(cell)  # type: ignore
+        row = f'NR;{common};{nr_uniq};'
 
     return row
 
@@ -95,7 +124,7 @@ def make_nbf_content(cell_data: AllTechPolygon) -> str:
     nbf_content = 'SYSTEM;SITE;LAT;LON;CELL;CH;BSIC;CID;PCI;LAC;SCR;DIR;BEAM;'
 
     for tech, tech_data in cell_data.items():
-        if tech in {'sites', 'NR'}:
+        if tech == 'sites':
             continue
         for cell in tech_data:  # type: ignore
             nbf_content = nbf_content + '\n{row}'.format(row=_get_tech_row(cell, tech))

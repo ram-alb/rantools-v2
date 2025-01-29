@@ -8,6 +8,7 @@ atoll_nr_select = """
         s.latitude,
         c.cell_id as cell,
         c.unique_id as cid,
+        c.carrier,
         c.pci,
         c.tac,
         t.height,
@@ -35,6 +36,7 @@ class NrRowFactory(NamedTuple):
     latitude: float
     cell: str
     cid: str
+    carrier: str
     pci: int
     tac: int
     height: float
