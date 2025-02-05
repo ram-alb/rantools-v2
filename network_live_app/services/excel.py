@@ -1,30 +1,22 @@
 """Create excel file with network live cell data."""
-from tempfile import NamedTemporaryFile
+from io import BytesIO
 
-from openpyxl import Workbook  # type: ignore
+import pandas as pd
 
 from network_live_app.services.select import NetworkLiveData
 
 
 def create_excel(network_live_data: NetworkLiveData) -> bytes:
     """Create excel file with network live cell data."""
-    work_book = Workbook()
+    output = BytesIO()
 
-    for technology, (cell_data, headers) in network_live_data.items():
-        work_sheet = work_book.create_sheet(technology.upper())
+    with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
+        for technology, (rows, headers) in network_live_data.items():
+            if not rows:
+                continue  # Пропускаем, если данных нет
 
-        row = 1
-        for column, header in enumerate(headers, start=1):
-            work_sheet.cell(row=row, column=column, value=header)
+            df = pd.DataFrame(rows, columns=headers)
+            df.to_excel(writer, sheet_name=technology.upper(), index=False)
 
-        row = 2  # Start after headers
-        for cell_values in cell_data:
-            work_sheet.append(cell_values)
-            row += 1
-
-    work_book.remove(work_book['Sheet'])
-
-    with NamedTemporaryFile() as tmp:
-        work_book.save(tmp.name)
-        tmp.seek(0)
-        return tmp.read()
+    output.seek(0)
+    return output.getvalue()

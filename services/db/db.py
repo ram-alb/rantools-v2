@@ -72,12 +72,19 @@ def select(
     sql_select: str,
     sql_params: Optional[Union[list, tuple, dict]] = None,
     row_factory: Any = None,
+    batch_size: int = 10000,
 ) -> List[Any]:
     """Execute a SELECT SQL query and returns the result as a list of row factory."""
     with connection.cursor() as cursor:
         cursor.execute(sql_select, sql_params)
         if row_factory is not None:
             cursor.rowfactory = row_factory
-        selected_data = cursor.fetchall()
 
-    return selected_data
+        rows = []
+        while True:
+            batch = cursor.fetchmany(batch_size)
+            if not batch:
+                break
+            rows.extend(batch)
+
+    return rows

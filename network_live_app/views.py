@@ -19,11 +19,14 @@ class NetworkLive(LoginMixin, GroupRequiredMixin, View):
     def post(self, request):
         """Handle POST requests."""
         technologies = request.POST.getlist('technologies')
+
         network_live_data = select_data(technologies)
         excel_content = create_excel(network_live_data)
 
-        content_type = 'application/vnd.ms-excel'
+        content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         file_name = 'nl_cells.xlsx'
+
         response = HttpResponse(excel_content, content_type=content_type)
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+
         return response

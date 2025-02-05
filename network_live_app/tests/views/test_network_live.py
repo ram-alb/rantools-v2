@@ -38,10 +38,11 @@ def test_post_request(mock_select_data, client, rnpo_user):
         username=rnpo_user['username'],
         password=rnpo_user['password'],
     )
+    content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     response = client.post(URL, data=form_data)
 
     assert response.status_code == HTTPStatus.OK
-    assert response['Content-Type'] == 'application/vnd.ms-excel'
+    assert response['Content-Type'] == content_type
     assert f'attachment; filename="{file_name}"' in response['Content-Disposition']
     assert _is_contains_word(response, form_data['technologies'], 'data1')
     assert _is_contains_word(response, form_data['technologies'], 'data4')
