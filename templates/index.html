@@ -1,8 +1,25 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1 class="text-center">Rantools</h1>
-  <p class="text-center">
-    Welcome to Rantools. Choose the tool on the sidebar.
-  </p>
+  <div class="container text-center mt-5">
+    <h1 class="display-3 fw-bold text-dark">Rantools</h1>
+    <p class="fs-4 text-secondary">
+      Your go-to platform for RNP&O tools. Select a tool from the sidebar to get started.
+    </p>
+
+    {% if user.is_authenticated %}
+      <p class="fs-5 text-secondary mt-3">
+        Welcome back, <strong>{{ user.username }}</strong>! Explore the tools and optimize your workflow.
+      </p>
+    {% else %}
+      <p class="fs-5 text-secondary mt-3">
+        New here? <a href="{% url 'registration' %}" class="text-primary text-decoration-none">Sign up</a> or
+        <a href="{% url 'login' %}" class="text-primary text-decoration-none">Login</a> to access all features.
+      </p>
+    {% endif %}
+
+    <p class="fs-6 text-muted mt-5">
+      Developed by <strong>NDS-RNPOU-RNSD-Team</strong>
+    </p>
+  </div>
 {% endblock content %}
