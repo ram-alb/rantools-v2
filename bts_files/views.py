@@ -42,3 +42,29 @@ class BtsFiles(LoginMixin, GroupRequiredMixin, View):
         response['Content-Disposition'] = f'attachment; filename="{file_name}"'
 
         return response
+
+
+class KmlOnly(LoginMixin, GroupRequiredMixin, View):
+    """A view for handling KML files."""
+
+    required_group = 'Partial Access Users'
+
+    def get(self, request, *args, **kwargs):
+        """Render form to select needed parameters for KML file."""
+        return render(request, 'bts_files/kml.html', {
+            'technologies': TECHNOLOGIES,
+            'regions': get_regions(is_sorted=True),
+        })
+
+    def post(self, request, *args, **kwargs):
+        """Create a KML file with BTS data based on selected technologies and regions."""
+        file_type = 'kml'
+        technologies = request.POST.getlist('technologies')
+        regions = request.POST.getlist('regions')
+
+        file_content = get_file_content(file_type, technologies, regions)
+
+        response = HttpResponse(file_content, content_type='text/plain')
+        response['Content-Disposition'] = 'attachment; filename="bts_file.kml"'
+
+        return response
