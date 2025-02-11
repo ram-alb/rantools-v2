@@ -9,6 +9,7 @@ class Tables(enum.Enum):
     wcdma_cells = 'wcdmacells2'
     lte_cells = 'ltecells2'
     nr_cells = 'nrcells'
+    iot_cells = 'iotcells'
 
 
 class BaseTable:

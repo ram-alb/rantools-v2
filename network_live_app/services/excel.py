@@ -13,7 +13,7 @@ def create_excel(network_live_data: NetworkLiveData) -> bytes:
     with pd.ExcelWriter(output, engine="xlsxwriter") as writer:
         for technology, (rows, headers) in network_live_data.items():
             if not rows:
-                continue  # Пропускаем, если данных нет
+                continue
 
             df = pd.DataFrame(rows, columns=headers)
             df.to_excel(writer, sheet_name=technology.upper(), index=False)
