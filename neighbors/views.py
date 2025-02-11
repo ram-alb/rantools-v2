@@ -16,13 +16,13 @@ class Index(LoginMixin, GroupRequiredMixin, TemplateView):
     """Render the index page of the neighbors app."""
 
     template_name = 'neighbors/index.html'
-    required_group = 'RNPO Users'
+    required_groups = ['RNPO Users']
 
 
 class NbrImport(LoginMixin, GroupRequiredMixin, View):
     """A view for managing neighbors."""
 
-    required_group = 'RNPO Users'
+    required_groups = ['RNPO Users']
 
     def get(self, request, direction, *args, **kwargs):
         """Handle GET request."""
@@ -64,7 +64,7 @@ class NbrImport(LoginMixin, GroupRequiredMixin, View):
 class DownloadTemplate(LoginMixin, GroupRequiredMixin, View):
     """A view for downloading neighbor template for planned neighbors."""
 
-    required_group = 'RNPO Users'
+    required_groups = ['RNPO Users']
 
     def get(self, request, direction):
         """Handle a GET request."""

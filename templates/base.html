@@ -74,6 +74,14 @@
                 </li>
               {% endif %}
 
+              {% if request.user|in_group:"BTS Files" %}
+                <li class="nav-item">
+                  <a href="{% url 'bts-files' %}" class="nav-link align-middle px-0">
+                    <i class="fas fa-file-export"></i> <span class="ms-1 d-none d-sm-inline">BTS Files</span>
+                  </a>
+                </li>
+              {% endif %}
+
               {% if request.user|in_group:"Partial Access Users" %}
                 <li class="nav-item">
                   <a href="{% url 'bts-files-kml' %}" class="nav-link align-middle px-0">

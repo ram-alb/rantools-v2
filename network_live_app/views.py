@@ -9,7 +9,7 @@ from services.mixins import GroupRequiredMixin, LoginMixin
 class NetworkLive(LoginMixin, GroupRequiredMixin, View):
     """View to handle requests for the network_live app."""
 
-    required_group = 'RNPO Users'
+    required_groups = ['RNPO Users']
     template_name = 'network_live/index.html'
 
     def get(self, request):

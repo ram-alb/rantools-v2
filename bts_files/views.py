@@ -13,7 +13,7 @@ TECHNOLOGIES = ('GSM', 'WCDMA', 'LTE', 'NR')
 class BtsFiles(LoginMixin, GroupRequiredMixin, View):
     """A view for handling BTS files."""
 
-    required_group = 'RNPO Users'
+    required_groups = ['RNPO Users', 'BTS Files']
 
     def get(self, request, *args, **kwargs):
         """Render form to select needed parameters for BTS file."""
@@ -47,7 +47,7 @@ class BtsFiles(LoginMixin, GroupRequiredMixin, View):
 class KmlOnly(LoginMixin, GroupRequiredMixin, View):
     """A view for handling KML files."""
 
-    required_group = 'Partial Access Users'
+    required_groups = ['Partial Access Users']
 
     def get(self, request, *args, **kwargs):
         """Render form to select needed parameters for KML file."""

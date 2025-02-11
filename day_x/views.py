@@ -11,13 +11,13 @@ class DayXIndexView(LoginMixin, GroupRequiredMixin, TemplateView):
     """View for displaying the main page of the DayX section."""
 
     template_name = 'day_x/index.html'
-    required_group = 'DayX'
+    required_groups = ['DayX']
 
 
 class UpdateDayXFileView(LoginMixin, GroupRequiredMixin, RedirectView):
     """View for triggering the update process of the DayX file."""
 
-    required_group = 'DayX'
+    required_groups = ['DayX']
     pattern_name = 'dayX'
 
     def get(self, request, *args, **kwargs):
