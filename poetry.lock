@@ -1376,7 +1376,7 @@ send-mail = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/send-mail.git"}
 type = "git"
 url = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/network-live.git"
 reference = "HEAD"
-resolved_reference = "12870b85158492bf4e82c47054b8ac2e9655e48c"
+resolved_reference = "fd831ba724faad649b6e9601cd605f9c6c4885c7"
 
 [[package]]
 name = "numpy"
