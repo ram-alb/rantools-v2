@@ -17,4 +17,5 @@ urlpatterns = [
     path('network_live/', include('network_live_app.urls')),
     path('dayX/', include('day_x.urls')),
     path('sites_count/', include('sites_count.urls')),
+    path('tr-data/', include('tr_data.urls')),
 ]

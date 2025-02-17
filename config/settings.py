@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'network_live_app',
     'day_x',
     'sites_count',
+    'tr_data',
 ]
 
 MIDDLEWARE = [

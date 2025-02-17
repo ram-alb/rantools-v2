@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="text-center mt-3">TR Data</h1>
+  <p class="text-center mt-3">👇 Click the "Download" button to get the data.</p>
+
+  <div class="d-flex justify-content-center align-items-center">
+    <form method="POST" id="tr-data">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary mt-3 d-block mx-auto" id="tr-submit">Download</button>
+    </form>
+  </div>
+
+</div>
+
+<script>
+  const trForm = document.getElementById('tr-data');
+  const submitBtn = document.getElementById('tr-submit');
+
+  trForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+    fetch('{% url "tr-data-index" %}', {
+      method: 'POST',
+      body: new FormData(trForm),
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'tr_data.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      submitBtn.innerHTML = 'Download';
+    });
+  });
+
+
+
+</script>
+
+{% endblock %}
