@@ -24,6 +24,11 @@ DEBUG = bool(os.getenv('DEBUG', default=0))
 
 ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS').split(' ')
 
+CSRF_TRUSTED_ORIGINS = [
+    "http://rantools-v2.kcell.kz",
+    "http://rantools.kcell.kz",
+]
+
 # Application definition
 
 INSTALLED_APPS = [
