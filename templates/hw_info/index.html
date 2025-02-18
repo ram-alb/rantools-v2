@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+  <h1 class="text-center mt-3">Hardware Info</h1>
+  <p class="text-center mt-3">👇 Click the "Download" button to get the HW data.</p>
+
+  <div class="d-flex justify-content-center align-items-center">
+    <form method="POST" id="hw-info">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary mt-3 d-block mx-auto" id="hw-submit">Download</button>
+    </form>
+  </div>
+
+</div>
+
+<script>
+  const hwForm = document.getElementById('hw-info');
+  const submitBtn = document.getElementById('hw-submit');
+
+  hwForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+    fetch('{% url "hw-info-index" %}', {
+      method: 'POST',
+      body: new FormData(hwForm),
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'hw-info.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+      submitBtn.innerHTML = 'Download';
+    });
+  });
+
+
+
+</script>
+
+{% endblock %}

@@ -15,6 +15,7 @@ from services.mixins import LoginMixin
     reverse_lazy('nbr-download-template', kwargs={'direction': 'G2U'}),
     reverse_lazy('nl-index'),
     reverse_lazy('tr-data-index'),
+    reverse_lazy('hw-info-index'),
 ])
 def test_get_not_logged_in(client, check_message, url):
     """Test that GET requests to specified URLs when the user is not logged in."""
@@ -33,6 +34,7 @@ def test_get_not_logged_in(client, check_message, url):
     reverse_lazy('nbr-download-template', kwargs={'direction': 'G2U'}),
     reverse_lazy('nl-index'),
     reverse_lazy('tr-data-index'),
+    reverse_lazy('hw-info-index'),
 ])
 def test_get_regular_user(client, regular_user, check_message, url):
     """Test that GET requests to specified URLs without permissions for regular user."""

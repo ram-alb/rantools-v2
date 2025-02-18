@@ -18,4 +18,5 @@ urlpatterns = [
     path('dayX/', include('day_x.urls')),
     path('sites_count/', include('sites_count.urls')),
     path('tr-data/', include('tr_data.urls')),
+    path('hw-info/', include('hw_info.urls')),
 ]

@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'day_x',
     'sites_count',
     'tr_data',
+    'hw_info',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'config.context_processors.user_tools',
             ],
             'libraries': {
                 'custom_filters': 'config.templatetags.custom_filters',
