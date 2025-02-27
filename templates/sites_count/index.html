@@ -12,7 +12,7 @@
           {{ form.date|as_crispy_field }}
         </div>
         <div class="col-auto">
-          {{ form.table_type|as_crispy_field }}
+          {{ form.group_by|as_crispy_field }}
         </div>
         <div class="col-auto">
           <button type="submit" class="btn btn-primary form-control">Submit</button>
@@ -21,34 +21,33 @@
     </div>
   </div>
 
-  {% if sites %}
-    <h3 class="text-center my-3">Kcell sites devided by {{ header }}</h3>
+  {% if data %}
+    <h3 class="text-center my-3">Kcell sites devided by {{ group_by }}</h3>
     <table class="table table-bordered table-striped text-center mx-auto w-auto">
       <thead>
         <tr>
-          <th scope="col" class="px-5">{{ header }}</th>
+          <th scope="col" class="px-5">{{ group_by }}</th>
           <th scope="col" class="px-5">2G</th>
           <th scope="col" class="px-5">3G</th>
           <th scope="col" class="px-5">4G</th>
           <th scope="col" class="px-5">5G</th>
+          <th scope="col" class="px-5">IoT</th>
           <th scope="col" class="px-5">Total</th>
         </tr>
       </thead>
       <tbody>
-        {% for row in sites %}
+        {% for entity_name, site_count in data.items %}
           <tr>
-            {% for cell in row %}
-              <td>{{ cell }}</td>
-            {% endfor %}
+            <td>{{ entity_name }}</td>
+            <td>{{ site_count.GSM }}</td>
+            <td>{{ site_count.WCDMA }}</td>
+            <td>{{ site_count.LTE }}</td>
+            <td>{{ site_count.NR }}</td>
+            <td>{{ site_count.IoT }}</td>
+            <td>{{ site_count.Total }}</td>
           </tr>
         {% endfor %}
       </tbody>
     </table>
   {% endif %}
-<script>
-    $(document).ready(function() {
-      var today = new Date().toISOString().split('T')[0];
-      $('#id_date').val(today);
-    });
-</script>
 {% endblock content %}

@@ -17,11 +17,14 @@ class SiteCountForm(forms.Form):
         initial=date.today(),
         required=True,
     )
-    table_type = forms.ChoiceField(
+    group_by = forms.ChoiceField(
         choices=[
             ('operator', 'operator'),
             ('vendor', 'vendor'),
             ('region', 'region'),
+            ('Kcell', 'Kcell by regions'),
+            ('Tele2', 'Tele2 by regions'),
+            ('Beeline', 'Beeline by regions'),
         ],
         initial='operators',
         label='',

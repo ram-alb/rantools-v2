@@ -6,71 +6,101 @@ from django.views import View
 
 from services.mixins import LoginMixin
 from sites_count.forms import SiteCountForm
-from sites_count.services.main import get_site_data
+from sites_count.services.fetcher import fetch_site_counts
+
+START_DAY = 15
+START_MONTH = 5
+START_YEAR = 2023
+OPERATOR_REGION_START_DAY = 1
+OPERATOR_REGION_START_MONTH = 2
+OPERATOR_REGION_START_YEAR = 2025
 
 
 class SitesCountView(LoginMixin, View):
-    """A view for displaying site counts."""
+    """A view to display site count data."""
 
-    template_path = 'sites_count/index.html'
+    started_date = date(START_YEAR, START_MONTH, START_DAY)
+    operator_region_start_date = date(
+        OPERATOR_REGION_START_YEAR,
+        OPERATOR_REGION_START_MONTH,
+        OPERATOR_REGION_START_DAY,
+    )
 
-    year = 2023
-    month = 5
-    day = 15
-    started_date = date(year, month, day)
+    template_name = 'sites_count/index.html'
 
-    def get(self, request, *args, **kwargs):
-        """Handle GET requests to the view and render the site count form."""
-        chosen_date = date.today()
-        sites_data, chosen_date = self.get_sites_data('operator', chosen_date, request)
+    def get(self, request):
+        """Display the form to request site count data."""
+        requested_date = date.today()
+        default_group_by = 'operator'
 
-        form = SiteCountForm()
-        form.fields['date'].initial = chosen_date
-        context = {
-            'form': form,
-            'sites': sites_data,
-            'header': 'Operator',
-        }
-        return render(request, self.template_path, context)
+        sites_data, used_date = self.get_sites_data(default_group_by, requested_date, request)
+        form = SiteCountForm(initial={'date': used_date, 'group_by': default_group_by})
 
-    def post(self, request, *args, **kwargs):
-        """Handle POST requests to the view and process the submitted form."""
+        return render(
+            request,
+            self.template_name,
+            {'form': form, 'data': sites_data, 'group_by': default_group_by},
+        )
+
+    def post(self, request):
+        """Display the site count data for the requested date."""
         form = SiteCountForm(request.POST)
         if form.is_valid():
             requested_date = form.cleaned_data['date']
-            validation_message = self.validate_date(requested_date)
+            group_by = form.cleaned_data['group_by']
 
+            validation_message = self.validate_date(requested_date, group_by)
             if validation_message:
                 form.add_error('date', validation_message)
-                return render(request, self.template_path, {'form': form})
+                return render(request, self.template_name, {'form': form})
 
-            table_type = form.cleaned_data['table_type']
-            sites_data, _ = self.get_sites_data(table_type, requested_date, request)
+            sites_data, final_date = self.get_sites_data(group_by, requested_date, request)
+            form = SiteCountForm(initial={'date': final_date, 'group_by': group_by})
 
-            header = table_type.capitalize()
-            context = {'form': form, 'sites': sites_data, 'header': header}
-
-            return render(request, self.template_path, context)
-
-        return render(request, self.template_path, {'form': form})
-
-    def get_sites_data(self, table_type, chosen_date, request):
-        """Return site data for a given date."""
-        sites_data = get_site_data(table_type, chosen_date)
-        if not sites_data:
-            yesterday = date.today() - timedelta(days=1)
-            sites_data = get_site_data(table_type, yesterday)
-            messages.error(
+            return render(
                 request,
-                f'No data for {chosen_date}. Data for {yesterday} is shown.',
+                self.template_name,
+                {'form': form, 'data': sites_data, 'group_by': group_by},
             )
-            return sites_data, yesterday
-        return sites_data, chosen_date
 
-    def validate_date(self, requested_date):
+    def validate_date(self, requested_date, group_by):
         """Validate the requested date."""
         if requested_date < self.started_date:
-            return 'No data before 15 May 2023'
-        elif requested_date > date.today():
+            formated_date = self.started_date.strftime('%d %B %Y')
+            return f'No data before {formated_date}'
+
+        if requested_date > date.today():
             return 'No data from the future :)'
+
+        if group_by not in {'operator', 'vendor', 'region'}:
+            if requested_date < self.operator_region_start_date:
+                formated_date = self.operator_region_start_date.strftime('%d %B %Y')
+                return f'No data before {formated_date}'
         return None
+
+    def get_sites_data(self, group_by, requested_date, request):
+        """Return site data for a given date."""
+        sites_data = fetch_site_counts(group_by, requested_date)
+
+        if sites_data:
+            return sites_data, requested_date
+
+        yesterday = date.today() - timedelta(days=1)
+        sites_data = fetch_site_counts(group_by, yesterday)
+        if sites_data:
+            formated_requested_date = requested_date.strftime('%d %B %Y')
+            formated_yesterday = yesterday.strftime('%d %B %Y')
+            error_message = (
+                f'Data for {formated_requested_date} is not available yet. '
+                f'Displaying data for {formated_yesterday}.'
+            )
+            messages.error(
+                request,
+                error_message,
+            )
+            return sites_data, yesterday
+
+        formated_date = requested_date.strftime('%d %B %Y')
+        messages.error(request, f'No data for {formated_date}.')
+
+        return {}, requested_date
