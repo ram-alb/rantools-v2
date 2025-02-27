@@ -26,10 +26,12 @@ def _aggregate_site_counts(site_counts: QuerySet, entity_field: str) -> Dict[str
             totals[technology] = 0
         totals[technology] += row.site_count
 
-    if counts:
-        counts['Total'] = totals
+    sorted_counts = dict(sorted(counts.items()))
 
-    return counts
+    if sorted_counts:
+        sorted_counts['Total'] = totals
+
+    return sorted_counts
 
 
 def _get_site_counts(group_by: str, requested_date: date) -> Dict[str, Dict[str, int]]:
