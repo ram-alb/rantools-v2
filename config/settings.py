@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+from celery.schedules import crontab
 from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
@@ -55,6 +56,7 @@ INSTALLED_APPS = [
     'sites_count',
     'tr_data',
     'hw_info',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -189,3 +191,10 @@ CELERY_RESULT_BACKEND = "redis://localhost:6379"
 REDIS_HOST = 'localhost'
 REDIS_PORT = 6379
 REDIS_DB = 0
+
+CELERY_BEAT_SCHEDULE = {
+    "sites_count": {
+        "task": "sites_count.tasks.sites_count",
+        "schedule": crontab(hour=7, minute=0),
+    },
+}

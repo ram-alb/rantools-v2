@@ -29,6 +29,7 @@ redis = "^5.2.1"
 network-live = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/network-live.git"}
 point-in-region = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/point-in-region.git"}
 xlsxwriter = "^3.2.2"
+django-celery-beat = "^2.7.0"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
