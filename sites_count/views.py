@@ -11,7 +11,7 @@ from sites_count.services.fetcher import fetch_site_counts
 START_DAY = 15
 START_MONTH = 5
 START_YEAR = 2023
-OPERATOR_REGION_START_DAY = 1
+OPERATOR_REGION_START_DAY = 27
 OPERATOR_REGION_START_MONTH = 2
 OPERATOR_REGION_START_YEAR = 2025
 
@@ -75,7 +75,7 @@ class SitesCountView(LoginMixin, View):
         if group_by not in {'operator', 'vendor', 'region'}:
             if requested_date < self.operator_region_start_date:
                 formated_date = self.operator_region_start_date.strftime('%d %B %Y')
-                return f'No data before {formated_date}'
+                return f'No data before {formated_date} for {group_by} by region'
         return None
 
     def get_sites_data(self, group_by, requested_date, request):

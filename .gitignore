@@ -115,6 +115,10 @@ __pypackages__/
 # Celery stuff
 celerybeat-schedule
 celerybeat.pid
+celerybeat-schedule.bak
+celerybeat-schedule.dat
+celerybeat-schedule.dir
+celerybeat-schedule.db
 
 # SageMath parsed files
 *.sage.py
@@ -173,8 +177,3 @@ cython_debug/
 day_x/network_live_files/DEC_2019.xlsx
 day_x/network_live_files/DEC_2019.zip
 dump.rdb
-
-celerybeat-schedule.bak
-celerybeat-schedule.dat
-celerybeat-schedule.dir
-celerybeat-schedule.db
