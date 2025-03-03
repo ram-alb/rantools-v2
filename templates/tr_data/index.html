@@ -2,44 +2,86 @@
 
 {% block content %}
 <div class="container">
-  <h1 class="text-center mt-3">TR Data</h1>
-  <p class="text-center mt-3">👇 Click the "Download" button to get the data.</p>
+  <h1 class="text-center mt-3 mb-3">TR Data</h1>
 
-  <div class="d-flex justify-content-center align-items-center">
-    <form method="POST" id="tr-data">
-      {% csrf_token %}
-      <button type="submit" class="btn btn-primary mt-3 d-block mx-auto" id="tr-submit">Download</button>
-    </form>
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+          <h5 class="card-title">IP Address</h5>
+          <p class="card-text">👇 Click the "Download" button to get the data.</p>
+          <form method="POST" id="ip-data">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="ip">
+            <button type="submit" class="btn btn-primary mt-3 d-block mx-auto" id="ip-submit">Download</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+          <h5 class="card-title">Clock Reference Status</h5>
+          <p class="card-text">👇 Click the "Download" button to get reference statuses.</p>
+          <form method="POST" id="sts-data">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="sts">
+            <button type="submit" class="btn btn-primary mt-3 d-block mx-auto" id="sts-submit">Download</button>
+          </form>
+        </div>
+      </div>
+    </div>
   </div>
 
 </div>
 
 <script>
-  const trForm = document.getElementById('tr-data');
-  const submitBtn = document.getElementById('tr-submit');
 
-  trForm.addEventListener('submit', (event) => {
-    event.preventDefault();
+  const eventListener = (form, submitBtn, fileName) => {
+    const allButtons = document.querySelectorAll('button[type="submit"]');
+    allButtons.forEach(btn => btn.disabled = true);
+
     submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
     fetch('{% url "tr-data-index" %}', {
       method: 'POST',
-      body: new FormData(trForm),
+      body: new FormData(form),
     })
     .then(response => response.blob())
     .then(blob => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'tr_data.xlsx';
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-      window.URL.revokeObjectURL(url);
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+    })
+    .finally(() => {
+      allButtons.forEach(btn => btn.disabled = false);
       submitBtn.innerHTML = 'Download';
     });
+  }
+
+
+  const ipForm = document.getElementById('ip-data');
+  const ipSubmit = document.getElementById('ip-submit');
+
+  const stsForm = document.getElementById('sts-data');
+  const stsSubmit = document.getElementById('sts-submit');
+
+  ipForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    eventListener(ipForm, ipSubmit, 'ip_data.xlsx');
   });
 
-
+  stsForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    eventListener(stsForm, stsSubmit, 'sts_data.xlsx');
+  });
 
 </script>
 

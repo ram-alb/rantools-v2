@@ -1,7 +1,7 @@
 from io import BytesIO
 from typing import List
 
-import pandas as pd
+import pandas as pd  # type: ignore
 
 
 def create_tr_excel(columns_list: List[str], tr_data: List[tuple]) -> bytes:

@@ -1,9 +1,9 @@
-from typing import List
+from typing import List, Tuple
 
 from services.db.db import DbConnection, select
 
 
-def select_tr_data() -> List[tuple]:
+def select_tr_data() -> Tuple[List[str], List[tuple]]:
     """Select all data from the SITE_TR_DATA table."""
     columns_query = """
         SELECT COLUMN_NAME

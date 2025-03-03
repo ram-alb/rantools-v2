@@ -36,7 +36,7 @@ def test_post_request(mock_select_tr_data, client, rnpo_user):
         password=rnpo_user['password'],
     )
     content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    response = client.post(URL)
+    response = client.post(URL, {'action': 'ip'})
 
     assert response.status_code == HTTPStatus.OK
     assert response['Content-Type'] == content_type

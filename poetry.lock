@@ -749,7 +749,7 @@ enm-client-scripting = {path = "local_lib/enm_client_scripting-1.22.2-py2.py3-no
 type = "git"
 url = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/enm-cli.git"
 reference = "HEAD"
-resolved_reference = "64ff6bf1c4d5270da9261f5bf072855c0cdb5aec"
+resolved_reference = "d3c0efb1b65effcbdb0efdfee78c53b75e8f034a"
 
 [[package]]
 name = "enm-client-scripting"
@@ -767,7 +767,7 @@ six = "1.9.0"
 
 [package.source]
 type = "file"
-url = "local_lib/enm_client_scripting-1.22.2-py2.py3-none-any.whl"
+url = ".venv/src/enm-cli/local_lib/enm_client_scripting-1.22.2-py2.py3-none-any.whl"
 
 [[package]]
 name = "eradicate"
@@ -2498,4 +2498,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<3.9"
-content-hash = "b715dbf8442431be9098248d5ef4c24ab6d378d1ad30bb8be8f42001587b946b"
+content-hash = "24ddb58d36d6f8e98c9d0c17f6d278e35da7c4dd284848a75479f8a663571bb8"
