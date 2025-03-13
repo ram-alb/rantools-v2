@@ -1,7 +1,7 @@
 from io import BytesIO
 from typing import List
 
-import pandas as pd
+import pandas as pd  # type: ignore
 
 
 def create_hw_excel(columns_list: List[str], hw_data: List[tuple]) -> bytes:

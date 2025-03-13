@@ -1,9 +1,9 @@
-from typing import List
+from typing import Tuple
 
 from services.db.db import DbConnection, select
 
 
-def select_hw_data() -> List[tuple]:
+def select_hw_data() -> Tuple[list, list]:
     """Select all data from the HW_INFO table."""
     columns_query = """
         SELECT COLUMN_NAME
