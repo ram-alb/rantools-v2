@@ -55,6 +55,7 @@ def _get_gsm_uniq(cell: GsmRowFactory) -> str:
 
 
 def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
+    azimut, beam_width = calc_azimut_beam(cell)
     uniq_params = [
         str(cell.carrier),
         '',
@@ -62,8 +63,8 @@ def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
         '',
         str(cell.lac),
         str(cell.psc),
-        str(cell.azimut),
-        str(DEFAULT_WIDTH),
+        str(azimut),
+        str(beam_width),
     ]
     return ';'.join(_replace_none(uniq_params))
 
