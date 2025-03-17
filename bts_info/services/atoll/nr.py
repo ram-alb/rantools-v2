@@ -48,6 +48,7 @@ SELECT_NETWORK = """
         cell,
         cellid,
         nrtac,
+        arfcndl,
         ROUND(latitude, 5) as latitude,
         ROUND(longitude, 5) as longitude,
         '' as sharingtype
@@ -64,7 +65,8 @@ class NetworkNrCell(NamedTuple):
     site: str
     cell: str
     cellid: int
-    tac: int
+    lac_tac: int
+    bcch_arfcndl: int
     latitude: float
     longitude: float
     sharingtype: str
