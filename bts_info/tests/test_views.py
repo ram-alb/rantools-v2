@@ -12,6 +12,9 @@ URL = reverse_lazy('bts-info')
 lat = 44.57305583
 lon = 78.44177778
 
+bcch1 = 25
+bcch2 = 35
+
 gsm_atoll_data = [
     AtollGsmCell(
         site='GSite1',
@@ -44,7 +47,7 @@ gsm_network_data = [
         cell='Gcell1',
         cellid=0,
         lac_tac=10,
-        bcch_arfcndl=25,
+        bcch_arfcndl=bcch1,
         longitude=lon,
         latitude=lat,
         sharingtype='',
@@ -55,7 +58,7 @@ gsm_network_data = [
         cell='Gcell2',
         cellid=1,
         lac_tac=10,
-        bcch_arfcndl=35,
+        bcch_arfcndl=bcch2,
         longitude=lon,
         latitude=lat,
         sharingtype='',

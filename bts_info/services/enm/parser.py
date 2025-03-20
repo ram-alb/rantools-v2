@@ -20,7 +20,10 @@ def parse_mimo_types(tx_data: ElementGroup) -> Dict[str, str]:
     for row in table:
         tx_num = row.find_by_label('noOfTxAntennas')[0].value()
         reserved_by = row.find_by_label('reservedBy')[0].value()
-        cell_name = parse_mo_value_from_fdn(reserved_by, 'EUtranCellFDD')
+        try:
+            cell_name = parse_mo_value_from_fdn(reserved_by, 'EUtranCellFDD')
+        except AttributeError:
+            continue
         tx_nums[cell_name] = mimo_types[tx_num]
 
     return tx_nums
