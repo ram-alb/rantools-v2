@@ -9,19 +9,21 @@ class SearchForm(forms.Form):
     max_length = 50
 
     query = forms.CharField(
-        label='',
+        label="",
         min_length=min_length,
         max_length=max_length,
         validators=[
             RegexValidator(
-                regex='^[a-zA-Z0-9_]+$',
+                regex="^[a-zA-Z0-9_]+$",
                 message="Only letters, numbers, and underscore (_) are allowed.",
-                code='invalid_query',
+                code="invalid_query",
             ),
         ],
-        widget=forms.TextInput(attrs={
-            'id': 'hw-search',
-            'class': 'form-control',
-            'placeholder': 'Enter site id or sitename',
-        }),
+        widget=forms.TextInput(
+            attrs={
+                "id": "hw-search",
+                "class": "form-control",
+                "placeholder": "Enter site id or sitename",
+            },
+        ),
     )

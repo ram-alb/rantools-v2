@@ -15,13 +15,15 @@ class RadioEquipmentClockReference(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=('enm', 'node_id', 'radio_equipment_clock_reference_id'),
-                name='unique_radio_equipment_clock_reference',
+        indexes = [
+            models.Index(
+                fields=["enm", "node_id", "radio_equipment_clock_reference_id"],
             ),
         ]
 
     def __str__(self):
         """Return string representation of RadioEquipmentClockReference."""
-        return f'{self.node_id}-{self.sync_ref_type}: {self.reference_status}'
+        return (
+            f"{self.node_id}-{self.sync_ref_type}: {self.reference_status}"
+            f"(Updated: {self.updated_at})"
+        )

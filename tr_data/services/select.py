@@ -13,7 +13,7 @@ def select_tr_data() -> Tuple[List[str], List[tuple]]:
     """
     data_query = "SELECT * FROM SITE_TR_DATA"
 
-    with DbConnection('oracledb') as connection:
+    with DbConnection("oracledb") as connection:
         columns = select(connection, columns_query)
         columns_list = [column[0] for column in columns]
 

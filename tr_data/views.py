@@ -13,39 +13,41 @@ from tr_data.services.select import select_tr_data
 class TrData(LoginMixin, GroupRequiredMixin, View):
     """View to handle requests for the tr_data app."""
 
-    required_groups = ['RNPO Users', 'Trans Group']
-    template_name = 'tr_data/index.html'
+    required_groups = ["RNPO Users", "Trans Group"]
+    template_name = "tr_data/index.html"
 
     def get(self, request):
         """Handle GET requests."""
         search_form = SearchForm()
-        return render(request, self.template_name, {'search_form': search_form})
+        return render(request, self.template_name, {"search_form": search_form})
 
     def post(self, request):
         """Handle POST requests."""
-        action = request.POST.get('action')
+        action = request.POST.get("action")
 
-        if action == 'sts':
+        if action == "sts":
             sts_data = get_sts_data()
             tr_data = create_tr_excel(*sts_data)
-        elif action == 'ip':
+        elif action == "ip":
             selected_data = select_tr_data()
             tr_data = create_tr_excel(*selected_data)
-        elif action == 'check':
-            site = request.POST.get('query')
+        elif action == "check":
+            site = request.POST.get("query")
             search_form = SearchForm(request.POST)
             enm_data = get_enm_sts_data(site)
             node_sts = parse_node_sts_data(enm_data)
             return render(
                 request,
                 self.template_name,
-                {'search_form': search_form, 'node_sts': node_sts},
+                {"search_form": search_form, "node_sts": node_sts},
             )
 
-        content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        file_name = 'tr-data.xlsx'
+        content_type = (
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        )
+        file_name = "tr-data.xlsx"
 
         response = HttpResponse(tr_data, content_type=content_type)
-        response['Content-Disposition'] = f'attachment; filename="{file_name}"'
+        response["Content-Disposition"] = f'attachment; filename="{file_name}"'
 
         return response

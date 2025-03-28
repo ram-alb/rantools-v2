@@ -7,24 +7,34 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='RadioEquipmentClockReference',
+            name="RadioEquipmentClockReference",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('enm', models.CharField(max_length=6)),
-                ('node_id', models.CharField(max_length=50)),
-                ('radio_equipment_clock_reference_id', models.IntegerField()),
-                ('reference_status', models.CharField(max_length=50)),
-                ('sync_ref_type', models.CharField(max_length=50)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("enm", models.CharField(max_length=6)),
+                ("node_id", models.CharField(max_length=50)),
+                ("radio_equipment_clock_reference_id", models.IntegerField()),
+                ("reference_status", models.CharField(max_length=50)),
+                ("sync_ref_type", models.CharField(max_length=50)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.AddConstraint(
-            model_name='radioequipmentclockreference',
-            constraint=models.UniqueConstraint(fields=('enm', 'node_id', 'radio_equipment_clock_reference_id'), name='unique_radio_equipment_clock_reference'),
+            model_name="radioequipmentclockreference",
+            constraint=models.UniqueConstraint(
+                fields=("enm", "node_id", "radio_equipment_clock_reference_id"),
+                name="unique_radio_equipment_clock_reference",
+            ),
         ),
     ]

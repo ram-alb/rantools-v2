@@ -9,10 +9,10 @@ def parse_node_sts_data(enm_data: Dict[str, ElementGroup]) -> List[Dict[str, str
     node_sts_data = []
 
     columns_to_parse = [
-        'NodeId',
-        'RadioEquipmentClockReferenceId',
-        'referenceStatus',
-        'syncRefType',
+        "NodeId",
+        "RadioEquipmentClockReferenceId",
+        "referenceStatus",
+        "syncRefType",
     ]
 
     for enm, sts_data in enm_data.items():
@@ -25,10 +25,10 @@ def parse_node_sts_data(enm_data: Dict[str, ElementGroup]) -> List[Dict[str, str
             if None in row_values:
                 continue
             sts = dict(zip(columns_to_parse, row_values))
-            sts['ENM'] = enm
+            sts["ENM"] = enm
             node_sts_data.append(sts)
 
     return sorted(
         node_sts_data,
-        key=lambda sts: (sts['NodeId'], sts['RadioEquipmentClockReferenceId']),
+        key=lambda sts: (sts["NodeId"], sts["RadioEquipmentClockReferenceId"]),
     )
