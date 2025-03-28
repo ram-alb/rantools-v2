@@ -199,6 +199,6 @@ CELERY_BEAT_SCHEDULE = {
     },
     "update_sts": {
         "task": "tr_data.tasks.update_sts",
-        "schedule": crontab(hour=[6, 13], minute=0),
+        "schedule": crontab(hour=[8, 12, 16, 20], minute=0),
     },
 }
