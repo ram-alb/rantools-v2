@@ -57,6 +57,7 @@ INSTALLED_APPS = [
     'tr_data',
     'hw_info',
     'django_celery_beat',
+    'retsubunit',
 ]
 
 MIDDLEWARE = [

@@ -1,8 +1,16 @@
 import os
+from enum import Enum
 from typing import List
 
 import enmscripting  # type: ignore
 from enmscripting.enmsession import EnmSession  # type: ignore
+
+
+class Enms(Enum):
+    """Enum for ENM servers."""
+
+    ENM2 = "ENM_2"
+    ENM4 = "ENM_4"
 
 
 class EnmScripting:

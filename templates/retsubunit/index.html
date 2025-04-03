@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+  <h1 class="text-center mt-3 mb-3">RetSubUnit Data</h1>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+          <h5 class="card-title">Download RetSubUnit Data</h5>
+          <p class="card-text">👇 Click the "Download" button to get the RetSubUnit data.</p>
+          <form method="POST" id="ret-info">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="download">
+            <button type="submit" class="btn btn-primary" id="ret-submit">Download</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-6">
+      <div class="card shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">Check RetSubUnit data for site</h5>
+          <p class="card-text">🔍 Enter site id and click "Check".</p>
+
+          <form method="POST" id="ret-check" class="row">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="check">
+            <div class="d-flex justify-content-center">
+              <div class="col-sm-8 col-md-6 col-lg-5">
+                {{ search_form.query|as_crispy_field }}
+              </div>
+              <div class="col-auto">
+                <button type="submit" class="btn btn-success mx-2" id="check-submit">Check</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% if retsubunit_data %}
+    <div class="mt-4">
+      <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+          <th>ENM</th>
+          <th>Site</th>
+          <th>SectorUnit</th>
+          <th>AntennaNearUnitId</th>
+          <th>electricalAntennaTilt</th>
+          <th>AntennaModel</th>
+          <th>maxTilt</th>
+          <th>minTilt</th>
+        </thead>
+        <tbody>
+          {% for row in retsubunit_data %}
+            <tr>
+              <td>{{ row.ENM }}</td>
+              <td>{{  row.NodeId  }}</td>
+              <td>{{  row.SectorUnit }}</td>
+              <td>{{  row.AntennaNearUnitId }}</td>
+              <td>{{  row.electricalAntennaTilt }}</td>
+              <td>{{  row.iuantAntennaModelNumber }}</td>
+              <td>{{  row.maxTilt }}</td>
+              <td>{{  row.minTilt }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% endif %}
+</div>
+
+<script>
+  const disableSubmitButtons = (btns) => {
+    btns.forEach(btn => btn.disabled = true);
+  }
+
+  const enableSubmitButtons = (btns) => {
+    btns.forEach(btn => btn.disabled = false);
+  }
+
+  const showLoading = (btn) => {
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+  }
+
+  const downloadForm = document.getElementById('ret-info');
+  const downloadSubmitBtn = document.getElementById('ret-submit');
+
+  const checkForm = document.getElementById('ret-check');
+  const checkSubmitBtn = document.getElementById('check-submit');
+
+  const allBtns = document.querySelectorAll('button[type="submit"]');
+
+  downloadForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    disableSubmitButtons(allBtns);
+    showLoading(downloadSubmitBtn);
+
+    fetch('{% url "retsubunit_index" %}', {
+      method: 'POST',
+      body: new FormData(downloadForm),
+    })
+    .then(response => response.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'retsubunit.xlsx';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    })
+    .finally(() => {
+      enableSubmitButtons(allBtns);
+      downloadSubmitBtn.innerHTML = 'Download';
+    });
+  });
+
+  checkForm.addEventListener('submit', (e) => {
+    disableSubmitButtons(allBtns);
+    showLoading(checkSubmitBtn);
+  });
+
+</script>
+{% endblock %}

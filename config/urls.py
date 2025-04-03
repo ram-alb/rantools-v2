@@ -19,4 +19,5 @@ urlpatterns = [
     path('sites_count/', include('sites_count.urls')),
     path('tr-data/', include('tr_data.urls')),
     path('hw-info/', include('hw_info.urls')),
+    path('retsubunit/', include('retsubunit.urls')),
 ]

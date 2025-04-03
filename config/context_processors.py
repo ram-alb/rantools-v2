@@ -9,11 +9,12 @@ tools = {
     'HW Info': {'url': 'hw-info-index', 'icon': 'fas fa-warehouse'},
     'DayX': {'url': 'dayX', 'icon': 'fa fa-user-secret'},
     'API Docs': {'url': 'api-docs', 'icon': 'fas fa-book'},
+    'RetSubUnit': {'url': 'retsubunit_index', 'icon': 'fas fa-sort-amount-down'}
 }
 
 group_tools = {
     'Regular Users': ['BTS Info', 'Sites Count'],
-    'RNPO Users': ['BTS Files', 'Network Live', 'Neighbors', 'TR Data', 'HW Info', 'API Docs'],
+    'RNPO Users': ['BTS Files', 'Network Live', 'Neighbors', 'TR Data', 'HW Info', 'API Docs', 'RetSubUnit'],
     'Hardware': ['HW Info'],
     'BTS Files': ['BTS Files'],
     'DayX': ['DayX'],
