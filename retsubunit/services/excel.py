@@ -9,7 +9,7 @@ def save_retsubunits_to_excel(retsubunits: List[Dict[str, str]]):
     column_order = [
         "ENM",
         "NodeId",
-        "SectorUnit",
+        "Sector",
         "AntennaNearUnitId",
         "electricalAntennaTilt",
         "iuantAntennaModelNumber",

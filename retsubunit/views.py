@@ -25,8 +25,10 @@ class RetSubUnitView(LoginMixin, GroupRequiredMixin, View):
         action = request.POST.get("action")
 
         if action == "check":
-            site = request.POST.get("query")
             search_form = SearchForm(request.POST)
+            if not search_form.is_valid():
+                return render(request, self.template_name, {"search_form": search_form})
+            site = search_form.cleaned_data["query"]
             retsubunit_data = get_retsubunits(site)
             if not retsubunit_data:
                 messages.error(
@@ -43,7 +45,9 @@ class RetSubUnitView(LoginMixin, GroupRequiredMixin, View):
             if not retsubunit_data:
                 messages.error(request, "No RetSubUnit data available for download.")
                 return render(
-                    request, self.template_name, {"search_form": SearchForm()},
+                    request,
+                    self.template_name,
+                    {"search_form": SearchForm()},
                 )
 
             retsubunit_excel = save_retsubunits_to_excel(retsubunit_data)

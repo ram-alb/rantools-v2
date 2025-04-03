@@ -1,5 +1,4 @@
 from django import forms
-from django.core.validators import RegexValidator
 
 
 class SearchForm(forms.Form):
@@ -12,13 +11,6 @@ class SearchForm(forms.Form):
         label="",
         min_length=min_length,
         max_length=max_length,
-        validators=[
-            RegexValidator(
-                regex=r"^\d{5}$",
-                message="Enter exactly 5 digits.",
-                code="invalid_query",
-            ),
-        ],
         widget=forms.TextInput(
             attrs={
                 "id": "ret-search",
@@ -27,3 +19,10 @@ class SearchForm(forms.Form):
             },
         ),
     )
+
+    def clean_query(self):
+        """Validate the query field."""
+        query_value = self.cleaned_data["query"]
+        if not query_value.isdigit():
+            raise forms.ValidationError("Enter exactly 5 digits.")
+        return query_value
