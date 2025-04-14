@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="main-part">
+  <div id="summary">
+    <h2 class="text-center my-5">Network-vs-Atoll Summary</h2>
+    <table class="table table-dark table-bordered text-center mx-auto w-auto">
+      <thead>
+        <tr>
+          <th class="px-5">Technology</th>
+          <th class="px-5">Inconsistencies count</th>
+          <th class="px-5">Go to details</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for delta in diff %}
+          <tr>
+            <td>{{ delta.technology }}</td>
+            <td>{{ delta.diffs.Total }}</td>
+            <td><button id="{{ delta.technology }}" class="btn btn-primary nva-details">Details</button></td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% for node_diff in diff %}
+    <div id="{{ node_diff.technology }}-block" class="d-none text-center">
+      <button class="btn btn-secondary my-3 nva-home">Back to Summary</button>
+      <h2 class="text-center my-3">{{ node_diff.technology }} Inconsistencies</h2>
+      <table class="table table-dark table-bordered text-center mx-auto w-auto">
+        <thead>
+          <tr>
+            {% if node_diff.technology == 'GSM' %}
+              <th>BSC</th>
+            {% elif node_diff.technology == 'WCDMA' %}
+              <th>RNC</th>
+            {% elif node_diff.technology == 'LTE' %}
+              <th>Subnetwork</th>
+            {% elif node_diff.technology == 'NR' %}
+              <th>Subnetwork</th>
+            {% endif %}
+            <th>Count</th>
+            <th>Download</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for node, count in node_diff.diffs.items %}
+              <tr>
+                <td class="px-5">{{ node }}</td>
+                <td class="px-5">{{ count }}</td>
+                <td class="px-5"><button id="{{ node_diff.technology }}-{{ node }}" class="btn btn-primary download-report">Download</button></td>
+              </tr>
+            {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+  {% endfor %}
+</div>
+
+  <script>
+    summaryDiv = document.getElementById('summary');
+
+    const detailBtns = document.getElementsByClassName('nva-details');
+    for (let btn of detailBtns) {
+      btn.addEventListener('click', () => {
+        summaryDiv.classList.add('d-none');
+
+        detailDiv = document.getElementById(btn.id + '-block');
+        detailDiv.classList.remove('d-none');
+      });
+    }
+
+    const nvaHomeBtns = document.getElementsByClassName('nva-home')
+    for (let btn of nvaHomeBtns) {
+      btn.addEventListener('click', () => {
+        parentDiv = btn.parentNode;
+        parentDiv.classList.add('d-none');
+
+        summaryDiv.classList.remove('d-none');
+      });
+    }
+
+    const downloadBtns = document.getElementsByClassName('download-report');
+    for (let btn of downloadBtns) {
+      btn.addEventListener('click', () => {
+        btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+        console.log(btn.id);
+        const formData = new FormData();
+        formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+        const [technology, node] = btn.id.split('-');
+        formData.append('technology', technology);
+        formData.append('node', node);
+        fetch('{% url "network_vs_atoll" %}', {method: 'POST', body: formData})
+          .then(response => response.blob())
+          .then(data => {
+            const url = window.URL.createObjectURL(data);
+              const anchor = document.createElement("a");
+              anchor.href = url;
+              anchor.download = 'network-vs-atoll-' + node + '.xlsx';
+              anchor.click();
+              btn.innerHTML = 'Download';
+          });
+      });
+    }
+  </script>
+
+{% endblock content %}

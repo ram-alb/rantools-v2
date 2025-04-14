@@ -58,6 +58,7 @@ INSTALLED_APPS = [
     'hw_info',
     'django_celery_beat',
     'retsubunit',
+    'network_vs_atoll',
 ]
 
 MIDDLEWARE = [
