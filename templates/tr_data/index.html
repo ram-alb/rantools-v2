@@ -72,7 +72,7 @@
         </thead>
         <tbody>
           {% for row in node_sts %}
-            <tr>
+            <tr {% if "P_FAULT" in row.referenceStatus %}class="table-danger"{% endif %}>
               <td>{{ row.ENM }}</td>
               <td>{{  row.NodeId  }}</td>
               <td>{{  row.RadioEquipmentClockReferenceId  }}</td>
