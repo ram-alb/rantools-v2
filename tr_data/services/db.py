@@ -45,29 +45,25 @@ def update_sts_data(enm_sts_data: Dict[str, ElementGroup]) -> None:
     if not sts_rows:
         return
 
-    # Вставляем новые данные
     RadioEquipmentClockReference.objects.bulk_create(sts_rows)
 
-    # Теперь проверяем и удаляем лишние записи
     unique_keys = {
         (row.enm, row.node_id, row.radio_equipment_clock_reference_id)
         for row in sts_rows
     }
 
+    ids_to_keep = set()
     for enm, node_id, ref_id in unique_keys:
-        existing_records = RadioEquipmentClockReference.objects.filter(
+        records = RadioEquipmentClockReference.objects.filter(
             enm=enm,
             node_id=node_id,
             radio_equipment_clock_reference_id=ref_id,
         ).order_by(
             "-updated_at",
         )  # От новых к старым
+        ids_to_keep.update(records.values_list("id", flat=True)[:4])
 
-        if existing_records.count() > 4:
-            records_to_delete_ids = existing_records.values_list("id", flat=True)[4:]
-            RadioEquipmentClockReference.objects.filter(
-                id__in=records_to_delete_ids,
-            ).delete()
+    RadioEquipmentClockReference.objects.exclude(id__in=ids_to_keep).delete()
 
 
 def get_sts_data() -> Tuple[List[str], List[tuple]]:
