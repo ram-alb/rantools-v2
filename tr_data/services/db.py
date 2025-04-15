@@ -9,6 +9,8 @@ from enmscripting import ElementGroup  # type: ignore
 
 from tr_data.models import RadioEquipmentClockReference
 
+FAULT_KEYWORDS = ("PTP_FAULT", "NTP_FAULT", "GNSS_FAULT", "QL_TOO_LOW")
+
 
 def _process_enm_sts_data(
     enm_sts_data: Dict[str, ElementGroup],
@@ -77,12 +79,10 @@ def get_sts_data() -> Tuple[List[str], List[tuple]]:
         if field.name not in {"id", "updated_at"}
     ]
 
-    fault_keywords = ["PTP_FAULT", "NTP_FAULT", "GNSS_FAULT", "QL_TOO_LOW"]
-
     fault_records = RadioEquipmentClockReference.objects.filter(
         functools.reduce(
             operator.or_,
-            [MODELSQ(reference_status__icontains=kw) for kw in fault_keywords],
+            [MODELSQ(reference_status__icontains=kw) for kw in FAULT_KEYWORDS],
         ),
     )
 

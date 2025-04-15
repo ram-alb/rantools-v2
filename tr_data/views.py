@@ -3,7 +3,7 @@ from django.views import View
 
 from services.mixins import GroupRequiredMixin, LoginMixin
 from tr_data.forms import SearchForm
-from tr_data.services.db import get_sts_data
+from tr_data.services.db import FAULT_KEYWORDS, get_sts_data
 from tr_data.services.enm import get_enm_sts_data
 from tr_data.services.enm_parser import parse_node_sts_data
 from tr_data.services.excel import create_tr_excel
@@ -39,7 +39,11 @@ class TrData(LoginMixin, GroupRequiredMixin, View):
             return render(
                 request,
                 self.template_name,
-                {"search_form": search_form, "node_sts": node_sts},
+                {
+                    "search_form": search_form,
+                    "node_sts": node_sts,
+                    "fault_keywords": FAULT_KEYWORDS,
+                },
             )
 
         content_type = (

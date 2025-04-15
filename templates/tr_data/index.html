@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load custom_filters %}
 
 {% block content %}
 <div class="container">
@@ -72,7 +73,7 @@
         </thead>
         <tbody>
           {% for row in node_sts %}
-            <tr {% if "P_FAULT" in row.referenceStatus %}class="table-danger"{% endif %}>
+            <tr {% if row.referenceStatus|contains_any:fault_keywords %}class="table-danger"{% endif %}>
               <td>{{ row.ENM }}</td>
               <td>{{  row.NodeId  }}</td>
               <td>{{  row.RadioEquipmentClockReferenceId  }}</td>
