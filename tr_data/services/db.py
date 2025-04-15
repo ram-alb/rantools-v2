@@ -1,6 +1,9 @@
+import functools
+import operator
 from typing import Dict, List, Tuple
 
 from django.db.models import Count, Max
+from django.db.models import Q as MODELSQ
 from enm_cli.parser import extract_row_values, get_table  # type: ignore
 from enmscripting import ElementGroup  # type: ignore
 
@@ -74,8 +77,13 @@ def get_sts_data() -> Tuple[List[str], List[tuple]]:
         if field.name not in {"id", "updated_at"}
     ]
 
+    fault_keywords = ["PTP_FAULT", "NTP_FAULT", "GNSS_FAULT", "QL_TOO_LOW"]
+
     fault_records = RadioEquipmentClockReference.objects.filter(
-        reference_status__icontains="TP_FAULT",
+        functools.reduce(
+            operator.or_,
+            [MODELSQ(reference_status__icontains=kw) for kw in fault_keywords],
+        ),
     )
 
     node_ids_with4_faults = (
