@@ -2,7 +2,7 @@ import functools
 import operator
 from typing import Dict, List, Tuple
 
-from django.db.models import Count, Max
+from django.db.models import Count, Max  # type: ignore
 from django.db.models import Q as MODELSQ
 from enm_cli.parser import extract_row_values, get_table  # type: ignore
 from enmscripting import ElementGroup  # type: ignore

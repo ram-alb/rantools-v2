@@ -4,7 +4,7 @@ from django.views import View
 from services.mixins import GroupRequiredMixin, LoginMixin
 from tr_data.forms import SearchForm
 from tr_data.services.db import FAULT_KEYWORDS, get_sts_data
-from tr_data.services.enm import get_enm_sts_data
+from tr_data.services.enm import get_enm_sts_live_data
 from tr_data.services.enm_parser import parse_node_sts_data
 from tr_data.services.excel import create_tr_excel
 from tr_data.services.select import select_tr_data
@@ -34,7 +34,7 @@ class TrData(LoginMixin, GroupRequiredMixin, View):
         elif action == "check":
             site = request.POST.get("query")
             search_form = SearchForm(request.POST)
-            enm_data = get_enm_sts_data(site)
+            enm_data = get_enm_sts_live_data(site)
             node_sts = parse_node_sts_data(enm_data)
             return render(
                 request,

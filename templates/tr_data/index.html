@@ -70,15 +70,19 @@
           <th>RadioEquipmentClockReferenceId</th>
           <th>referenceStatus</th>
           <th>syncRefType</th>
+          <th>ptpProfile</th>
+          <th>associatedGrandmaster</th>
         </thead>
         <tbody>
           {% for row in node_sts %}
             <tr {% if row.referenceStatus|contains_any:fault_keywords %}class="table-danger"{% endif %}>
               <td>{{ row.ENM }}</td>
-              <td>{{  row.NodeId  }}</td>
-              <td>{{  row.RadioEquipmentClockReferenceId  }}</td>
-              <td>{{  row.referenceStatus  }}</td>
-              <td>{{  row.syncRefType  }}</td>
+              <td>{{ row.NodeId }}</td>
+              <td>{{ row.RadioEquipmentClockReferenceId }}</td>
+              <td>{{ row.referenceStatus }}</td>
+              <td>{{ row.syncRefType }}</td>
+              <td>{{ row.ptpProfile|default_if_none:"" }}</td>
+              <td>{{ row.associatedGrandmaster|default_if_none:"" }}</td>
             </tr>
           {% endfor %}
         </tbody>
