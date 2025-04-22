@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div id="loader" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh;">
+  <div class="spinner-border text-primary" role="status" style="width: 4rem; height: 4rem;"></div>
+  <div class="mt-3 fs-5 text-center">
+    Comparing Network and Atoll data, please wait…
+  </div>
+</div>
+
+<div class="main-part" style="display: none;">
+  <div id="summary">
+    <h2 class="text-center my-5">Network-vs-Atoll Summary</h2>
+    <table class="table table-bordered text-center mx-auto w-auto">
+      <thead>
+        <tr>
+          <th class="px-5">Technology</th>
+          <th class="px-5">Inconsistencies count</th>
+          <th class="px-5">Go to details</th>
+        </tr>
+      </thead>
+      <tbody>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const loader = document.getElementById('loader');
+    const mainPart = document.querySelector('.main-part');
+    const summaryDiv = document.getElementById('summary');
+
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+    formData.append('action', 'calculate_diff');
+
+    fetch('{% url "network_vs_atoll" %}', { method: 'POST', body: formData })
+      .then(response => response.json())
+      .then(data => {
+          populateSummary(data.summary);
+          populateDetails(data.summary_by_technologies);
+          loader.style.display = 'none';
+          mainPart.style.display = 'block';
+          attachDownloadButtons();
+        })
+      .catch(error => {
+          console.error('Ошибка при загрузке данных:', error);
+          alert('An error occurred while loading data. Please try again.');
+        });
+
+      function populateSummary(summary) {
+        const tbody = summaryDiv.querySelector('tbody');
+        tbody.innerHTML = '';
+
+        for (const [tech, diffCount] of Object.entries(summary)) {
+          const row = document.createElement('tr');
+          row.innerHTML = `
+            <td>${tech}</td>
+            <td>${diffCount}</td>
+            <td><button id="${tech}" class="btn btn-primary nva-details">Details</button></td>
+          `;
+          tbody.appendChild(row);
+        }
+      }
+
+      function populateDetails(summaryByTech) {
+        for (const [tech, diffs] of Object.entries(summaryByTech)) {
+          const block = document.createElement('div');
+          block.id = `${tech}-block`;
+          block.className = 'd-none text-center';
+          block.innerHTML = `
+            <button class="btn btn-secondary my-3 nva-home">Back to Summary</button>
+            <h2 class="text-center my-3">${tech} Inconsistencies</h2>
+            <table class="table table-bordered text-center mx-auto w-auto">
+              <thead>
+                <tr>
+                  <th class="px-5">${tech === 'GSM' ? 'BSC' : tech === 'WCDMA' ? 'RNC' : 'Subnetwork'}</th>
+                  <th>Count</th>
+                  <th>Download</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+          `;
+          mainPart.appendChild(block);
+
+          const tbody = block.querySelector('tbody');
+          tbody.innerHTML = '';
+
+          for (const [node, count] of Object.entries(diffs)) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+              <td class="px-5">${node}</td>
+              <td class="px-5">${count}</td>
+              <td class="px-5"><button id="${tech}-${node}" class="btn btn-primary download-report">Download</button></td>
+            `;
+            tbody.appendChild(row);
+          }
+
+          attachDetailButtons(block);
+        }
+      }
+
+      function disableAllButtons(disable) {
+        const allButtons = document.querySelectorAll('button');
+        allButtons.forEach(button => button.disabled = disable);
+      }
+
+      function attachDetailButtons(block) {
+        const detailBtns = document.getElementsByClassName('nva-details');
+        const nvaHomeBtns = block.querySelectorAll('.nva-home');
+
+        for (let btn of detailBtns) {
+          btn.addEventListener('click', () => {
+            summaryDiv.classList.add('d-none');
+            const detailDiv = document.getElementById(btn.id + '-block');
+            detailDiv.classList.remove('d-none');
+          });
+        }
+
+        for (let btn of nvaHomeBtns) {
+          btn.addEventListener('click', () => {
+            const block = btn.closest('div[id$="-block"]');
+            if (block) {
+            block.classList.add('d-none');
+            }
+            summaryDiv.classList.remove('d-none');
+          });
+        }
+      }
+
+      function attachDownloadButtons() {
+        const downloadBtns = document.getElementsByClassName('download-report');
+
+        for (let btn of downloadBtns) {
+          btn.addEventListener('click', () => {
+            disableAllButtons(true);
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
+
+            const formData = new FormData();
+            formData.append('csrfmiddlewaretoken', '{{ csrf_token }}');
+            formData.append('action', 'download_excel');
+
+            const [technology, node] = btn.id.split('-');
+            formData.append('technology', technology);
+            formData.append('node', node);
+
+            fetch('{% url "network_vs_atoll" %}', { method: 'POST', body: formData })
+              .then(response => response.blob())
+              .then(data => {
+                const url = window.URL.createObjectURL(data);
+                const anchor = document.createElement("a");
+                anchor.href = url;
+                anchor.download = `${technology}-${node}-diffs.xlsx`;
+                anchor.click();
+                window.URL.revokeObjectURL(url);
+                btn.innerHTML = 'Download';
+              })
+              .catch(error => {
+                console.error('Ошибка при скачивании:', error);
+                btn.innerHTML = 'Download';
+                alert('An error occurred while downloading the file. Please try again.');
+              })
+              .finally(() => {
+                disableAllButtons(false);
+              });
+          });
+        }
+      }
+    });
+</script>
+
+{% endblock content %}

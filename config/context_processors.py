@@ -10,12 +10,20 @@ tools = {
     'DayX': {'url': 'dayX', 'icon': 'fa fa-user-secret'},
     'API Docs': {'url': 'api-docs', 'icon': 'fas fa-book'},
     'RetSubUnit': {'url': 'retsubunit_index', 'icon': 'fas fa-sort-amount-down'},
+    'Network vs Atoll': {'url': 'network_vs_atoll', 'icon': 'fas fa-not-equal'},
 }
 
 group_tools = {
     'Regular Users': ['BTS Info', 'Sites Count'],
     'RNPO Users': [
-        'BTS Files', 'Network Live', 'Neighbors', 'TR Data', 'HW Info', 'API Docs', 'RetSubUnit',
+        'BTS Files',
+        'Network Live',
+        'Neighbors',
+        'TR Data',
+        'HW Info',
+        'API Docs',
+        'RetSubUnit',
+        'Network vs Atoll',
     ],
     'Hardware': ['HW Info'],
     'BTS Files': ['BTS Files'],

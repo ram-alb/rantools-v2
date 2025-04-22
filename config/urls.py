@@ -20,4 +20,5 @@ urlpatterns = [
     path('tr-data/', include('tr_data.urls')),
     path('hw-info/', include('hw_info.urls')),
     path('retsubunit/', include('retsubunit.urls')),
+    path('network-vs-atoll/', include('network_vs_atoll.urls')),
 ]
