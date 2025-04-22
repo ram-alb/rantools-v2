@@ -1,39 +1,55 @@
-from django.shortcuts import render, HttpResponse
+from django.http import JsonResponse
+from django.shortcuts import HttpResponse, render
 from django.views import View
+
+from network_vs_atoll.services.excel import write_diffs_to_excel
+from network_vs_atoll.services.lte.main import main as lte_main
 from services.mixins import GroupRequiredMixin, LoginMixin
-from network_vs_atoll.services.main import main
-from network_vs_atoll.services.excel import fill_excel
+
+BAD_REQUEST = 400
 
 
-class NetworkVsAtollView(View):
-    """A view for displaying Network vs Atoll data."""
+class NetworkVsAtollView(LoginMixin, GroupRequiredMixin, View):
+    """View for Network vs Atoll page."""
 
-    diff = {}
+    required_groups = ['RNPO Users']
+    template_name = 'network_vs_atoll/index.html'
 
-    def get(self, request, *args, **kwargs):
-        """Handle GET request to display diffs between Network and Atoll."""
-        context = {}
-        deltas, diff = main()
-        context['diff'] = diff
+    def get(self, request):
+        """Handle GET requests."""
+        return render(request, self.template_name)
 
-        for tech, delta in deltas.items():
-            self.diff[tech] = delta
+    def post(self, request):
+        """Handle POST requests."""
+        action = request.POST.get('action')
+        if action == 'calculate_diff':
+            lte_total_diff_count, lte_diff_count_by_subnetwork, lte_diffs = lte_main()
+            request.session['LTE'] = lte_diffs
+            return JsonResponse({
+                'summary': {'LTE': lte_total_diff_count},
+                'summary_by_technologies': {'LTE': lte_diff_count_by_subnetwork},
+                'diffs': {'LTE': lte_diffs},
+            })
 
-        return render(request, 'network_vs_atoll/index.html', context)
+        if action == 'download_excel':
+            technology = request.POST.get('technology')
+            node = request.POST.get('node')
+            diffs = request.session.get(technology)
 
-    def post(self, request, *args, **kwargs):
-        """Handle POST request to fille report and send it for download."""
-        technology = request.POST.get('technology')
-        node = request.POST.get('node')
+            if not diffs:
+                return HttpResponse("Diffs not found in session", status=BAD_REQUEST)
 
-        report_path = fill_excel(node, self.diff[technology][node])
-        with open(report_path, 'rb') as attachment:
-            file_data = attachment.read()
-            response = HttpResponse(
-                file_data,
-                content_type='application/vnd.ms-excel',
-            )
-            response['Content-Disposition'] = (
-                f'attachment; filename="{node}.xlsx"'
-            )
+            try:
+                node_diffs = diffs[node]
+            except KeyError:
+                return HttpResponse("Invalid technology or node", status=BAD_REQUEST)
+
+            diff_excell = write_diffs_to_excel(node_diffs)
+
+            content_type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            file_name = f'{technology}-{node}-diffs.xlsx'
+            response = HttpResponse(diff_excell, content_type=content_type)
+            response['Content-Disposition'] = f'attachment; filename="{file_name}"'
             return response
+
+        return HttpResponse("Invalid action", status=BAD_REQUEST)

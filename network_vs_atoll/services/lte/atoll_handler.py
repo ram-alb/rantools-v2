@@ -1,97 +1,47 @@
 import re
+from typing import List, Optional, Union
+
+from network_vs_atoll.services.lte.sql import AtollRow
 
 
-def parse_earfcndl(atoll_earfcndl):
-    """
-    Parse earfcndl value from atoll data.
+def _get_earfcndl(carrier: str) -> Union[int, str]:
+    if carrier is None:
+        return None
+    if carrier.isnumeric():
+        return int(carrier)
 
-    Args:
-        atoll_earfcndl (str): an earfcndl data
+    match = re.search(r'\((\d+)\)', carrier)
+    if match:
+        return int(match.group(1))
 
-    Returns:
-        str: earfcndl value
-    """
-    try:
-        return re.search(r'(?<=\()\d+(?=\))', atoll_earfcndl).group()
-    except AttributeError:
-        numbers = re.findall(r'\d+', atoll_earfcndl)
-        if numbers:
-            return max(numbers, key=len)
-        else:
-            return None
-
-def parse_rach(atoll_rach):
-    """
-    Parse rach value from atoll data.
-
-    Args:
-        atoll_rach (str): a rach data
-
-    Returns:
-        str: rach value
-    """
-    return atoll_rach.split('-')[0] if atoll_rach else -1
+    return carrier
 
 
-def make_int(parameter):
-    """
-    Make parameter of int instanse.
+def _get_rach(rach_list: str) -> Optional[int]:
+    if rach_list is None:
+        return None
+    if rach_list.isnumeric():
+        return int(rach_list)
 
-    Args:
-        parameter (str): a parameter value
-
-    Returns:
-        int
-    """
-    return int(parameter) if parameter == 0 or parameter else -1
+    return int(rach_list.split('-')[0])
 
 
-def handle_atoll_lte_params(atoll_params):
-    """
-    Handle all LTE parameters selected from atoll.
+def handle_atoll_data(atoll_data: List[AtollRow]) -> dict:
+    """Handle Atoll data and convert it to a dictionary."""
+    atoll_cells = {}
 
-    Args:
-        atoll_params (list): a list of namedtuples with LTE params
+    for row in atoll_data:
+        earfcndl = _get_earfcndl(row.earfcndl)
+        rach = _get_rach(row.rach)
+        try:
+            cell_id = int(row.cellid)
+        except TypeError:
+            cell_id = row.cellid
 
-    Returns:
-        dict: keys are the cells, values are the dicts with cell parameters
-    """
-    atoll_params_dict = {}
-    for row in atoll_params:
-        site = row.lte_sitename if row.lte_sitename else row.sitename
-        earfcndl = parse_earfcndl(row.earfcndl)
-        rach = parse_rach(row.rach)
-        atoll_params_dict[row.cell] = {
-            'site': site,
-            'tac': make_int(row.tac),
-            'cellid': make_int(row.cellid),
-            'pci': make_int(row.pci),
-            'earfcndl': make_int(earfcndl),
-            'rach': make_int(rach),
-        }
-    return atoll_params_dict
+        row_params = row._asdict()
+        row_params['earfcndl'] = earfcndl
+        row_params['rach'] = rach
+        row_params['cellid'] = cell_id
+        atoll_cells[row.cell] = row_params
 
-
-def get_cell_atoll_params(cell, atoll_params):
-    """
-    Get parameters for one cell from atoll LTE cell data.
-
-    Args:
-        cell (str): a cell name
-        atoll_params (dict): keys are cells, values are dicts of cell parameters
-
-    Returns:
-        dict: dict with parameters if cell found or default values
-    """
-    try:
-        atoll_cell_params = atoll_params[cell]
-    except KeyError:
-        atoll_cell_params = {
-            'site': '',
-            'tac': -1,
-            'cellid': -1,
-            'pci': -1,
-            'earfcndl': -1,
-            'rach': -1,
-        }
-    return atoll_cell_params
+    return atoll_cells
