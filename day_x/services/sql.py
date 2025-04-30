@@ -16,8 +16,6 @@ SELECT
     BSCNAME
 FROM
     GSMCELLS2
-WHERE
-    Lower(CELLSTATE) = 'active'
 """
 
 WCDMA_SELECT = """
@@ -34,8 +32,6 @@ SELECT
     RNCNAME
 FROM
     WCDMACELLS2
-WHERE
-    Lower(ADMINISTRATIVESTATE) = 'unlocked'
 """
 
 LTE_SELECT = """
