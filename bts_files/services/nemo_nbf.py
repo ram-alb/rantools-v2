@@ -50,6 +50,7 @@ def _get_gsm_uniq(cell: GsmRowFactory) -> str:
         '',
         str(cell.azimut),
         str(DEFAULT_WIDTH),
+        str(int(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -65,6 +66,7 @@ def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
         str(cell.psc),
         str(azimut),
         str(beam_width),
+        str(int(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -81,6 +83,7 @@ def _get_lte_uniq(cell: LteRowFactory) -> str:
         '',
         str(azimut),
         str(beam_width),
+        str(int(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -96,6 +99,7 @@ def _get_nr_uniq(cell: NrRowFactory) -> str:
         '',
         str(cell.azimut),
         str(DEFAULT_WIDTH),
+        str(int(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -122,7 +126,7 @@ def _get_tech_row(cell: CellRowFactory, technology: str) -> str:
 
 def make_nbf_content(cell_data: AllTechPolygon) -> str:
     """Generate NBF content from the given cell data for different technologies."""
-    nbf_content = 'SYSTEM;SITE;LAT;LON;CELL;CH;BSIC;CID;PCI;LAC;SCR;DIR;BEAM;'
+    nbf_content = 'SYSTEM;SITE;LAT;LON;CELL;CH;BSIC;CID;PCI;LAC;SCR;DIR;BEAM;HEIGHT;'
 
     for tech, tech_data in cell_data.items():
         if tech == 'sites':
