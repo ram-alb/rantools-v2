@@ -1,11 +1,22 @@
+image: python:3.8
+
 stages:
+  - install
   - lint
 
-flake8:
-  stage: lint
-  image: python:3.8
-  before_script:
-    - pip install poetry
+before_script:
+  - mkdir -p ~/.ssh
+  - echo "$CI_SSH_KEY" > ~/.ssh/id_ed25519
+  - chmod 600 ~/.ssh/id_ed25519
+  - ssh-keyscan gitlab.kcell.kz >> ~/.ssh/known_hosts
+  - pip install poetry
+
+install-deps:
+  stage: install
+  script:
     - poetry install
+
+lint:
+  stage: lint
   script:
     - poetry run flake8
