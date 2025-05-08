@@ -19,4 +19,4 @@ lint:
 test:
   stage: test
   script:
-	  - poetry run pytest --disable-warnings
+    - poetry run pytest --disable-warnings
