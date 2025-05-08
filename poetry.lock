@@ -811,7 +811,7 @@ enm-client-scripting = {path = "local_lib/enm_client_scripting-1.22.2-py2.py3-no
 
 [package.source]
 type = "git"
-url = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/enm-cli.git"
+url = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/enm-cli.git"
 reference = "HEAD"
 resolved_reference = "d3c0efb1b65effcbdb0efdfee78c53b75e8f034a"
 
@@ -1479,17 +1479,17 @@ develop = false
 
 [package.dependencies]
 cx-oracle = "^8.3.0"
-enm-cli = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/enm-cli.git"}
+enm-cli = {git = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/enm-cli.git"}
 oracledb = "^2.5.0"
-point-in-region = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/point-in-region.git"}
+point-in-region = {git = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/point-in-region.git"}
 python-dotenv = "^1.0.1"
-send-mail = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/send-mail.git"}
+send-mail = {git = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/send-mail.git"}
 
 [package.source]
 type = "git"
 url = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/network-live.git"
 reference = "HEAD"
-resolved_reference = "3f8bf07ca9d635a54e9ae189c64271a64eddce74"
+resolved_reference = "c9e1d830a76412db26f0bfc063227770488ebbb4"
 
 [[package]]
 name = "numpy"
@@ -1763,7 +1763,7 @@ geopandas = "0.12.2"
 
 [package.source]
 type = "git"
-url = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/point-in-region.git"
+url = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/point-in-region.git"
 reference = "HEAD"
 resolved_reference = "fe9c06d6d11abd4e8a9d485893fffe6a30c1c2c8"
 
@@ -2348,7 +2348,7 @@ python-dotenv = "^1.0.1"
 
 [package.source]
 type = "git"
-url = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/send-mail.git"
+url = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/send-mail.git"
 reference = "HEAD"
 resolved_reference = "b1456c13ecf90c083ea60dd7fbc1f7ff9a8b3a00"
 
