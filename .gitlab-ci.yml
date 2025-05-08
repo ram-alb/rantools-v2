@@ -5,10 +5,8 @@ stages:
   - lint
 
 before_script:
-  - mkdir -p ~/.ssh
-  - echo "$CI_SSH_KEY" > ~/.ssh/id_ed25519
-  - chmod 600 ~/.ssh/id_ed25519
-  - ssh-keyscan gitlab.kcell.kz >> ~/.ssh/known_hosts
+  - echo -e "machine gitlab.kcell.kz\nlogin $DEPLOY_TOKEN_USER\npassword $DEPLOY_TOKEN_PASS" > ~/.netrc
+  - chmod 600 ~/.netrc
   - pip install poetry
 
 install-deps:

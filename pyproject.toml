@@ -26,12 +26,10 @@ geopandas = "0.12.2"
 geopy = "^2.4.1"
 celery = "^5.4.0"
 redis = "^5.2.1"
-network-live = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/network-live.git"}
-point-in-region = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/point-in-region.git"}
 xlsxwriter = "^3.2.2"
 django-celery-beat = "^2.7.0"
-enm-cli = {git = "git@gitlab.kcell.kz:nds-rnpou-rnsd-team/enm-cli.git"}
 deepdiff = "^8.4.2"
+network-live = {git = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/network-live.git"}
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"
