@@ -1,22 +1,43 @@
 image: python:3.8.13-slim-buster
 
 stages:
+  - install
   - lint
   - test
+
+cache:
+  key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - ~/.cache/pip
+    - ~/.cache/pypoetry
+    - .venv
 
 before_script:
   - apt-get update && apt-get install -y git
   - echo -e "machine gitlab.kcell.kz\nlogin $DEPLOY_TOKEN_USER\npassword $DEPLOY_TOKEN_PASS" > ~/.netrc
   - chmod 600 ~/.netrc
   - pip install poetry
-  - poetry install
+  - poetry config virtualenvs.in-project true
+
+install:
+  stage: install
+  script:
+    - poetry install
+  artifacts:
+    paths:
+      - .venv
+    expire_in: 1h
 
 lint:
   stage: lint
+  dependencies:
+    - install
   script:
     - poetry run flake8
 
 test:
   stage: test
+  dependencies:
+    - install
   script:
     - poetry run pytest --disable-warnings
