@@ -1,18 +1,14 @@
-image: python:3.8
+image: python:3.8.13-slim-buster
 
 stages:
-  - install
   - lint
 
 before_script:
+  - apt-get update && apt-get install -y git
   - echo -e "machine gitlab.kcell.kz\nlogin $DEPLOY_TOKEN_USER\npassword $DEPLOY_TOKEN_PASS" > ~/.netrc
   - chmod 600 ~/.netrc
   - pip install poetry
-
-install-deps:
-  stage: install
-  script:
-    - poetry install
+  - poetry install
 
 lint:
   stage: lint
