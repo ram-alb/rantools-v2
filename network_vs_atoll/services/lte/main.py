@@ -20,7 +20,10 @@ def main():
         if diff:
             diffs.setdefault(subnetwork, []).extend(diff)
 
-    diff_count_by_subnetwork = {subnetwork: len(diffs) for subnetwork, diffs in diffs.items()}
+    diff_count_by_subnetwork = dict(sorted(
+        ((subnetwork, len(diff)) for subnetwork, diff in diffs.items()),
+        key=lambda subnetwork_diff: subnetwork_diff[0],
+    ))
     total_diff_count = sum(diff_count_by_subnetwork.values())
 
     return total_diff_count, diff_count_by_subnetwork, diffs
