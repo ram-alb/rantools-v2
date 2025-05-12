@@ -1,0 +1,17 @@
+image: python:3.8.13-slim-buster
+
+stages:
+  - lint and test
+
+before_script:
+  - apt-get update && apt-get install -y git
+  - echo -e "machine gitlab.kcell.kz\nlogin $DEPLOY_TOKEN_USER\npassword $DEPLOY_TOKEN_PASS" > ~/.netrc
+  - chmod 600 ~/.netrc
+  - pip install poetry
+
+lint&test:
+  stage: lint and test
+  script:
+    - poetry install
+    - poetry run flake8
+    - poetry run pytest --disable-warnings
