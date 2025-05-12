@@ -36,7 +36,7 @@ def handle_atoll_data(atoll_data: List[AtollRow]) -> dict:
         try:
             cell_id = int(row.cellid)
         except TypeError:
-            cell_id = row.cellid
+            cell_id = row.cellid  # type: ignore
 
         row_params = row._asdict()
         row_params['earfcndl'] = earfcndl

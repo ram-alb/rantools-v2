@@ -16,7 +16,7 @@ def main():
         network_params = row._asdict()
         subnetwork = network_params.pop('subnetwork', None)
         atoll_cell_params = atoll_params.get(network_params['cell'], None)
-        diff = compare_network_vs_atoll(network_params, atoll_cell_params)
+        diff = compare_network_vs_atoll(network_params, atoll_cell_params, technology='LTE')
         if diff:
             diffs.setdefault(subnetwork, []).extend(diff)
 
