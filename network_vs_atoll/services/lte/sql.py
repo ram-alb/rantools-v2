@@ -19,6 +19,7 @@ WHERE oss LIKE 'ENM%'
 ATOLL_QUERY = r"""
 SELECT
     s.name as site,
+    s.LTE_SITENAME,
     c.cell_id as cell,
     c.tac,
     c.unique_id as cellid,
@@ -52,6 +53,7 @@ class AtollRow(NamedTuple):
     """Atoll row from the database."""
 
     site: str
+    lte_sitename: str
     cell: str
     tac: int
     cellid: str
