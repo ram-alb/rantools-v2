@@ -58,6 +58,7 @@
           <th>AntennaModel</th>
           <th>maxTilt</th>
           <th>minTilt</th>
+          <th>SerialNumber</th>
         </thead>
         <tbody>
           {% for row in retsubunit_data %}
@@ -70,6 +71,7 @@
               <td>{{  row.iuantAntennaModelNumber }}</td>
               <td>{{  row.maxTilt }}</td>
               <td>{{  row.minTilt }}</td>
+              <td>{{ row.iuantAntennaSerialNumber|default_if_none:"" }}</td>
             </tr>
           {% endfor %}
         </tbody>

@@ -8,6 +8,7 @@ from services.enm.enmscripting import Enms
 retsubunit_params = [
     "electricalAntennaTilt",
     "iuantAntennaModelNumber",
+    "iuantAntennaSerialNumber",
     "maxTilt",
     "minTilt",
 ]
