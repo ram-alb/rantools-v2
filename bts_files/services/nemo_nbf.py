@@ -23,6 +23,13 @@ def _get_nr_carrier(carrier: str) -> str:
     return carrier_data
 
 
+def _int_height(height) -> int:
+    try:
+        return int(height)
+    except (ValueError, TypeError):
+        return 0
+
+
 def _get_common_part(cell: CellRowFactory) -> str:
     common_params = [
         cell.site,
@@ -50,7 +57,7 @@ def _get_gsm_uniq(cell: GsmRowFactory) -> str:
         '',
         str(cell.azimut),
         str(DEFAULT_WIDTH),
-        str(int(cell.height)),
+        str(_int_height(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -66,7 +73,7 @@ def _get_wcdma_uniq(cell: WcdmaRowFactory) -> str:
         str(cell.psc),
         str(azimut),
         str(beam_width),
-        str(int(cell.height)),
+        str(_int_height(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -83,7 +90,7 @@ def _get_lte_uniq(cell: LteRowFactory) -> str:
         '',
         str(azimut),
         str(beam_width),
-        str(int(cell.height)),
+        str(_int_height(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
@@ -99,7 +106,7 @@ def _get_nr_uniq(cell: NrRowFactory) -> str:
         '',
         str(cell.azimut),
         str(DEFAULT_WIDTH),
-        str(int(cell.height)),
+        str(_int_height(cell.height)),
     ]
     return ';'.join(_replace_none(uniq_params))
 
