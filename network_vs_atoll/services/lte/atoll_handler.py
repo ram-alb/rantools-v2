@@ -1,7 +1,8 @@
 import re
-from typing import List, Optional, Union
+from typing import List, Union
 
 from network_vs_atoll.services.lte.sql import AtollRow
+from network_vs_atoll.services.utils import get_rach
 
 
 def _get_earfcndl(carrier: str) -> Union[int, str]:
@@ -17,22 +18,13 @@ def _get_earfcndl(carrier: str) -> Union[int, str]:
     return carrier
 
 
-def _get_rach(rach_list: str) -> Optional[int]:
-    if rach_list is None:
-        return None
-    if rach_list.isnumeric():
-        return int(rach_list)
-
-    return int(rach_list.split('-')[0])
-
-
 def handle_atoll_data(atoll_data: List[AtollRow]) -> dict:
     """Handle Atoll data and convert it to a dictionary."""
     atoll_cells = {}
 
     for row in atoll_data:
         earfcndl = _get_earfcndl(row.earfcndl)
-        rach = _get_rach(row.rach)
+        rach = get_rach(row.rach)
         try:
             cell_id = int(row.cellid)
         except TypeError:
