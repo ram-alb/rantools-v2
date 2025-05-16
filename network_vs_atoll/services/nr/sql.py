@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 NETWORK_QUERY = r"""
 SELECT
@@ -51,8 +51,8 @@ class AtollRow(NamedTuple):
 
     site: str
     cell: str
-    cellid: str
-    nrpci: int
-    nrtac: int
-    rach: str
+    cellid: Optional[str]
+    nrpci: Optional[int]
+    nrtac: Optional[int]
+    rach: Optional[str]
     carrier: str

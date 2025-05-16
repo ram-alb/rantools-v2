@@ -1,3 +1,5 @@
+from typing import Dict
+
 from network_vs_atoll.services.lte.main import main as lte_main
 from network_vs_atoll.services.nr.main import main as nr_main
 
@@ -9,7 +11,7 @@ def main() -> dict:
         'NR': nr_main,
     }
 
-    network_vs_atoll_results = {
+    network_vs_atoll_results: Dict[str, dict] = {
         'summary': {},
         'summary_by_technologies': {},
         'diffs': {},
