@@ -1,4 +1,4 @@
-from typing import NamedTuple
+from typing import NamedTuple, Optional
 
 NETWORK_QUERY = r"""
 SELECT
@@ -39,24 +39,24 @@ WHERE c.active = -1
 class NetworkRow(NamedTuple):
     """Network row from the database."""
 
-    subnetwork: str
-    site: str
-    cell: str
-    tac: int
-    cellid: int
-    pci: int
-    earfcndl: int
-    rach: int
+    subnetwork: Optional[str]
+    site: Optional[str]
+    cell: Optional[str]
+    tac: Optional[int]
+    cellid: Optional[int]
+    pci: Optional[int]
+    earfcndl: Optional[int]
+    rach: Optional[int]
 
 
 class AtollRow(NamedTuple):
     """Atoll row from the database."""
 
     site: str
-    lte_sitename: str
+    lte_sitename: Optional[str]
     cell: str
-    tac: int
-    cellid: str
-    pci: int
+    tac: Optional[int]
+    cellid: Optional[str]
+    pci: Optional[int]
     earfcndl: str
-    rach: str
+    rach: Optional[str]

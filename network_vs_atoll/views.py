@@ -3,7 +3,7 @@ from django.shortcuts import HttpResponse, render
 from django.views import View
 
 from network_vs_atoll.services.excel import write_diffs_to_excel
-from network_vs_atoll.services.lte.main import main as lte_main
+from network_vs_atoll.services.main import main as network_vs_atoll
 from services.mixins import GroupRequiredMixin, LoginMixin
 
 BAD_REQUEST = 400
@@ -23,15 +23,12 @@ class NetworkVsAtollView(LoginMixin, GroupRequiredMixin, View):
         """Handle POST requests."""
         action = request.POST.get('action')
         if action == 'calculate_diff':
-            lte_total_diff_count, lte_diff_count_by_subnetwork, lte_diffs = lte_main()
-            request.session['LTE'] = lte_diffs
-            return JsonResponse({
-                'summary': {'LTE': lte_total_diff_count},
-                'summary_by_technologies': {'LTE': lte_diff_count_by_subnetwork},
-                'diffs': {'LTE': lte_diffs},
-            })
+            network_vs_atoll_results = network_vs_atoll()
+            for tech, diff in network_vs_atoll_results['diffs'].items():
+                request.session[tech] = diff
+            return JsonResponse(network_vs_atoll_results)
 
-        if action == 'download_excel':
+        elif action == 'download_excel':
             technology = request.POST.get('technology')
             node = request.POST.get('node')
             diffs = request.session.get(technology)
