@@ -30,6 +30,7 @@ group_tools = {
     'DayX': ['DayX'],
     'Partial Access Users': ['KML Files'],
     'Trans Group': ['TR Data'],
+    'Rollout': ['TR Data'],
 }
 
 
