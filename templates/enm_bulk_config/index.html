@@ -1,5 +1,90 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>ENM Bulk Configuration</h1>
+<div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
+  <h1 class="mb-4 text-center">ENM Bulk Configuration</h1>
+  <form method="post" enctype="multipart/form-data" class="w-100" style="max-width: 400px;">
+
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label for="id_technology" class="form-label">Select technology:</label>
+      <select class="form-select" id="id_technology" name="technology" required>
+        <option value="" selected disabled>select...</option>
+        {% for tech in technologies %}
+          <option value="{{ tech }}">{{ tech }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div class="mb-3" id="parameter-select-container" style="display:none;">
+      <label for="id_parameter" class="form-label">Select parameter:</label>
+      <select class="form-select" id="id_parameter" name="parameter">
+        <!-- options will be added by JS -->
+      </select>
+      <div id="template-actions"></div>
+    </div>
+
+    <button type="submit" class="btn btn-primary w-100" id="submit-btn" disabled>Submit</button>
+
+  </form>
+</div>
+<script>
+  const parameters = {{ parameters|safe }};
+  const techSelect = document.getElementById('id_technology');
+  const paramContainer = document.getElementById('parameter-select-container');
+  const paramSelect = document.getElementById('id_parameter');
+  const submitBtn = document.getElementById('submit-btn');
+  const templateActions = document.getElementById('template-actions');
+
+  techSelect.addEventListener('change', function() {
+    const tech = this.value;
+    if (parameters[tech]) {
+      paramSelect.innerHTML = '<option value="" selected disabled>select...</option>';
+      parameters[tech].forEach(function(param) {
+        const opt = document.createElement('option');
+        opt.value = param;
+        opt.textContent = param;
+        paramSelect.appendChild(opt);
+      });
+      paramContainer.style.display = '';
+      templateActions.innerHTML = '';
+      submitBtn.disabled = true;
+    } else {
+      paramContainer.style.display = 'none';
+      templateActions.innerHTML = '';
+      submitBtn.disabled = true;
+    }
+  });
+
+  paramSelect.addEventListener('change', function() {
+    const tech = techSelect.value;
+    const param = this.value;
+    if (tech && param) {
+      // Формируем ссылку для скачивания шаблона
+      const getParams = new URLSearchParams({
+        technology: tech,
+        parameter: param
+      }).toString();
+      const url = "{% url 'enm_bulk_config_download_template' %}?" + getParams;
+      templateActions.innerHTML = `
+        <div class="mt-3">
+          <a href="${url}" id="download-template-btn" class="btn btn-outline-success w-100">Download template</a>
+        </div>
+        <div class="mt-3">
+          <label for="id_template_file" class="form-label">Upload filled template:</label>
+          <input type="file" id="id_template_file" name="template_file" class="form-control">
+        </div>
+      `;
+      const uploadInput = document.getElementById('id_template_file');
+      submitBtn.disabled = true;
+      uploadInput.addEventListener('change', function() {
+        submitBtn.disabled = !(uploadInput.files && uploadInput.files.length > 0);
+      });
+    } else {
+      templateActions.innerHTML = '';
+      submitBtn.disabled = true;
+    }
+  });
+</script>
 {% endblock content %}
