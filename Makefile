@@ -27,5 +27,14 @@ check: selfcheck lint test
 shell:
 	poetry run python manage.py shell_plus --plain
 
+isort-files:
+	poetry run isort $(FILES)
+
+format-files:
+	poetry run black $(FILES)
+
+lint-files:
+	poetry run flake8 $(FILES)
+
 
 .PHONY: dev-start install migrate isort lint selfcheck check test-coverage
