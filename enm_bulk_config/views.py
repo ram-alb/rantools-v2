@@ -1,7 +1,8 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
-from openpyxl import Workbook
+
+from enm_bulk_config.services.templates import generate_bulk_template
 
 
 class EnmBulkConfigView(View):
@@ -35,17 +36,11 @@ def download_template(request):
             status=error_status,
         )
 
-    # Создаем Excel-файл с двумя колонками: 'cell' и выбранный параметр
-    wb = Workbook()
-    ws = wb.active
-    ws.title = f"{technology}_{parameter}"
-    ws.append(["cell", f"new {parameter}"])  # Заголовки столбцов
-
-    # Готовим ответ для скачивания
+    template_content = generate_bulk_template(technology, parameter)
+    filename = f"{technology}_{parameter}_template.xlsx"
     response = HttpResponse(
+        template_content,
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
     )
-    filename = f"{technology}_{parameter}_template.xlsx"
     response["Content-Disposition"] = f'attachment; filename="{filename}"'
-    wb.save(response)
     return response
