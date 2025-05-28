@@ -11,6 +11,7 @@ tools = {
     'API Docs': {'url': 'api-docs', 'icon': 'fas fa-book'},
     'RetSubUnit': {'url': 'retsubunit_index', 'icon': 'fas fa-sort-amount-down'},
     'Network vs Atoll': {'url': 'network_vs_atoll', 'icon': 'fas fa-not-equal'},
+    'ENM Bulk Configuration': {'url': 'enm_bulk_config', 'icon': 'fas fa-cogs'},
 }
 
 group_tools = {
@@ -24,6 +25,7 @@ group_tools = {
         'API Docs',
         'RetSubUnit',
         'Network vs Atoll',
+        'ENM Bulk Configuration',
     ],
     'Hardware': ['HW Info'],
     'BTS Files': ['BTS Files'],

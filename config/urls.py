@@ -21,4 +21,5 @@ urlpatterns = [
     path('hw-info/', include('hw_info.urls')),
     path('retsubunit/', include('retsubunit.urls')),
     path('network-vs-atoll/', include('network_vs_atoll.urls')),
+    path('enm-bulk-config/', include('enm_bulk_config.urls')),
 ]

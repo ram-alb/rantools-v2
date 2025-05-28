@@ -59,6 +59,7 @@ INSTALLED_APPS = [
     'django_celery_beat',
     'retsubunit',
     'network_vs_atoll',
+    'enm_bulk_config',
 ]
 
 MIDDLEWARE = [
