@@ -1,8 +1,9 @@
+from django.contrib import messages
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 
-from enm_bulk_config.services.templates import generate_bulk_template
+from enm_bulk_config.services.templates import generate_bulk_template, validate_uploaded_template
 
 
 class EnmBulkConfigView(View):
@@ -23,6 +24,38 @@ class EnmBulkConfigView(View):
         }
 
         return render(request, self.template_name, context)
+
+    def post(self, request, *args, **kwargs):
+        """Handle POST requests for the ENM bulk configuration page."""
+        technology = request.POST.get("technology")
+        parameter = request.POST.get("parameter")
+        template_file = request.FILES.get("template_file")
+
+        tehnologies = ["LTE", "NR"]
+        tech_parameters = {
+            "LTE": ["PCI", "RACH", "TAC", "CellId"],
+            "NR": ["PCI", "RACH", "TAC", "CellId"],
+        }
+        context = {
+            "technologies": tehnologies,
+            "parameters": tech_parameters,
+            "selected_technology": technology,
+            "selected_parameter": parameter,
+        }
+
+        if not (technology and parameter and template_file):
+            messages.error(
+                request,
+                "Please select technology, parameter and upload a file.",
+            )
+            return render(request, self.template_name, context)
+
+        is_valid, error = validate_uploaded_template(template_file, parameter)
+        if not is_valid:
+            messages.error(request, f"Invalid template: {error}")
+            return render(request, self.template_name, context)
+
+        return HttpResponse("Template validated successfully!")
 
 
 def download_template(request):

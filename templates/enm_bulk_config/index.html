@@ -86,5 +86,25 @@
       submitBtn.disabled = true;
     }
   });
+
+  // Получаем выбранные значения из Django-контекста
+  const selectedTech = "{{ selected_technology|default:'' }}";
+  const selectedParam = "{{ selected_parameter|default:'' }}";
+
+  // Если есть выбранная технология, выставляем её и отрисовываем параметры
+  if (selectedTech) {
+    techSelect.value = selectedTech;
+    // Триггерим событие change, чтобы отрисовать параметры
+    techSelect.dispatchEvent(new Event('change'));
+  }
+
+  // Если есть выбранный параметр, выставляем его и отрисовываем действия
+  if (selectedParam) {
+    // Нужно подождать, пока options появятся
+    setTimeout(function() {
+      paramSelect.value = selectedParam;
+      paramSelect.dispatchEvent(new Event('change'));
+    }, 100);
+  }
 </script>
 {% endblock content %}
