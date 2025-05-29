@@ -11,6 +11,7 @@ tools = {
     'API Docs': {'url': 'api-docs', 'icon': 'fas fa-book'},
     'RetSubUnit': {'url': 'retsubunit_index', 'icon': 'fas fa-sort-amount-down'},
     'Network vs Atoll': {'url': 'network_vs_atoll', 'icon': 'fas fa-not-equal'},
+    'Submit TOA': {'url': 'search_form', 'icon': 'fas fa-book'},
 }
 
 group_tools = {
@@ -31,6 +32,7 @@ group_tools = {
     'Partial Access Users': ['KML Files'],
     'Trans Group': ['TR Data'],
     'Rollout': ['TR Data'],
+    'Integration Team': ['Submit TOA'],
 }
 
 

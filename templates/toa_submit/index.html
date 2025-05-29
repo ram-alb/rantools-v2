@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% block content %} 
+{% load static %}
+<link rel="stylesheet" href="{% static 'toa_submit/css/createtool.css' %}">
+    <div class="form-wrapper">
+        {% if form %}
+            <form id="searchForm" class="form-container" method="post">
+                <h1>TOA send tool</h1>
+                {% csrf_token %}
+                <div class="form-row-container input-btn-group">
+                    <label class="form-label" for="{{ form.site_name.id_for_label }}">{{ form.site_name.label }}</label>
+                    <div class="input-group">
+                        {{ form.site_name }}
+                        <button type="submit" id="btn" class="btn btn-primary" disabled>Check Site</button>
+                    </div>
+                </div>
+                <div class="form-row-container">
+                    {{ form.technologies.label_tag }}
+                    <div class="checkbox-group">
+                        {{ form.technologies }}
+                    </div>
+                </div>
+            </form>
+        {% endif %}
+        
+      
+      {% if messages %}
+        {% for message in messages %}
+          <div class="d-flex justify-content-center">
+            <div id='message-div' class="alert alert-danger d-inline-block" role="alert">
+              {{ message }}
+            </div>
+          </div>
+        {% endfor %}
+      {% endif %}
+    </div>
+<script src="{% static 'toa_submit/js/app_script.js' %}"></script>
+{% endblock content %}   
+
+        

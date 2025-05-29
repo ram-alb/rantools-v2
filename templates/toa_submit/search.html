@@ -1,0 +1,168 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'toa_submit/css/createtool.css' %}">
+    <div class="main-part">
+    <form id="site-form" method="post" action="?">
+        {% csrf_token %}
+    <pre>{{ context|safe }}</pre>
+    <div class="form-row">
+        <!-- Site Information -->
+        <fieldset class="nested-fieldsets" id="site-info">
+            <legend>Site Information</legend>
+            <div class="form-group">
+                <label for="sitename">Sitename:</label>
+                <input type="text" id="sitename" name="sitename" readonly>
+            </div>
+            <div class="form-group"> 
+                <label for="latitude">Latitude:</label>
+                <input type="text" id="latitude" name="latitude">
+            </div>
+            <div class="form-group">         
+                <label for="longitude">Longitude:</label>
+                <input type="text" id="longitude" name="longitude">
+            </div>
+            <div class="form-group">         
+                <label for="address">Site Address:</label>
+                <input type="text" id="address" name="address">
+            </div>
+            <div class="form-group">
+                <label for="kato">KATO:</label>
+                <input type="text" id="kato" name="kato">
+            </div>
+            <div class="form-group">
+                <label for="toa-date">Date for TOA</label>
+                <input type="date" id="toa-date" name="toa-date" value="{{ today|date:'Y-m-d' }}">
+            </div>
+            <div class="form-group">
+                <label for="combobox-handler" >Accepted by</label>
+                <select id="combobox-handler" name="combobox_handler">
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="combobox-dictionary">Cabinet Type</label>
+                <select id="combobox-dictionary" name="combobox_dictionary">
+                </select>
+            </div>  
+        </fieldset>
+        
+        <!-- Additional data -->
+        <fieldset  class="nested-fieldsets" id="add-data">
+            <legend>Additional Data</legend>
+            <div class="form-group"> 
+                <label for="serial-number">Serial Number:</label>
+                <input type="text" id="serial-number" name="serial-number">
+            </div>
+            <div class="form-group">
+                <label for="PName">Cabinet type</label>
+                <input type="text" id="PName" name="PName" readonly>
+            </div>
+            <div class="form-group"> 
+                <label for="subnetwork">Subnetwork:</label>
+                <input type="text" id="subnetwork" name="subnetwork" readonly>
+            </div>
+            <div class="form-group">
+                <label for="tr-oam">TR-OAM:</label>
+                <input type="text" id="tr-oam" name="tr-oam">
+            </div>
+
+
+
+        </fieldset>
+        
+    </div> 
+    
+    <div class="form-row">
+        <!-- Fieldset 2: Connect SAO -->
+
+        <fieldset id="Bands" class="nested-fieldsets">
+            <legend>Bands</legend>
+        </fieldset>
+        
+        <fieldset id="SendToa" class="nested-fieldsets">
+            <legend>TOA</legend>
+            <div class="d-flex justify-content-center gap-3">
+                <button type="button" id="send-toa-button" class="btn btn-primary w-auto px-4" data-technologies="{{ technologies|join:',' }}">
+                    Send TOA Request
+                </button>
+                <button type="button" id="reset-button" class="btn btn-secondary w-auto px-4">
+                    Back
+                </button>
+            </div>
+        </fieldset>
+    </div>        
+    
+    <div class="form-row">
+
+        </fieldset>    
+        <fieldset class="nested-fieldsets" id="2G-Data" style="display: none">
+            <legend>2G Data</legend>
+            <!-- Fields for 2G data -->
+            <div class="form-group">
+                <label for="2g_data_ne">BSC:</label>
+                <input type="text" id="2g_data_ne" name="2g_data_ne">
+            </div>
+            <div class="form-group">
+                <label for="2g_data_lac">LAC:</label>
+                <input type="text" id="2g_data_lac" name="2g_data_lac">
+            </div>
+            <div class="form-group">
+                <label for="2g_data_cell_list">Cell list:</label>
+                <input type="text" id="2g_data_cell_list" name="2g_data_cell_list">
+            </div>
+            <div class="form-group">
+                <label for="2g_data_CI_list">CI List:</label>
+                <input type="text" id="2g_data_CI_list" name="2g_data_CI_list">
+            </div>
+            <div class="form-group">
+                <label for="2g_data_tg">TG/Office ID:</label>
+                <input type="text" id="2g_data_tg" name="2g_data_tg">
+            </div>
+            <div class="form-group">
+                <label for="2g_data_trx">TRX Configuration:</label>
+                <input type="text" id="2g_data_trx" name="2g_data_trx">
+            </div>
+            <div class="form-group">
+                <label for="2g_data_edge">EDGE Configuration:</label>
+                <input type="text" id="2g_data_edge" name="2g_data_edge">
+            </div>    
+        </fieldset>
+
+                    <!-- 3G Data -->
+        <fieldset class="nested-fieldsets" id="3G-Data" style="display:none">
+            <legend>3G Data</legend>
+            <!-- Fields for 3G data -->
+            <div class="form-group">
+                <label for="3g_data_ne">RNC</label>
+                <input type="text" id="3g_data_ne" name="3g_data_ne">
+            </div>
+            <div class="form-group">
+                <label for="3g_data_lac">LAC</label>
+                <input type="text" id="3g_data_lac" name="3g_data_lac">
+            </div>
+            <div class="form-group">
+                <label for="3g_data_cell_list">Cell list</label>
+                <input type="text" id="3g_data_cell_list" name="3g_data_cell_list">
+            </div>
+            <div class="form-group">
+                <label for="3g_data_CI_list">CI List</label>
+                <input type="text" id="3g_data_CI_list" name="3g_data_CI_list">
+            </div>
+        </fieldset>
+    </div>
+    </form>
+    </div>
+<script>
+    window.site_info = {{ site_info|safe }};
+    window.common_data = {{ common_data|safe }};
+    window.accepted_list = {{ accepted_list|safe }};
+    window.cabinet_type = {{ cabinet_type|safe }};
+    window.technologies = {{ technologies|safe }};
+    window.data_2g = {{ data_2g|default:'null'|safe }};
+    window.data_3g = {{ data_3g|default:'null'|safe }};
+</script>
+<script src="{% static 'toa_submit/js/app_script.js' %}"></script>
+
+{% endblock content %}

@@ -21,4 +21,5 @@ urlpatterns = [
     path('hw-info/', include('hw_info.urls')),
     path('retsubunit/', include('retsubunit.urls')),
     path('network-vs-atoll/', include('network_vs_atoll.urls')),
+    path('toa_submit/', include('toa_submit.urls')),
 ]

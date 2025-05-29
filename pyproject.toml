@@ -30,6 +30,7 @@ xlsxwriter = "^3.2.2"
 django-celery-beat = "^2.7.0"
 deepdiff = "^8.4.2"
 network-live = {git = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/network-live.git"}
+pyodbc = "^5.2.0"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings"

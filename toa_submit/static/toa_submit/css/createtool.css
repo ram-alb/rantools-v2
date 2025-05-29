@@ -1,0 +1,174 @@
+main .main-part {
+    float: right;
+    color: #fff;
+    width: 80%;
+    max-height: 100vh;
+    overflow-y: auto;
+ }
+main .main-part-ind {
+    display:flex;
+    justify-content:center;
+    height: 100vh;
+    font-size:1rem;
+    color: #fff;
+    float:right;
+    width: 80%; 
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    font-size: 16px;
+    line-height: 1.5;
+    position: relative;
+}
+.alert-danger {
+    background-color: #f2dede;
+    color: #a94442;
+    border: 1px solid #ebccd1;
+}
+fieldset {
+    border: 1px solid #fff;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+legend {
+    font-weight:bold;
+    position: relative;
+    width: fit-content;
+    color: #0d6efd;
+}
+.disabled {
+ background-color: #e9ecef;
+ cursor: not-allowed;
+}
+input, select {
+ display: block;
+ margin-top: 5px;
+}
+.form-row {
+ display: flex;
+ flex-wrap: wrap;
+ gap: 10px;
+ margin-right: 10px;
+ margin-left: 10px;
+}
+.form-row  fieldset {
+ flex: 1;
+ min-width: 200px;
+} 
+.form-group {
+ display: flex;
+ align-items: center;
+  margin-bottom: 5px;
+}
+.form-group label {
+ width: 100px;
+ margin-right: 10px;
+ text-align: right;
+}
+.form-group input {
+ flex: 1;
+}
+.sao-fieldset {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+.checkbox-container  {
+ display: flex;
+ flex-direction: column;
+ gap: 10px;
+}
+.checkbox-group label {
+ margin-right: 10px;
+}
+.nested-fieldsets {
+ display: flex;
+ flex-direction: column;
+ gap: 20px;
+ padding: 10px;
+ border: 1px solid #ccc;
+ max-width: 650px;
+}
+.nested-fieldsets fieldset {
+ border: 1px solid #ccc;
+ padding: 10px;
+}
+.nested-fieldsets fieldset label{
+display: flex;
+align-items: center;
+gap: 5px;
+color:#0d6efd;
+}
+.nested-fieldsets fieldset legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    display: block; /* Выносит заголовок на новую строку */
+    margin-bottom: 10px;
+    color:#0d6efd;
+}
+
+.nested-fieldsets .checkbox-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+.disabled{
+ pointer-events: none;
+ opacity: 0.5;
+}
+.input-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Убираем стандартные отступы */
+.input-group input {
+    flex-grow: 1;
+    min-width: 250px;
+    width: 300px;
+}
+
+/* Чекбоксы в горизонтальный ряд */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: center;
+}
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+ul {
+    list-style-type: none; /* Убирает маркеры у всех списков */
+    padding: 0; /* Убирает отступы внутри списка */
+    margin: 0; /* Убирает отступы вокруг списка */
+}
+.form-control {
+    width: 100%; /* Или задайте конкретную ширину */
+    max-width: 700px; /* Ограничение максимальной ширины */
+    padding: 10px;
+    font-size: 16px;
+}
+.form-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    width: auto;
+    margin-left: auto; /* Смещение вправо */
+}
+
+/* Оформление формы */
+.form-container {
+    padding: 20px;
+    max-width: 500px;
+    width: 100%;
+}
+

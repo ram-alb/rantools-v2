@@ -8,6 +8,7 @@ before_script:
   - echo -e "machine gitlab.kcell.kz\nlogin $DEPLOY_TOKEN_USER\npassword $DEPLOY_TOKEN_PASS" > ~/.netrc
   - chmod 600 ~/.netrc
   - pip install poetry
+  - apt install -y unixodbc unixodbc-dev
 
 lint&test:
   stage: lint and test
