@@ -3,7 +3,9 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 
+from enm_bulk_config.services.network_live import get_all_params
 from enm_bulk_config.services.templates import generate_bulk_template, validate_uploaded_template
+from services.technologies import Technologies
 
 
 class EnmBulkConfigView(View):
@@ -13,14 +15,9 @@ class EnmBulkConfigView(View):
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests for the ENM bulk configuration page."""
-        tehnologies = ["LTE", "NR"]
-        tech_parameters = {
-            "LTE": ["PCI", "RACH", "TAC", "CellId"],
-            "NR": ["PCI", "RACH", "TAC", "CellId"],
-        }
         context = {
-            "technologies": tehnologies,
-            "parameters": tech_parameters,
+            "technologies": Technologies.get_technologies(),
+            "parameters": get_all_params(),
         }
 
         return render(request, self.template_name, context)
@@ -31,13 +28,10 @@ class EnmBulkConfigView(View):
         parameter = request.POST.get("parameter")
         template_file = request.FILES.get("template_file")
 
-        tehnologies = ["LTE", "NR"]
-        tech_parameters = {
-            "LTE": ["PCI", "RACH", "TAC", "CellId"],
-            "NR": ["PCI", "RACH", "TAC", "CellId"],
-        }
+        technologies = Technologies.get_technologies()
+        tech_parameters = get_all_params()
         context = {
-            "technologies": tehnologies,
+            "technologies": technologies,
             "parameters": tech_parameters,
             "selected_technology": technology,
             "selected_parameter": parameter,
