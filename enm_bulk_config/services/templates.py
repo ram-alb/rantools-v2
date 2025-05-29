@@ -2,6 +2,7 @@ from io import BytesIO
 from typing import Optional, Tuple
 
 import openpyxl
+import pandas as pd
 
 
 def generate_bulk_template(technology: str, parameter: str) -> bytes:
@@ -39,3 +40,15 @@ def validate_uploaded_template(
         return False, "There must be at least one data row."
 
     return True, None
+
+
+def read_clean_excel(template: BytesIO) -> pd.DataFrame:
+    """Read an Excel file and clean the 'cell' column by stripping whitespace."""
+    df = pd.read_excel(template, engine="openpyxl")
+    if "cell" in df.columns:
+        df["cell"] = df["cell"].apply(
+            lambda cell_name: (
+                cell_name.strip() if isinstance(cell_name, str) else cell_name
+            ),
+        )
+    return df
