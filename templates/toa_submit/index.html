@@ -1,8 +1,12 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
-{% block content %} 
 {% load static %}
-<link rel="stylesheet" href="{% static 'toa_submit/css/createtool.css' %}">
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'toa_submit/css/createtool.css' %}">
+{% endblock extra_head %}
+
+{% load crispy_forms_tags %}
+{% block content %}
     <div class="form-wrapper">
         {% if form %}
             <form id="searchForm" class="form-container" method="post">
@@ -23,8 +27,7 @@
                 </div>
             </form>
         {% endif %}
-        
-      
+
       {% if messages %}
         {% for message in messages %}
           <div class="d-flex justify-content-center">
@@ -36,6 +39,4 @@
       {% endif %}
     </div>
 <script src="{% static 'toa_submit/js/app_script.js' %}"></script>
-{% endblock content %}   
-
-        
+{% endblock content %}
