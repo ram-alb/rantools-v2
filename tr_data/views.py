@@ -13,7 +13,7 @@ from tr_data.services.select import select_tr_data
 class TrData(LoginMixin, GroupRequiredMixin, View):
     """View to handle requests for the tr_data app."""
 
-    required_groups = ["RNPO Users", "Trans Group"]
+    required_groups = ["RNPO Users", "Trans Group", "Integration Team"]
     template_name = "tr_data/index.html"
 
     def get(self, request):
