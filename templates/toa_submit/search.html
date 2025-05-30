@@ -1,4 +1,10 @@
 {% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'toa_submit/css/createtool.css' %}">
+{% endblock extra_head %}
+
 {% load crispy_forms_tags %}
 {% block style %}
   main .main-part {
@@ -15,7 +21,7 @@
       font-size:1rem;
       color: #fff;
       float:right;
-      width: 80%; 
+      width: 80%;
   }
 
   .alert {
@@ -62,7 +68,7 @@
   .form-row  fieldset {
   flex: 1;
   min-width: 200px;
-  } 
+  }
   .form-group {
   display: flex;
   align-items: center;
@@ -176,7 +182,6 @@
   }
 {% endblock style %}
 {% block content %}
-    {% load static %}
     <div class="main-part">
     <form id="site-form" method="post" action="?">
         {% csrf_token %}
@@ -189,15 +194,15 @@
                 <label for="sitename">Sitename:</label>
                 <input type="text" id="sitename" name="sitename" readonly>
             </div>
-            <div class="form-group"> 
+            <div class="form-group">
                 <label for="latitude">Latitude:</label>
                 <input type="text" id="latitude" name="latitude">
             </div>
-            <div class="form-group">         
+            <div class="form-group">
                 <label for="longitude">Longitude:</label>
                 <input type="text" id="longitude" name="longitude">
             </div>
-            <div class="form-group">         
+            <div class="form-group">
                 <label for="address">Site Address:</label>
                 <input type="text" id="address" name="address">
             </div>
@@ -218,13 +223,13 @@
                 <label for="combobox-dictionary">Cabinet Type</label>
                 <select id="combobox-dictionary" name="combobox_dictionary">
                 </select>
-            </div>  
+            </div>
         </fieldset>
-        
+
         <!-- Additional data -->
         <fieldset  class="nested-fieldsets" id="add-data">
             <legend>Additional Data</legend>
-            <div class="form-group"> 
+            <div class="form-group">
                 <label for="serial-number">Serial Number:</label>
                 <input type="text" id="serial-number" name="serial-number">
             </div>
@@ -232,7 +237,7 @@
                 <label for="PName">Cabinet type</label>
                 <input type="text" id="PName" name="PName" readonly>
             </div>
-            <div class="form-group"> 
+            <div class="form-group">
                 <label for="subnetwork">Subnetwork:</label>
                 <input type="text" id="subnetwork" name="subnetwork" readonly>
             </div>
@@ -244,16 +249,16 @@
 
 
         </fieldset>
-        
-    </div> 
-    
+
+    </div>
+
     <div class="form-row">
         <!-- Fieldset 2: Connect SAO -->
 
         <fieldset id="Bands" class="nested-fieldsets">
             <legend>Bands</legend>
         </fieldset>
-        
+
         <fieldset id="SendToa" class="nested-fieldsets">
             <legend>TOA</legend>
             <div class="d-flex justify-content-center gap-3">
@@ -265,11 +270,11 @@
                 </button>
             </div>
         </fieldset>
-    </div>        
-    
+    </div>
+
     <div class="form-row">
 
-        </fieldset>    
+        </fieldset>
         <fieldset class="nested-fieldsets" id="2G-Data" style="display: none">
             <legend>2G Data</legend>
             <!-- Fields for 2G data -->
@@ -300,7 +305,7 @@
             <div class="form-group">
                 <label for="2g_data_edge">EDGE Configuration:</label>
                 <input type="text" id="2g_data_edge" name="2g_data_edge">
-            </div>    
+            </div>
         </fieldset>
 
                     <!-- 3G Data -->
@@ -422,7 +427,7 @@ function add4GInput(ip) {
     input.value = ip;
     div.appendChild(label);
     div.appendChild(input)
-    
+
     let formContainer = document.getElementById('add-data');
     formContainer.appendChild(div);
 
@@ -467,7 +472,7 @@ function remove4GInput() {
     if (container) {
         container.remove();
     }
-    
+
     let containerBand = document.getElementById('4G-Data');
     if (containerBand) {
         containerBand.remove();
@@ -538,7 +543,7 @@ function populateCombobox(data) {
         option.value = item.name + ', ' + item.mobile;
         option.textContent = item.name;
         combobox.appendChild(option);
-    });    
+    });
 }
 
 function populateCabinetCombo(data) {
@@ -547,9 +552,9 @@ function populateCabinetCombo(data) {
     combobox.innerHTML = ''
     for (const [key, value] of Object.entries(data)) {
         const option = document.createElement('option');
-        option.value = value;      
-        option.textContent = key;  
-        combobox.appendChild(option);  
+        option.value = value;
+        option.textContent = key;
+        combobox.appendChild(option);
     }
 }
 
@@ -577,7 +582,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (inputVal.length >= 5) {
                 btn.innerHTML = '<span class="spinner-border spinner-border-sm"></span>Loading...';
             }
-        });    
+        });
     }
 
     // === search.html logic ===
@@ -683,19 +688,19 @@ function validateForm(){
                 for (let fieldset of fieldsets) {
                     const checkboxes = fieldset.querySelectorAll('input[type="checkbox"]');
                     const isChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-                
+
                     if (!isChecked) {
                         alert('Please choose at least one band')
                         return false;
                     }
                 }
             }
-            return true;    
+            return true;
         };
 
 
     document.getElementById('reset-button').addEventListener('click', function(event) {
-            event.preventDefault(); 
+            event.preventDefault();
             const confirmation = confirm('Confirm close this page')
             if (confirmation){
                 const form = document.getElementById('site-form')
@@ -705,14 +710,14 @@ function validateForm(){
                 };
 
                 const formData = new FormData(form);
-                
+
                 formData.set('action', 'reset');
 
                 fetch('/toa_submit/create/', {
                     method: 'POST',
                     body: formData,
                     headers: {
-                            'X-Requested-With': 'XMLHttpRequest',  
+                            'X-Requested-With': 'XMLHttpRequest',
                     }
                 })
                 .then(response => {
@@ -722,17 +727,17 @@ function validateForm(){
                     return response.json();
                 })
                 .then(data => {
-                    console.log(data)        
+                    console.log(data)
                     if (data.redirect) {
                         window.location.href = data.redirect;
                     } else {
                         console.error('No redirect URL found in response');
                     }
-                }) 
+                })
                 .catch(error => console.error('Error:', error));
             }
         });
-    
+
     async function get2GSiteName(sitename) {
             try {
                 const response = await fetch(`/toa_submit/api/get-site-name/?sitename=${encodeURIComponent(sitename)}`);
@@ -770,7 +775,7 @@ function validateForm(){
         const technologiesRaw = document.getElementById('send-toa-button').dataset.technologies;
         let technologies = technologiesRaw ? technologiesRaw.split(',') : [];
         console.log(technologiesRaw);
-        
+
         const sitename = document.getElementById('sitename').value;
         const address = document.getElementById('address').value;
         const latitude = document.getElementById('latitude').value;
