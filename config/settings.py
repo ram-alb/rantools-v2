@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'retsubunit',
     'network_vs_atoll',
     'toa_submit',
+    'enm_bulk_config',
 ]
 
 MIDDLEWARE = [
