@@ -3,7 +3,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.views import View
 
-from enm_bulk_config.services.network_live import get_all_params
+from enm_bulk_config.services.main import main as process_template
+from enm_bulk_config.services.parameters import parameters_map
 from enm_bulk_config.services.templates import generate_bulk_template, validate_uploaded_template
 from services.technologies import Technologies
 
@@ -17,7 +18,7 @@ class EnmBulkConfigView(View):
         """Handle GET requests for the ENM bulk configuration page."""
         context = {
             "technologies": Technologies.get_technologies(),
-            "parameters": get_all_params(),
+            "parameters": parameters_map,
         }
 
         return render(request, self.template_name, context)
@@ -29,7 +30,7 @@ class EnmBulkConfigView(View):
         template_file = request.FILES.get("template_file")
 
         technologies = Technologies.get_technologies()
-        tech_parameters = get_all_params()
+        tech_parameters = parameters_map
         context = {
             "technologies": technologies,
             "parameters": tech_parameters,
@@ -49,7 +50,11 @@ class EnmBulkConfigView(View):
             messages.error(request, f"Invalid template: {error}")
             return render(request, self.template_name, context)
 
-        return HttpResponse("Template validated successfully!")
+        config_archive = process_template(technology, parameter, template_file)
+
+        response = HttpResponse(config_archive, content_type="application/zip")
+        response["Content-Disposition"] = 'attachment; filename="enm_bulk_config.zip"'
+        return response
 
 
 def download_template(request):

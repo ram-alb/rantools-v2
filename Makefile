@@ -36,5 +36,7 @@ format-files:
 lint-files:
 	poetry run flake8 $(FILES)
 
+format:
+	poetry run black $(FILES)
 
 .PHONY: dev-start install migrate isort lint selfcheck check test-coverage
