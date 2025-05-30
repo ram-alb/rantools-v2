@@ -3,7 +3,7 @@
 {% block content %}
 <div class="container d-flex flex-column justify-content-center align-items-center" style="min-height: 80vh;">
   <h1 class="mb-4 text-center">ENM Bulk Configuration</h1>
-  <form method="post" enctype="multipart/form-data" class="w-100" style="max-width: 400px;">
+  <form method="post" enctype="multipart/form-data" class="w-100" style="max-width: 400px;" id="bulk-config-form">
 
     {% csrf_token %}
 
@@ -25,8 +25,14 @@
       <div id="template-actions"></div>
     </div>
 
-    <button type="submit" class="btn btn-primary w-100" id="submit-btn" disabled>Submit</button>
-
+    <button type="submit" class="btn btn-primary w-100 d-flex justify-content-center align-items-center" id="submit-btn" disabled>
+      <span id="submit-btn-text">Submit</span>
+      <span id="submit-btn-spinner" class="spinner-border spinner-border-sm ms-2" style="display: none;" role="status" aria-hidden="true"></span>
+    </button>
+    <div id="form-spinner" class="mt-3 text-center" style="display: none;">
+      <div class="spinner-border text-primary" role="status"></div>
+      <div class="mt-2">Processing your request, please wait...</div>
+    </div>
   </form>
 </div>
 <script>
@@ -36,6 +42,8 @@
   const paramSelect = document.getElementById('id_parameter');
   const submitBtn = document.getElementById('submit-btn');
   const templateActions = document.getElementById('template-actions');
+  const form = document.getElementById('bulk-config-form');
+  const spinner = document.getElementById('form-spinner');
 
   techSelect.addEventListener('change', function() {
     const tech = this.value;
@@ -106,5 +114,51 @@
       paramSelect.dispatchEvent(new Event('change'));
     }, 100);
   }
+
+  // Блокируем кнопку и показываем спиннер при отправке формы
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    submitBtn.disabled = true;
+    document.getElementById('submit-btn-text').textContent = 'Processing...';
+    document.getElementById('submit-btn-spinner').style.display = '';
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: {
+        'X-Requested-With': 'XMLHttpRequest'
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Server error');
+      }
+      return response.blob();
+    })
+    .then(blob => {
+      // Создаём ссылку для скачивания архива
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'enm_bulk_config.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+
+      // Возвращаем кнопку и спиннер в исходное состояние
+      submitBtn.disabled = false;
+      document.getElementById('submit-btn-text').textContent = 'Submit';
+      document.getElementById('submit-btn-spinner').style.display = 'none';
+    })
+    .catch(error => {
+      alert('Error: ' + error.message);
+      submitBtn.disabled = false;
+      document.getElementById('submit-btn-text').textContent = 'Submit';
+      document.getElementById('submit-btn-spinner').style.display = 'none';
+    });
+  });
 </script>
 {% endblock content %}
