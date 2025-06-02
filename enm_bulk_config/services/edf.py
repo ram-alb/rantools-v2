@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple
 
+from enm_bulk_config.services.parameters import EutranCellFddParams, NRCellDUParams
 from services.technologies import Technologies
 
 
@@ -27,7 +28,7 @@ def _generate_lte_pci_config_lines(fdns: List[dict]) -> List[str]:
     lines = []
     for fdn_data in fdns:
         fdn = fdn_data.get("fdn")
-        pci = fdn_data.get("PCI")
+        pci = fdn_data.get(EutranCellFddParams.pci.value)
         if not fdn or pci is None:
             continue
         cell_id_group, sub_cell_id = _get_lte_pci_config_lines(pci)
@@ -43,7 +44,7 @@ def _generate_nr_pci_config_lines(fdns: List[dict]) -> List[str]:
     lines = []
     for fdn_data in fdns:
         fdn = fdn_data.get("fdn")
-        pci = fdn_data.get("nRPCI")
+        pci = fdn_data.get(NRCellDUParams.pci.value)
         if not fdn or pci is None:
             continue
         lines.append("SET")
@@ -71,8 +72,14 @@ def generate_edf_config(
     Returns dict: enm -> config text.
     """
     config_generators = {
-        (Technologies.lte.value, "PCI"): _generate_lte_pci_config_lines,
-        (Technologies.nr.value, "nRPCI"): _generate_nr_pci_config_lines,
+        (
+            Technologies.lte.value,
+            EutranCellFddParams.pci.value,
+        ): _generate_lte_pci_config_lines,
+        (
+            Technologies.nr.value,
+            NRCellDUParams.pci.value,
+        ): _generate_nr_pci_config_lines,
     }
 
     config = {}
