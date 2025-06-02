@@ -32,10 +32,31 @@ def _generate_lte_pci_config_lines(fdns: List[dict]) -> List[str]:
             continue
         cell_id_group, sub_cell_id = _get_lte_pci_config_lines(pci)
         lines.append("SET")
-        lines.append(f'FDN:"{fdn_data["fdn"]}"')
+        lines.append(f'FDN:"{fdn}"')
         lines.append(cell_id_group)
         lines.append(sub_cell_id)
         lines.append("")
+    return lines
+
+
+def _generate_nr_pci_config_lines(fdns: List[dict]) -> List[str]:
+    lines = []
+    for fdn_data in fdns:
+        fdn = fdn_data.get("fdn")
+        pci = fdn_data.get("nRPCI")
+        if not fdn or pci is None:
+            continue
+        lines.append("SET")
+        lines.append(f'FDN:"{fdn}"')
+        lines.append("administrativeState:LOCKED")
+        lines.append(f"nRPCI:{pci}")
+        lines.append("")
+
+        lines.append("SET")
+        lines.append(f'FDN:"{fdn}"')
+        lines.append("administrativeState:UNLOCKED")
+        lines.append("")
+
     return lines
 
 
@@ -51,6 +72,7 @@ def generate_edf_config(
     """
     config_generators = {
         (Technologies.lte.value, "PCI"): _generate_lte_pci_config_lines,
+        (Technologies.nr.value, "nRPCI"): _generate_nr_pci_config_lines,
     }
 
     config = {}
