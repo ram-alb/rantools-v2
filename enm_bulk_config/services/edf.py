@@ -1,7 +1,9 @@
 from typing import Dict, List, Tuple
 
+from services.technologies import Technologies
 
-def get_lte_pci_config_lines(pci) -> Tuple[str, str]:
+
+def _get_lte_pci_config_lines(pci) -> Tuple[str, str]:
     """
     Return config lines for PCI.
 
@@ -21,6 +23,22 @@ def get_lte_pci_config_lines(pci) -> Tuple[str, str]:
         return ("physicalLayerCellIdGroup:", "physicalLayerSubCellId:")
 
 
+def _generate_lte_pci_config_lines(fdns: List[dict]) -> List[str]:
+    lines = []
+    for fdn_data in fdns:
+        fdn = fdn_data.get("fdn")
+        pci = fdn_data.get("PCI")
+        if not fdn or pci is None:
+            continue
+        cell_id_group, sub_cell_id = _get_lte_pci_config_lines(pci)
+        lines.append("SET")
+        lines.append(f'FDN:"{fdn_data["fdn"]}"')
+        lines.append(cell_id_group)
+        lines.append(sub_cell_id)
+        lines.append("")
+    return lines
+
+
 def generate_edf_config(
     fdn_params: Dict[str, List[dict]],
     technology: str,
@@ -31,21 +49,13 @@ def generate_edf_config(
 
     Returns dict: enm -> config text.
     """
+    config_generators = {
+        (Technologies.lte.value, "PCI"): _generate_lte_pci_config_lines,
+    }
+
     config = {}
 
     for enm, fdns in fdn_params.items():
-        lines = []
-        for fdn_data in fdns:
-            fdn = fdn_data.get("fdn")
-            if not fdn:
-                continue
-            lines.append("SET")
-            lines.append(f'FDN:"{fdn}"')
-
-            parameter_value = fdn_data.get(parameter)
-            if technology == "LTE" and parameter == "PCI":
-                lines.extend(get_lte_pci_config_lines(parameter_value))
-
-            lines.append("")
-        config[enm] = "\n".join(lines)
+        config_generator = config_generators.get((technology, parameter))
+        config[enm] = "\n".join(config_generator(fdns))
     return config
