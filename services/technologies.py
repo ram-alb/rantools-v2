@@ -5,6 +5,7 @@ class Technologies(Enum):
     """Enumeration representing a set of technologies."""
 
     lte = "LTE"
+    nr = "NR"
 
     @classmethod
     def get_technologies(cls):

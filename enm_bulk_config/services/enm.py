@@ -25,6 +25,7 @@ def _get_enm_scope(existent_df: pd.DataFrame) -> Scope:
 def _extract_mo_value(fdn: str, technology: str) -> Optional[str]:
     patterns = {
         Technologies.lte: "EUtranCellFDD=([^, ]+)",
+        Technologies.nr: "NRCellDU=([^, ]+)",
     }
     pattern = patterns.get(Technologies.from_str(technology))
     match = re.search(pattern, fdn) if pattern else None
@@ -37,6 +38,7 @@ def _get_enm_data(
 ) -> Dict[str, Tuple[ElementGroup, set]]:
     mo_types = {
         Technologies.lte: "EUtranCellFDD",
+        Technologies.nr: "NRCellDU",
     }
     tech_enum = Technologies.from_str(technology)
     mo_type = mo_types.get(tech_enum)
@@ -55,11 +57,7 @@ def get_fdn_params(
     existent_df: pd.DataFrame,
     parameter: str,
 ) -> Dict[str, List[dict]]:
-    """Return a dict with {fdn: <fdn_val>, param_name: param_val}.
-
-    For each FDN found in ENM output,
-    where param_val is taken from existent_df for the corresponding cell.
-    """
+    """Get FDN parameters from ENM for the given technology and existent cells."""
     scope = _get_enm_scope(existent_df)
     enm_data = _get_enm_data(technology, scope)
 
