@@ -11,6 +11,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Load needed environment
 if "RANTOOLS_ENV" in os.environ:
     load_dotenv(dotenv_path=BASE_DIR / ".env", override=True)
+    # SSL settings
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SECURE = True
 else:
     load_dotenv(dotenv_path=BASE_DIR / ".env.dev", override=True)
 
@@ -206,9 +211,3 @@ CELERY_BEAT_SCHEDULE = {
         "schedule": crontab(hour=[8, 12, 16, 20], minute=0),
     },
 }
-
-# SSL settings
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
