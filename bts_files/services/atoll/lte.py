@@ -1,6 +1,6 @@
 from typing import NamedTuple
 
-atoll_lte_select_old = """
+atoll_lte_select = """
     SELECT
         s.lte_region,
         t.site_name,
@@ -27,26 +27,6 @@ atoll_lte_select_old = """
         AND t.azimut IS NOT NULL
     ORDER BY
         c.cell_id
-"""
-
-atoll_lte_select = """
-SELECT
-    SUBNETWORK,
-    SITENAME,
-    '' AS lte_sitename,
-    LONGITUDE,
-    LATITUDE,
-    CELL,
-    EARFCNDL,
-    CELLID,
-    PHYSICALCELLID,
-    RACHROOTSEQUENCE,
-    TAC,
-    HEIGHT,
-    AZIMUT,
-    '' AS antenna
-FROM LTECELLS2
-WHERE AZIMUT IS NOT NULL
 """
 
 
