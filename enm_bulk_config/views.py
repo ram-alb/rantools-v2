@@ -6,15 +6,17 @@ from django.views import View
 from enm_bulk_config.services.main import main as process_template
 from enm_bulk_config.services.parameters import parameters_map
 from enm_bulk_config.services.templates import generate_bulk_template, validate_uploaded_template
-from services.mixins import GroupRequiredMixin, LoginMixin
+from services.mixins import GroupRequiredMixin, LoginMixin, login_required_mixin
 from services.technologies import Technologies
+
+REQUIRED_GROUPS = ("RNPO Users",)
 
 
 class EnmBulkConfigView(LoginMixin, GroupRequiredMixin, View):
     """View for handling ENM bulk configuration."""
 
     template_name = "enm_bulk_config/index.html"
-    required_groups = ["RNPO Users"]
+    required_groups = REQUIRED_GROUPS
 
     def get(self, request, *args, **kwargs):
         """Handle GET requests for the ENM bulk configuration page."""
@@ -59,6 +61,7 @@ class EnmBulkConfigView(LoginMixin, GroupRequiredMixin, View):
         return response
 
 
+@login_required_mixin(required_groups=REQUIRED_GROUPS)
 def download_template(request):
     """Download an Excel template for bulk configuration."""
     technology = request.GET.get("technology")
