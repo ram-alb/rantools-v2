@@ -6,6 +6,7 @@ class EutranCellFddParams(Enum):
     """Enumeration representing parameters for EutranCellFdd."""
 
     pci = "PCI"
+    rach = "rachRootSequence"
 
     @classmethod
     def get_params(cls) -> List[str]:

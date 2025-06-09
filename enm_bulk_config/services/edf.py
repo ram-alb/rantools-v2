@@ -1,5 +1,6 @@
 from typing import Dict, List, Tuple
 
+from enm_bulk_config.services.edff.eutrancellfdd import generate_lte_rach_config_lines
 from enm_bulk_config.services.parameters import EutranCellFddParams, NRCellDUParams
 from services.technologies import Technologies
 
@@ -80,6 +81,10 @@ def generate_edf_config(
             Technologies.nr.value,
             NRCellDUParams.pci.value,
         ): _generate_nr_pci_config_lines,
+        (
+            Technologies.lte.value,
+            EutranCellFddParams.rach.value,
+        ): generate_lte_rach_config_lines,
     }
 
     config = {}
