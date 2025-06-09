@@ -3,7 +3,7 @@ from typing import Tuple
 
 import pandas as pd
 
-from enm_bulk_config.services.edf import generate_edf_config
+from enm_bulk_config.services.edff.main import generate_edff_config
 from enm_bulk_config.services.enm import get_fdn_params
 from enm_bulk_config.services.files import create_archive
 from enm_bulk_config.services.network_live import get_network_live_df
@@ -64,6 +64,6 @@ def main(technology: str, parameter: str, template: io.BytesIO) -> bytes:
     fdn_params = get_fdn_params(technology, existent_df, parameter)
 
     # with existent cells create enm bulk config script
-    config = generate_edf_config(fdn_params, technology, parameter)
+    config = generate_edff_config(fdn_params, technology, parameter)
     # return script and non-existent cells
     return create_archive(config, non_existent_df)
