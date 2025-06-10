@@ -4,7 +4,10 @@ from enm_bulk_config.services.edff.eutrancellfdd import (
     generate_lte_pci_config_lines,
     generate_lte_rach_config_lines,
 )
-from enm_bulk_config.services.edff.nrcelldu import generate_nr_pci_config_lines
+from enm_bulk_config.services.edff.nrcelldu import (
+    generate_nr_pci_config_lines,
+    generate_nr_rach_config_lines,
+)
 from enm_bulk_config.services.parameters import EutranCellFddParams, NRCellDUParams
 from services.technologies import Technologies
 
@@ -32,6 +35,10 @@ def generate_edff_config(
             Technologies.lte.value,
             EutranCellFddParams.rach.value,
         ): generate_lte_rach_config_lines,
+        (
+            Technologies.nr.value,
+            NRCellDUParams.rach.value,
+        ): generate_nr_rach_config_lines,
     }
 
     config = {}

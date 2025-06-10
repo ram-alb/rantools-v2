@@ -30,3 +30,23 @@ def generate_nr_pci_config_lines(fdns: List[dict]) -> List[str]:
         lines.extend(_generate_unlock_fdn_lines(fdn))
 
     return lines
+
+
+def generate_nr_rach_config_lines(fdns: List[dict]) -> List[str]:
+    """Generate EDFF config lines for NR RACH."""
+    lines = []
+
+    for fdn_data in fdns:
+        fdn = fdn_data.get("fdn")
+        rach = fdn_data.get(NRCellDUParams.rach.value)
+        if not fdn or rach is None:
+            continue
+        lines.append("SET")
+        lines.append(f'FDN:"{fdn}"')
+        lines.append("administrativeState:LOCKED")
+        lines.append(f"rachRootSequence:{rach}")
+        lines.append("")
+
+        lines.extend(_generate_unlock_fdn_lines(fdn))
+
+    return lines

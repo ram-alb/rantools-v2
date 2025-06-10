@@ -18,6 +18,7 @@ class NRCellDUParams(Enum):
     """Enumeration representing parameters for NRCellDU."""
 
     pci = "nRPCI"
+    rach = "rachRootSequence"
 
     @classmethod
     def get_params(cls) -> List[str]:
