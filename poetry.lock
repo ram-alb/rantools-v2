@@ -814,8 +814,11 @@ name = "docutils"
 version = "0.20.1"
 description = "Docutils -- Python Documentation Utilities"
 optional = false
-python-versions = "*"
-files = []
+python-versions = ">=3.7"
+files = [
+    {file = "docutils-0.20.1-py3-none-any.whl", hash = "sha256:96f387a2c5562db4476f09f13bbab2192e764cac08ebbf3a34a95d9b1e4a59d6"},
+    {file = "docutils-0.20.1.tar.gz", hash = "sha256:f08a4e276c3a1583a86dce3e34aba3fe04d02bba2dd51ed16106244e8a923e3b"},
+]
 
 [[package]]
 name = "drf-spectacular"
@@ -890,7 +893,7 @@ six = "1.9.0"
 
 [package.source]
 type = "file"
-url = ".venv/src/enm-cli/local_lib/enm_client_scripting-1.22.2-py2.py3-none-any.whl"
+url = "local_lib/enm_client_scripting-1.22.2-py2.py3-none-any.whl"
 
 [[package]]
 name = "eradicate"
@@ -1601,7 +1604,7 @@ send-mail = {git = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/send-mail.git"}
 type = "git"
 url = "https://gitlab.kcell.kz/nds-rnpou-rnsd-team/network-live.git"
 reference = "HEAD"
-resolved_reference = "c9e1d830a76412db26f0bfc063227770488ebbb4"
+resolved_reference = "2d2847a749c905411a46b0bbf564534ed763bcfc"
 
 [[package]]
 name = "nodeenv"
